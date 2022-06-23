@@ -228,6 +228,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
 #' @return NULL
 #' @importFrom stringr str_extract
 #' @importFrom tibble tibble
+#' @export
 #' @examples
 #' # The database connector only needs to be created once in any given script.
 #' ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite')
@@ -276,6 +277,7 @@ extract_ffiec_codebook <- function(sch_unzipped) {
 #' @importFrom dplyr mutate select
 #' @importFrom rlog log_info log_warn
 #' @importFrom tidyr pivot_longer
+#' @export
 #' @examples 
 #' # The database connector only needs to be created once in any given script.
 #' ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite')
@@ -342,6 +344,7 @@ extract_ffiec_obs <- function(sch_unzipped) {
 #' @importFrom purrr map2_chr
 #' @importFrom readr cols col_character read_tsv
 #' @importFrom rlog log_info
+#' @export
 #' @examples 
 #' parse_ffiec_obs('FFIEC CDR Call Schedule RCCII 06302002.txt')
 parse_ffiec_obs <- function(sch_unzipped) {
@@ -387,6 +390,7 @@ schedule_name_components <- function(sch) {
 #' @param sch_unzipped The path to an FFIEC schedule file on disk.
 #' @return A character vector containing the variable names found in the top line.
 #' @importFrom readr read_lines
+#' @export
 #' @examples
 #' extract_ffiec_names('FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_names <- function(sch_unzipped) { 
@@ -400,6 +404,7 @@ extract_ffiec_names <- function(sch_unzipped) {
 #' @return A character vector containing the variable descriptions found in the 
 #' second line of the file.
 #' @importFrom readr read_lines
+#' @export
 #' @examples
 #' extract_ffiec_descs('FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_descs <- function(sch_unzipped) { 
@@ -415,6 +420,7 @@ extract_ffiec_descs <- function(sch_unzipped) {
 #' @importFrom magrittr %>%
 #' @importFrom lubridate mdy
 #' @importFrom stringr str_extract
+#' @export
 #' @examples
 #' extract_ffiec_datestr('FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_datestr <- function(sch) {
@@ -427,6 +433,7 @@ extract_ffiec_datestr <- function(sch) {
 #' @return A character value containing the alphabetical schedule code 
 #' corresponding to the given schedule filename.
 #' @importFrom stringr str_match
+#' @export
 #' @examples
 #' > extract_schedule_code('FFIEC CDR Call Schedule RCCII 06302002.txt')
 #' [1] "RCCII"
@@ -460,6 +467,7 @@ extract_part_codes <- function(sch) {
 #' 
 #' @param sch_line A line from an FFIEC tab-separated schedule file
 #' @return A character vector of the values in that line
+#' @export
 #' @examples
 #' extract_values('12311  2031  298310')
 #' [1] "12311" "2031" "298310"
