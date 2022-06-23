@@ -9,6 +9,7 @@
 #' @param pattern A regular expression on which to split the string
 #' @return A character vector containing the split values
 #' @importFrom stringr str_split
+#' @export
 #' @examples
 #' > str_split1('Hello world')
 #' [1] "Hello" "world"
@@ -26,6 +27,7 @@ str_split1 <- function(str, pattern) {
 #' values replaced with the "last-seen" non-`NA` value up to that point in the
 #' vector
 #' @importFrom purrr reduce
+#' @export
 #' @examples
 #' > fill_na_with_previous(c(1, 2, NA, NA, 3))
 #' [1] 1 2 2 2 3
