@@ -2,6 +2,7 @@
 
 export(chifed_dates_in_db)
 export(create_new_sqlite_db)
+export(db_connector_sqlite)
 export(detect_ffiec_cross_references)
 export(extract_all_chifed_zips)
 export(extract_all_ffiec_zips)

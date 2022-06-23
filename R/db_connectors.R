@@ -10,6 +10,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom DBI dbConnect
 #' @importFrom glue glue
+#' @export
 #' @examples
 #' db_connector_sqlite('./db/ffiec.sqlite')
 db_connector_sqlite <- function(sqlite_db_path, overwrite = FALSE) {
