@@ -23,7 +23,7 @@ extract_all_ffiec_zips <- function(db_connector, ffiec_zip_path) {
   dttm_str <- 
     str_remove_all(Sys.time(), '[-:]') %>% 
     str_replace_all('\\s', '_')
-  log_filename <- glue('./logs/extract_ffiec_{dttrm_str}.log.txt')
+  log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
   
   sink(NULL) # Stop any logging in this session so we can start again.
   sink(log_filename, split = TRUE)
