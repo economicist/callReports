@@ -50,6 +50,7 @@ fill_na_with_previous <- function(x) {
 #' @return `TRUE` if the user responds with any of "Y", "YES", "T", or "TRUE"
 #' (case-insensitive).
 #' @importFrom glue glue
+#' @export
 confirm_and_delete <- function(file_path, prompt = glue('Delete {file_path}?')) {
   # If the file isn't there to delete, pretend we've deleted it.
   if (!file.exists(file_path)) return(TRUE)
