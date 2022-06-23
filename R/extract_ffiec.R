@@ -301,7 +301,7 @@ extract_ffiec_obs <- function(sch_unzipped) {
         log_warn(
           glue('anomalies in table {sch_code} records for {report_date}.'))
       } 
-      parse_ffiec_obs(sch_fixed)
+      suppressWarnings(parse_ffiec_obs(sch_fixed))
     })
   
   if (ncol(df_obs) < 2) {
