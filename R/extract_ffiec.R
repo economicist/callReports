@@ -444,6 +444,7 @@ extract_schedule_code <- function(sch) {
 #' with both being `1` if no part is indicated in the filename.
 #' 
 #' @importFrom stringr str_match
+#' @export
 #' @examples
 #' > extract_part_code('FFIEC CDR Call Schedule RCB 03312013(2 of 2).txt')
 #' part_num  part_of 
