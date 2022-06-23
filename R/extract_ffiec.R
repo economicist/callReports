@@ -13,6 +13,7 @@
 #' @return NULL
 #' @importFrom magrittr %>%
 #' @importFrom purrr pwalk
+#' @importFrom rlog log_info
 #' @export
 #' @examples
 #' db_connector <- db_connector_sqlite('./db/ffiec.sqlite')
@@ -25,7 +26,10 @@ extract_all_ffiec_zips <- function(db_connector, ffiec_zip_path) {
     str_replace_all('\\s', '_')
   log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
   
-  try(sink(NULL)) # Stop any logging in this session so we can start again.
+  tryCatch(sink(NULL), 
+           warning = function(w) {
+             log_info('No log is currently open. Will begin logging.')
+           })
   sink(log_filename, split = TRUE)
   list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
     pwalk(function(zip_file, sch_file) {

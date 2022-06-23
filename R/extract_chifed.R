@@ -27,7 +27,10 @@ extract_all_chifed_zips <-
       str_replace_all('\\s', '_')
     log_filename <- glue('./logs/extract_chifed_{dttm_str}.log.txt')
     
-    try(sink(NULL)) # Stop any logging in this session so we can start again.
+    tryCatch(sink(NULL), 
+             warning = function(w) {
+               log_info('No log is currently open. Will begin logging.')
+             })
     sink(log_filename, split = TRUE)
     db_conn <- db_connector()
     yymm_in_db <-
