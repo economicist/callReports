@@ -60,8 +60,8 @@ db_connector_sqlite <- function(sqlite_db_path, overwrite = FALSE) {
 #' @importFrom rlog log_info
 #' @export
 #' @examples
-#' # Create a new database file, overwriting the existing copy:
-#' create_new_sqlite_db('./zips-ffiec/ffiec.sqlite', overwrite = TRUE)
+#' # Create a new database file:
+#' create_new_sqlite_db('./zips-ffiec/ffiec.sqlite')
 create_new_sqlite_db <- function(sqlite_db_path) {
   # If file exists, ask for permission to overwrite. Exit if permission denied.
   callReports::confirm_and_delete(sqlite_db_path)

@@ -26,6 +26,6 @@ SQLite database file. If one does not exist, one should be created using this
 function before proceeding to extract data.
 }
 \examples{
-# Create a new database file, overwriting the existing copy:
-create_new_sqlite_db('./zips-ffiec/ffiec.sqlite', overwrite = TRUE)
+# Create a new database file:
+create_new_sqlite_db('./zips-ffiec/ffiec.sqlite')
 }
