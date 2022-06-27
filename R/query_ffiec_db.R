@@ -198,3 +198,49 @@ query_multischedule_variable <- function(db_connector, var_name) {
                        values_from = VALUE) %>%
     type_convert()
 }
+
+#' How much of this ZIP file has been extracted to the database?
+#' 
+#' `compare_zip_to_db()` queries the `SUMMARY` table of the database, given by
+#' the connector function `db_connector()`, to determine which schedules for
+#' a particular period's FFIEC ZIP file have already been extracted to that
+#' database, so as to allow `extract_all_ffiec_zips()` to begin where it left
+#' off in its previous run.
+#'
+#' @param db_connector A `function` created by one of the `db_connector_*()` 
+#' functions found in this package. It should be passed without the `()`
+#' @return A `tibble` containing a record for each period, schedule, and part
+#' code already extracted to the database, as determined by a query of the 
+#' `SUMMARY` table.
+#' @importFrom magrittr %>%
+#' @importFrom DBI dbReadTable dbDisconnect
+#' @importFrom dplyr distinct collect
+#' @export
+zipped_schedules_not_in_db <- function(db_connector, zip_file) {
+  schedules_in_zip <- 
+    list_ffiec_schedules(zip_file) %>%
+    map_dfr(function(sch) {
+      tibble(REPORT_DATE   = extract_ffiec_datestr(sch),
+             SCHEDULE_CODE = extract_schedule_code(sch),
+             PART_NUM      = extract_part_codes(sch)[1],
+             PART_OF       = extract_part_codes(sch)[2])
+    })
+  sch_date <- unique(schedules_in_zip$REPORT_DATE)
+  
+  db_conn <- db_connector()
+  df_summ <- 
+    dbReadTable(db_conn, 'SUMMARY') %>%
+    filter(REPORT_DATE == sch_date) %>%
+    distinct(REPORT_DATE, SCHEDULE_CODE, PART_NUM, PART_OF) %>%
+    collect() %>% as_tibble() %>%
+    mutate_at(vars(starts_with('PART_')), ~ as.numeric(.x))
+  dbDisconnect(db_conn)
+  
+  schedules_not_in_db <-
+    schedules_in_zip %>%
+    anti_join(df_summ,
+              by = c('REPORT_DATE', 'SCHEDULE_CODE', 'PART_NUM', 'PART_OF')) %>%
+    pmap_chr(callReports::build_schedule_filename)
+  
+  return(schedules_not_in_db)
+}

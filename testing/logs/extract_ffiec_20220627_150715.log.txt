@@ -1,0 +1,856 @@
+2022-06-27 15:07:15 [INFO] 2001-03-31 ENT 
+2022-06-27 15:07:15 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 LEO 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 NARR 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RC 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCA 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCB 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCD 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCE 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCEI 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCEII 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCF 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCG 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCH 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCK 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCL 
+2022-06-27 15:07:16 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:16 [INFO] 2001-03-31 RCM 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RCN 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RCO 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RCR (1 of 2)
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RCR (2 of 2)
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RCS 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RI 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RIA 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RIBI 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RIBII 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RID 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2001-03-31 RIE 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2002-03-31 ENT 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2002-03-31 LEO 
+2022-06-27 15:07:17 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:17 [INFO] 2002-03-31 NARR 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RC 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCA 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCB 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCD 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCE 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCEI 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCEII 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCF 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCG 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCH 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCK 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCL 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCM 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:18 [INFO] 2002-03-31 RCN 
+2022-06-27 15:07:18 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RCO 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RCR (1 of 2)
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RCR (2 of 2)
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RCS 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RCT 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RI 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RIA 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RIBI 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RIBII 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RID 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2002-03-31 RIE 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2003-03-31 ENT 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2003-03-31 LEO 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:19 [INFO] 2003-03-31 NARR 
+2022-06-27 15:07:19 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RC 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCA 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCB 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCD 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCE 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCEI 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCEII 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCF 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCG 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCH 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCK 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCL 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCM 
+2022-06-27 15:07:20 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:20 [INFO] 2003-03-31 RCN 
+2022-06-27 15:07:21 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:21 [INFO] 2003-03-31 RCO 
+2022-06-27 15:07:21 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 15:07:21 [INFO] 2003-03-31 RCR (1 of 2)
+2022-06-27 15:07:21 [INFO] Schedule already in database. Moving to next...
+
+
+> #' Query the FFIEC database for variables in a given database table
+> #' 
+> #' `query_ffiec_db()` connects to a given database and searches the give .... [TRUNCATED] 
+
+> #' Quickly determine which periods are already in the FFIEC database
+> #'
+> #' @param db_connector A `function` created by one of the `db_connector_ .... [TRUNCATED] 
+
+> #' Search the FFIEC data codebook in the database, by varible name or description
+> #'
+> #' Either a `var_name` or `var_desc` must be provided.
+> #' .... [TRUNCATED] 
+
+> #' Detect variables in the FFIEC database that exist in multiple tables
+> #'
+> #' @param db_connector A `function` created by one of the `db_connect .... [TRUNCATED] 
+
+> #' Query a variable from all FFIEC tables where it exists
+> #' 
+> #' In case you want to know which FFIEC schedule contains the most instances
+> #'  .... [TRUNCATED] 
+
+> get_schedules_in_db <- function(db_connector) {
++   db_conn <- db_connector()
++   db_summ <- dbSendQuery()
++ }
+NULL
+NULL
+[1] "Hi!"
+ [1] "FFIEC CDR Call Schedule ENT 03312001.txt"         "FFIEC CDR Call Schedule LEO 03312001.txt"        
+ [3] "FFIEC CDR Call Schedule NARR 03312001.txt"        "FFIEC CDR Call Schedule RC 03312001.txt"         
+ [5] "FFIEC CDR Call Schedule RCA 03312001.txt"         "FFIEC CDR Call Schedule RCB 03312001.txt"        
+ [7] "FFIEC CDR Call Schedule RCD 03312001.txt"         "FFIEC CDR Call Schedule RCE 03312001.txt"        
+ [9] "FFIEC CDR Call Schedule RCEI 03312001.txt"        "FFIEC CDR Call Schedule RCEII 03312001.txt"      
+[11] "FFIEC CDR Call Schedule RCF 03312001.txt"         "FFIEC CDR Call Schedule RCG 03312001.txt"        
+[13] "FFIEC CDR Call Schedule RCH 03312001.txt"         "FFIEC CDR Call Schedule RCK 03312001.txt"        
+[15] "FFIEC CDR Call Schedule RCL 03312001.txt"         "FFIEC CDR Call Schedule RCM 03312001.txt"        
+[17] "FFIEC CDR Call Schedule RCN 03312001.txt"         "FFIEC CDR Call Schedule RCO 03312001.txt"        
+[19] "FFIEC CDR Call Schedule RCR 03312001(1 of 2).txt" "FFIEC CDR Call Schedule RCR 03312001(2 of 2).txt"
+[21] "FFIEC CDR Call Schedule RCS 03312001.txt"         "FFIEC CDR Call Schedule RI 03312001.txt"         
+[23] "FFIEC CDR Call Schedule RIA 03312001.txt"         "FFIEC CDR Call Schedule RIBI 03312001.txt"       
+[25] "FFIEC CDR Call Schedule RIBII 03312001.txt"       "FFIEC CDR Call Schedule RID 03312001.txt"        
+[27] "FFIEC CDR Call Schedule RIE 03312001.txt"        
+[[1]]
+[1] "2001-03-31"
+
+[[2]]
+[1] "2001-03-31"
+
+[[3]]
+[1] "2001-03-31"
+
+[[4]]
+[1] "2001-03-31"
+
+[[5]]
+[1] "2001-03-31"
+
+[[6]]
+[1] "2001-03-31"
+
+[[7]]
+[1] "2001-03-31"
+
+[[8]]
+[1] "2001-03-31"
+
+[[9]]
+[1] "2001-03-31"
+
+[[10]]
+[1] "2001-03-31"
+
+[[11]]
+[1] "2001-03-31"
+
+[[12]]
+[1] "2001-03-31"
+
+[[13]]
+[1] "2001-03-31"
+
+[[14]]
+[1] "2001-03-31"
+
+[[15]]
+[1] "2001-03-31"
+
+[[16]]
+[1] "2001-03-31"
+
+[[17]]
+[1] "2001-03-31"
+
+[[18]]
+[1] "2001-03-31"
+
+[[19]]
+[1] "2001-03-31"
+
+[[20]]
+[1] "2001-03-31"
+
+[[21]]
+[1] "2001-03-31"
+
+[[22]]
+[1] "2001-03-31"
+
+[[23]]
+[1] "2001-03-31"
+
+[[24]]
+[1] "2001-03-31"
+
+[[25]]
+[1] "2001-03-31"
+
+[[26]]
+[1] "2001-03-31"
+
+[[27]]
+[1] "2001-03-31"
+
+ [1] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[11] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[21] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[1] 1 2
+a b 
+1 2 
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+1   2001-03-31           ENT        1       1
+2   2001-03-31           LEO        1       1
+3   2001-03-31          NARR        1       1
+4   2001-03-31            RC        1       1
+5   2001-03-31           RCA        1       1
+6   2001-03-31           RCB        1       1
+7   2001-03-31           RCD        1       1
+8   2001-03-31           RCE        1       1
+9   2001-03-31          RCEI        1       1
+10  2001-03-31         RCEII        1       1
+11  2001-03-31           RCF        1       1
+12  2001-03-31           RCG        1       1
+13  2001-03-31           RCH        1       1
+14  2001-03-31           RCK        1       1
+15  2001-03-31           RCL        1       1
+16  2001-03-31           RCM        1       1
+17  2001-03-31           RCN        1       1
+18  2001-03-31           RCO        1       1
+19  2001-03-31           RCR        1       2
+20  2001-03-31           RCR        2       2
+21  2001-03-31           RCS        1       1
+22  2001-03-31            RI        1       1
+23  2001-03-31           RIA        1       1
+24  2001-03-31          RIBI        1       1
+25  2001-03-31         RIBII        1       1
+26  2001-03-31           RID        1       1
+27  2001-03-31           RIE        1       1
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>         <chr>    <chr>  
+ 1 2001-03-31  ENT           1        1      
+ 2 2001-03-31  LEO           1        1      
+ 3 2001-03-31  NARR          1        1      
+ 4 2001-03-31  RC            1        1      
+ 5 2001-03-31  RCA           1        1      
+ 6 2001-03-31  RCB           1        1      
+ 7 2001-03-31  RCD           1        1      
+ 8 2001-03-31  RCE           1        1      
+ 9 2001-03-31  RCEI          1        1      
+10 2001-03-31  RCEII         1        1      
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+$PART_NUM
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1
+
+$PART_OF
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 1 1 1 1
+
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+$REPORT_DATE
+ [1] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[11] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[21] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+
+$SCHEDULE_CODE
+ [1] "ENT"   "LEO"   "NARR"  "RC"    "RCA"   "RCB"   "RCD"   "RCE"   "RCEI"  "RCEII" "RCF"   "RCG"   "RCH"   "RCK"   "RCL"   "RCM"   "RCN"  
+[18] "RCO"   "RCR"   "RCR"   "RCS"   "RI"    "RIA"   "RIBI"  "RIBII" "RID"   "RIE"  
+
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+$REPORT_DATE
+ [1] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[11] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[21] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+
+$SCHEDULE_CODE
+ [1] "ENT"   "LEO"   "NARR"  "RC"    "RCA"   "RCB"   "RCD"   "RCE"   "RCEI"  "RCEII" "RCF"   "RCG"   "RCH"   "RCK"   "RCL"   "RCM"   "RCN"  
+[18] "RCO"   "RCR"   "RCR"   "RCS"   "RI"    "RIA"   "RIBI"  "RIBII" "RID"   "RIE"  
+
+$REPORT_DATE
+ [1] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[11] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[21] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+
+$SCHEDULE_CODE
+ [1] "ENT"   "LEO"   "NARR"  "RC"    "RCA"   "RCB"   "RCD"   "RCE"   "RCEI"  "RCEII" "RCF"   "RCG"   "RCH"   "RCK"   "RCL"   "RCM"   "RCN"  
+[18] "RCO"   "RCR"   "RCR"   "RCS"   "RI"    "RIA"   "RIBI"  "RIBII" "RID"   "RIE"  
+
+$PART_NUM
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1
+
+$PART_OF
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 1 1 1 1 1 1 1
+
+function (x, y, ...) 
+UseMethod("intersect")
+<bytecode: 0x55c10a466130>
+<environment: namespace:generics>
+function (x, y) 
+{
+    if (is.null(x) || is.null(y)) 
+        return(NULL)
+    u <- as.vector(x)
+    v <- as.vector(y)
+    c(u[!duplicated(unclass(u)) & (match(u, v, 0L) > 0L)], v[numeric()])
+}
+<bytecode: 0x55c10864d748>
+<environment: namespace:base>
+$REPORT_DATE
+ [1] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[11] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+[21] "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31" "2001-03-31"
+
+$SCHEDULE_CODE
+ [1] "ENT"   "LEO"   "NARR"  "RC"    "RCA"   "RCB"   "RCD"   "RCE"   "RCEI"  "RCEII" "RCF"   "RCG"   "RCH"   "RCK"   "RCL"   "RCM"   "RCN"  
+[18] "RCO"   "RCR"   "RCR"   "RCS"   "RI"    "RIA"   "RIBI"  "RIBII" "RID"   "RIE"  
+
+# A tibble: 27 × 4
+   REPORT_DATE SCHEDULE_CODE PART_NUM PART_OF
+   <chr>       <chr>            <dbl>   <dbl>
+ 1 2001-03-31  ENT                  1       1
+ 2 2001-03-31  LEO                  1       1
+ 3 2001-03-31  NARR                 1       1
+ 4 2001-03-31  RC                   1       1
+ 5 2001-03-31  RCA                  1       1
+ 6 2001-03-31  RCB                  1       1
+ 7 2001-03-31  RCD                  1       1
+ 8 2001-03-31  RCE                  1       1
+ 9 2001-03-31  RCEI                 1       1
+10 2001-03-31  RCEII                1       1
+# … with 17 more rows
+# A tibble: 0 × 4
+# … with 4 variables: REPORT_DATE <chr>, SCHEDULE_CODE <chr>, PART_NUM <dbl>, PART_OF <dbl>
+character(0)
+               FFIEC CDR Call Bulk All Schedules 03312001.zip                FFIEC CDR Call Bulk All Schedules 03312002.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312002.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312003.zip                FFIEC CDR Call Bulk All Schedules 03312004.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312004.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312005.zip                FFIEC CDR Call Bulk All Schedules 03312006.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312006.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312007.zip                FFIEC CDR Call Bulk All Schedules 03312008.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312008.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312009.zip                FFIEC CDR Call Bulk All Schedules 03312010.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312010.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312011.zip                FFIEC CDR Call Bulk All Schedules 03312012.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312012.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312013.zip                FFIEC CDR Call Bulk All Schedules 03312014.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312014.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312015.zip                FFIEC CDR Call Bulk All Schedules 03312016.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312016.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312017.zip                FFIEC CDR Call Bulk All Schedules 03312018.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312018.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312019.zip                FFIEC CDR Call Bulk All Schedules 03312020.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312020.zip" 
+               FFIEC CDR Call Bulk All Schedules 03312021.zip                FFIEC CDR Call Bulk All Schedules 03312022.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312021.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312022.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302001.zip                FFIEC CDR Call Bulk All Schedules 06302002.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302002.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302003.zip                FFIEC CDR Call Bulk All Schedules 06302004.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302004.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302005.zip                FFIEC CDR Call Bulk All Schedules 06302006.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302006.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302007.zip                FFIEC CDR Call Bulk All Schedules 06302008.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302008.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302009.zip                FFIEC CDR Call Bulk All Schedules 06302010.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302010.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302011.zip                FFIEC CDR Call Bulk All Schedules 06302012.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302012.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302013.zip                FFIEC CDR Call Bulk All Schedules 06302014.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302014.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302015.zip                FFIEC CDR Call Bulk All Schedules 06302016.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302016.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302017.zip                FFIEC CDR Call Bulk All Schedules 06302018.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302018.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302019.zip                FFIEC CDR Call Bulk All Schedules 06302020.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302020.zip" 
+               FFIEC CDR Call Bulk All Schedules 06302021.zip                FFIEC CDR Call Bulk All Schedules 09302001.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302021.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302001.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302002.zip                FFIEC CDR Call Bulk All Schedules 09302003.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302002.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302003.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302004.zip                FFIEC CDR Call Bulk All Schedules 09302005.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302004.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302005.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302006.zip                FFIEC CDR Call Bulk All Schedules 09302007.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302006.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302007.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302008.zip                FFIEC CDR Call Bulk All Schedules 09302009.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302008.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302009.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302010.zip                FFIEC CDR Call Bulk All Schedules 09302011.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302010.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302011.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302012.zip                FFIEC CDR Call Bulk All Schedules 09302013.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302012.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302013.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302014.zip                FFIEC CDR Call Bulk All Schedules 09302015.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302014.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302015.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302016.zip                FFIEC CDR Call Bulk All Schedules 09302017.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302016.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302017.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302018.zip                FFIEC CDR Call Bulk All Schedules 09302019.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302018.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302019.zip" 
+               FFIEC CDR Call Bulk All Schedules 09302020.zip                FFIEC CDR Call Bulk All Schedules 09302021.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302020.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302021.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312001.zip                FFIEC CDR Call Bulk All Schedules 12312002.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312002.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312003.zip                FFIEC CDR Call Bulk All Schedules 12312004.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312004.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312005.zip                FFIEC CDR Call Bulk All Schedules 12312006.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312006.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312007.zip                FFIEC CDR Call Bulk All Schedules 12312008.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312008.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312009.zip                FFIEC CDR Call Bulk All Schedules 12312010.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312010.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312011.zip                FFIEC CDR Call Bulk All Schedules 12312012.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312012.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312013.zip                FFIEC CDR Call Bulk All Schedules 12312014.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312014.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312015.zip                FFIEC CDR Call Bulk All Schedules 12312016.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312016.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312017.zip                FFIEC CDR Call Bulk All Schedules 12312018.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312018.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312019.zip                FFIEC CDR Call Bulk All Schedules 12312020.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312020.zip" 
+               FFIEC CDR Call Bulk All Schedules 12312021.zip 
+"./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312021.zip" 
+ [1] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312002.zip"
+ [3] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312004.zip"
+ [5] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312006.zip"
+ [7] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312008.zip"
+ [9] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312010.zip"
+[11] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312012.zip"
+[13] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312014.zip"
+[15] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312016.zip"
+[17] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312018.zip"
+[19] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312020.zip"
+[21] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312021.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312022.zip"
+[23] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302002.zip"
+[25] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302004.zip"
+[27] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302006.zip"
+[29] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302008.zip"
+[31] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302010.zip"
+[33] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302012.zip"
+[35] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302014.zip"
+[37] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302016.zip"
+[39] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302018.zip"
+[41] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302020.zip"
+[43] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302021.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302001.zip"
+[45] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302002.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302003.zip"
+[47] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302004.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302005.zip"
+[49] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302006.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302007.zip"
+[51] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302008.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302009.zip"
+[53] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302010.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302011.zip"
+[55] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302012.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302013.zip"
+[57] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302014.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302015.zip"
+[59] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302016.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302017.zip"
+[61] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302018.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302019.zip"
+[63] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302020.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302021.zip"
+[65] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312002.zip"
+[67] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312004.zip"
+[69] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312006.zip"
+[71] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312008.zip"
+[73] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312010.zip"
+[75] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312012.zip"
+[77] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312014.zip"
+[79] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312016.zip"
+[81] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312018.zip"
+[83] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312020.zip"
+[85] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312021.zip"
+ [1] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312002.zip"
+ [3] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312004.zip"
+ [5] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312006.zip"
+ [7] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312008.zip"
+ [9] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312010.zip"
+[11] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312012.zip"
+[13] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312014.zip"
+[15] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312016.zip"
+[17] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312018.zip"
+[19] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312020.zip"
+[21] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312021.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 03312022.zip"
+[23] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302002.zip"
+[25] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302004.zip"
+[27] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302006.zip"
+[29] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302008.zip"
+[31] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302010.zip"
+[33] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302012.zip"
+[35] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302014.zip"
+[37] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302016.zip"
+[39] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302018.zip"
+[41] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302020.zip"
+[43] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 06302021.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302001.zip"
+[45] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302002.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302003.zip"
+[47] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302004.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302005.zip"
+[49] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302006.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302007.zip"
+[51] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302008.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302009.zip"
+[53] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302010.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302011.zip"
+[55] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302012.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302013.zip"
+[57] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302014.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302015.zip"
+[59] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302016.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302017.zip"
+[61] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302018.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302019.zip"
+[63] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302020.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 09302021.zip"
+[65] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312001.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312002.zip"
+[67] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312003.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312004.zip"
+[69] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312005.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312006.zip"
+[71] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312007.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312008.zip"
+[73] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312009.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312010.zip"
+[75] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312011.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312012.zip"
+[77] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312013.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312014.zip"
+[79] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312015.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312016.zip"
+[81] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312017.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312018.zip"
+[83] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312019.zip" "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312020.zip"
+[85] "./zips/ffiec/FFIEC CDR Call Bulk All Schedules 12312021.zip"

@@ -70,3 +70,146 @@ confirm_and_delete <- function(file_path, prompt = glue('Delete {file_path}?')) 
   # Signal an error if permission to delete is denied.
   stop(glue('Permission to delete {file_path} denied. Exiting...'))
 }
+
+
+
+#' Get the components of a schedule filename in easily-referenced format.
+#'
+#' @param sch The name of an FFIEC tab-separated schedule file.
+#' @return A named vector containing a value for `report_date`, `sch_code`,
+#' `part_num` (default `1`) and `part_of` (default `1`)
+#' and number of parts available for the schedule.
+#' @export
+#' @examples
+#' > schedule_name_components('FFIEC CDR Call Schedule RCB 03312012(1 of 2).txt')
+#'  report_date     sch_code     part_num      part_of 
+#' "2012-03-31"        "RCB"          "1"          "2" 
+schedule_name_components <- function(sch) {
+  sch_info <- c(report_date = extract_ffiec_datestr(sch),
+                sch_code    = extract_schedule_code(sch))
+  part_codes <- callReports::extract_part_codes(sch)
+  return(c(sch_info, part_codes))
+}
+
+#' Extract the variable names from an FFIEC schedule file
+#'
+#' @param sch_unzipped The path to an FFIEC schedule file on disk.
+#' @return A character vector containing the variable names found in the top line.
+#' @importFrom readr read_lines
+#' @export
+#' @examples
+#' extract_ffiec_names('FFIEC CDR Call Schedule RCCII 06302002.txt')
+extract_ffiec_names <- function(sch_unzipped) { 
+  read_lines(sch_unzipped, n_max = 1, progress = FALSE) %>% 
+    callReports::str_split1('\\t')
+}
+
+#' Extract the variable descriptions from an FFIEC schedule file
+#'
+#' @param sch_unzipped The path to an FFIEC schedule file on disk.
+#' @return A character vector containing the variable descriptions found in the 
+#' second line of the file.
+#' @importFrom readr read_lines
+#' @export
+#' @examples
+#' extract_ffiec_descs('FFIEC CDR Call Schedule RCCII 06302002.txt')
+extract_ffiec_descs <- function(sch_unzipped) { 
+  read_lines(sch_unzipped, skip = 1, n_max = 1, progress = FALSE) %>%
+    callReports::str_split1('\\t')
+}
+
+#' Extract the date from an FFIEC schedule filename in `YYYY-MM-DD` format
+#'
+#' @param filename The name of an FFIEC zip or schedule file, existent or not.
+#' Really just any character value with an eight-digit string that can be 
+#' interpreted as a date in `MMDDYYYY` format.
+#' @return A character value in `YYYY-MM-DD` format containing the date of the
+#' report corresponding to that schedule filename.
+#' @importFrom lubridate mdy
+#' @importFrom stringr str_extract
+#' @export
+#' @examples
+#' extract_ffiec_datestr('FFIEC CDR Call Schedule RCCII 06302002.txt')
+extract_ffiec_datestr <- function(filename) {
+  as.character(mdy(str_extract(filename, '[[:digit:]]{8}')))
+}
+
+#' Extract the alphabetical schedule code from an FFIEC schedule filename
+#'
+#' @param sch The name of an FFIEC schedule file, existent or not.
+#' @return A character value containing the alphabetical schedule code 
+#' corresponding to the given schedule filename.
+#' @importFrom stringr str_match
+#' @export
+#' @examples
+#' > extract_schedule_code('FFIEC CDR Call Schedule RCCII 06302002.txt')
+#' [1] "RCCII"
+extract_schedule_code <- function(sch) {
+  str_match(sch, '([[:alpha:]]+) [[:digit:]]{8}')[1, 2]
+}
+
+#' Extract the schedule part number from an FFIEC schedule filename
+#'
+#' If data for a schedule is issued in one part (true for most), then it will
+#' be determined to be part 1 of 1.
+#'
+#' @param sch The name of an FFIEC schedule file, existent or not.
+#' @return A numeric vector with two named values: `part_num` and `part_of`,
+#' with both being `1` if no part is indicated in the filename.
+#' 
+#' @importFrom stringr str_match
+#' @export
+#' @examples
+#' > extract_part_code('FFIEC CDR Call Schedule RCB 03312013(2 of 2).txt')
+#' part_num  part_of 
+#'        1        2 
+extract_part_codes <- function(sch) {
+  rx <- '([[:digit:]]{8})(\\(([[:digit:]]) of ([[:digit:]])\\))*'
+  part_codes <- str_match(sch, rx)
+  if (is.na(part_codes[1, 3])) return(c(part_num = 1, part_of = 1))
+  return(c(part_num = as.numeric(part_codes[1, 4]), 
+           part_of  = as.numeric(part_codes[1, 5])))
+}
+
+#' Extract the values from one line of an FFIEC schedule file
+#' 
+#' @param sch_line A line from an FFIEC tab-separated schedule file
+#' @return A character vector of the values in that line
+#' @export
+#' @examples
+#' extract_values('12311  2031  298310')
+#' [1] "12311" "2031" "298310"
+extract_values <- function(sch_line) {
+  sch_line %>% callReports::str_split1('\\t')
+}
+
+#' Rebuild an FFIEC schedule filename from its relevant parts
+#'
+#' From the reporting date, schedule code, part number and part code given as
+#' parameters, construct a filename in the pattern of those found in the zipped
+#' FFIEC schedule files.
+#'
+#' The `SUMMARY` table in the FFIEC database contains five columns that indicate
+#' the dates, schedule codes, and part numbers of FFIEC schedule files that have
+#' already been extracted to the database. This function takes parameters 
+#' describing a hypothetical schedule file, in the format they would be seen in
+#' the aforementioned `SUMMARY` table, and outputs a filename in the pattern
+#' `FFIEC CDR Call Schedule {sch_code} {rep_date}{part_str}.txt`, where
+#' `part_str` is simply the `NULL` string when `part_of` is equal to `1`, as only
+#' those schedule files that are in fact divided into parts have their part
+#' numbers indicated in their filename.
+#'
+#' @param rep_date A date string in ISO `YYYY-MM-DD` format
+#' @param sch_code An FFIEC schedule code
+#' @param part_num A part number
+#' @param part_of The number of parts the schedule described by these parameters
+#' is divided into.
+#' @return A character valued filename constructed from the given parameters.
+#' @export
+build_schedule_filename <- function(rep_date, sch_code, part_num, part_of) {
+  part_str <- 
+    ifelse(as.numeric(part_of) == 1, '', glue('({part_num} of {part_of})'))
+  sch_filename <- 
+    glue('FFIEC CDR Call Schedule {sch_code} {rep_date}{part_str}.txt')
+  return(sch_filename)
+}
