@@ -288,20 +288,19 @@ extract_ffiec_obs <- function(sch_unzipped) {
   report_date <- callReports::extract_ffiec_datestr(sch_unzipped)
   log_info(glue('Extracting observations...'))
   
-  df_obs <- tryCatch(
-    callReports::parse_ffiec_obs(sch_unzipped),
+  df_obs <- tibble()
+  tryCatch(
+    df_obs <- callReports::parse_ffiec_obs(sch_unzipped),
     warning = function(w) {
       log_warn('Warning issued trying to extract. Running repair function...')
       sch_fixed <- callReports::fix_broken_ffiec_obs(sch_unzipped)
-      if (sch_fixed == sch_unzipped) {
-        log_warn('Repair function found no unwanted newlines or tabs.')
-        log_warn('You may wish to investigate both the original input schedule')
-        log_warn(
-          glue('file {sch_unzipped} and the extracted output in the database'))
-        log_warn(
-          glue('anomalies in table {sch_code} records for {report_date}.'))
-      } 
-      suppressWarnings(parse_ffiec_obs(sch_fixed))
+      tryCatch(
+        df_obs <- callReports::parse_ffiec_obs(sch_fixed),
+        warning = function(w) {
+          log_warn('Warning still issued after repairing. You may wish to')
+          log_warn(glue('investigate table {sch_code} for {report_date}.'))
+        }
+      )
     })
   
   if (ncol(df_obs) < 2) {
