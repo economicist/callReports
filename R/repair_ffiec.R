@@ -29,7 +29,7 @@
 #' @importFrom glue glue
 #' @importFrom purrr map_dfr
 #' @importFrom readr read_lines write_lines
-#' @importFrom rlog log_info log_fatal log_warn
+#' @importFrom rlog log_info log_fatal
 #' @importFrom stringr str_count str_detect str_match str_replace
 #' @export
 #' @examples

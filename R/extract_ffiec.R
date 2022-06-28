@@ -307,7 +307,7 @@ extract_ffiec_codebook <- function(sch_unzipped) {
 #' @return NULL
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate select
-#' @importFrom rlog log_info log_warn
+#' @importFrom rlog log_info
 #' @importFrom tidyr pivot_longer
 #' @export
 #' @examples 
@@ -323,13 +323,13 @@ extract_ffiec_obs <- function(sch_unzipped) {
   df_obs <- tryCatch(
     df_obs <- callReports::parse_ffiec_obs(sch_unzipped),
     warning = function(w) {
-      log_warn('Warning issued trying to extract. Running repair function...')
+      log_info('Warning issued trying to extract. Running repair function...')
       sch_fixed <- callReports::fix_broken_ffiec_obs(sch_unzipped)
       tryCatch(
         df_obs <- callReports::parse_ffiec_obs(sch_fixed),
         warning = function(w) {
-          log_warn('Warning still issued after repairing. You may wish to')
-          log_warn(glue('investigate table {sch_code} for {report_date}.'))
+          log_info('Warning still issued after repairing. You may wish to')
+          log_info(glue('investigate table {sch_code} for {report_date}.'))
           df_obs <- suppressWarnings(callReports::parse_ffiec_obs(sch_fixed))
         }
       )
