@@ -28,16 +28,10 @@ extract_all_ffiec_zips <-
       str_replace_all('\\s', '_')
     log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
     
-    tryCatch(sink(NULL), 
-             warning = function(w) {
-               log_info('No log is currently open. Will begin logging.')
-             })
-    sink(log_filename, split = TRUE)
     list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
       pwalk(function(zip_file, sch_file) {
         callReports::extract_ffiec_schedule(ffiec_db, zip_file, sch_file)
       })
-    sink(NULL)
   }
 
 #' List ZIP and schedule files containing FFIEC bulk call report data
