@@ -5,5 +5,4 @@
 .DS_Store
 
 testing/db/
-testing/zips-ffiec/
-testing/zips-chifed/
+testing/zips/

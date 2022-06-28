@@ -1,6 +1,6 @@
 #' Create a `function` that opens an SQLite connection on command.
 #' 
-#' `db_connect_sqlite()` returns a `function` that allows an SQLite connection
+#' `db_connector_sqlite()` returns a `function` that allows an SQLite connection
 #' to be opened whenever necessary by other functions in this package.
 #' 
 #' @param sqlite_db_path The path to an SQLite database file. Must be in an

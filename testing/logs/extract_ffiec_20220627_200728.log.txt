@@ -1,0 +1,135 @@
+2022-06-27 20:07:28 [INFO] 2001-03-31 ENT 
+2022-06-27 20:07:28 [INFO] Extracting codebook...
+2022-06-27 20:07:28 [INFO] Extracting observations...
+2022-06-27 20:07:28 [INFO] Parsing observations in FFIEC CDR Call Schedule ENT 03312001.txt
+# A tibble: 8,857 × 7
+   IDRSSD RSSD9017 RSSD9050 RSSD9130 RSSD9200 RSSD9220 TEXT4087
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 2 242    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 3 279    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 4 354    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 5 439    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 6 457    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 7 505    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 8 1146   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 9 1155   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+10 1351   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+# … with 8,847 more rows
+2022-06-27 20:07:28 [INFO] Writing 0 observations to the database...
+
+2022-06-27 20:07:28 [INFO] 2001-03-31 LEO 
+2022-06-27 20:07:29 [INFO] Extracting codebook...
+2022-06-27 20:07:29 [INFO] Extracting observations...
+2022-06-27 20:07:29 [INFO] Parsing observations in FFIEC CDR Call Schedule LEO 03312001.txt
+# A tibble: 8,857 × 9
+   IDRSSD RCFD3561 RCFD3562 RCFD7701 RCFD7702 RCON3561 RCON3562 RCON7701 RCON7702
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     <NA>     <NA>     <NA>     <NA>     0        0        0.0000   0.0000  
+ 2 242    <NA>     <NA>     <NA>     <NA>     2        329      0.0800   0.0850  
+ 3 279    <NA>     <NA>     <NA>     <NA>     2        27       0.0745   0.0800  
+ 4 354    <NA>     <NA>     <NA>     <NA>     2        4        0.1050   0.1050  
+ 5 439    <NA>     <NA>     <NA>     <NA>     1        14       0.0850   0.0850  
+ 6 457    <NA>     <NA>     <NA>     <NA>     1        3        0.0675   0.0675  
+ 7 505    <NA>     <NA>     <NA>     <NA>     0        0        0.0000   0.0000  
+ 8 1146   <NA>     <NA>     <NA>     <NA>     0        0        0.0000   0.0000  
+ 9 1155   <NA>     <NA>     <NA>     <NA>     0        0        0.0000   0.0000  
+10 1351   <NA>     <NA>     <NA>     <NA>     4        60       0.0900   0.0900  
+# … with 8,847 more rows
+2022-06-27 20:07:29 [INFO] Writing 35428 observations to the database...
+
+2022-06-27 20:07:29 [INFO] 2001-03-31 NARR 
+2022-06-27 20:07:29 [INFO] Extracting codebook...
+2022-06-27 20:07:29 [INFO] Extracting observations...
+2022-06-27 20:07:29 [INFO] Parsing observations in FFIEC CDR Call Schedule NARR 03312001.txt
+# A tibble: 8,857 × 3
+   IDRSSD RCON6979 TEXT6980
+   <chr>  <chr>    <chr>   
+ 1 37     false    <NA>    
+ 2 242    false    <NA>    
+ 3 279    false    <NA>    
+ 4 354    false    <NA>    
+ 5 439    false    <NA>    
+ 6 457    false    <NA>    
+ 7 505    false    <NA>    
+ 8 1146   false    <NA>    
+ 9 1155   false    <NA>    
+10 1351   false    <NA>    
+# … with 8,847 more rows
+2022-06-27 20:07:29 [INFO] Writing 7383 observations to the database...
+
+2022-06-27 20:07:29 [INFO] 2001-03-31 RC 
+2022-06-27 20:07:29 [INFO] Extracting codebook...
+2022-06-27 20:07:29 [INFO] Extracting observations...
+2022-06-27 20:07:29 [INFO] Parsing observations in FFIEC CDR Call Schedule RC 03312001.txt
+# A tibble: 8,857 × 77
+   IDRSSD RCFD0071 RCFD0081 RCFD0426 RCFD1350 RCFD1754 RCFD1773 RCFD2130 RCFD2145 RCFD2150 RCFD2155 RCFD2160 RCFD2170 RCFD2800 RCFD2920
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 2 242    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 3 279    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 4 354    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 5 439    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 6 457    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 7 505    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 8 1146   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 9 1155   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+10 1351   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+# … with 8,847 more rows, and 62 more variables: RCFD2930 <chr>, RCFD2948 <chr>, RCFD3000 <chr>, RCFD3123 <chr>, RCFD3163 <chr>,
+#   RCFD3190 <chr>, RCFD3200 <chr>, RCFD3210 <chr>, RCFD3230 <chr>, RCFD3300 <chr>, RCFD3545 <chr>, RCFD3548 <chr>, RCFD3632 <chr>,
+#   RCFD3838 <chr>, RCFD3839 <chr>, RCFD5369 <chr>, RCFD6724 <chr>, RCFDA130 <chr>, RCFDB528 <chr>, RCFDB529 <chr>, RCFDB530 <chr>,
+#   RCFN2200 <chr>, RCFN6631 <chr>, RCFN6636 <chr>, RCON0071 <chr>, RCON0081 <chr>, RCON0426 <chr>, RCON1350 <chr>, RCON1754 <chr>,
+#   RCON1773 <chr>, RCON2130 <chr>, RCON2145 <chr>, RCON2150 <chr>, RCON2155 <chr>, RCON2160 <chr>, RCON2170 <chr>, RCON2200 <chr>,
+#   RCON2800 <chr>, RCON2920 <chr>, RCON2930 <chr>, RCON2948 <chr>, RCON3000 <chr>, RCON3123 <chr>, RCON3163 <chr>, RCON3190 <chr>,
+#   RCON3200 <chr>, RCON3210 <chr>, RCON3230 <chr>, RCON3300 <chr>, RCON3545 <chr>, RCON3548 <chr>, RCON3632 <chr>, RCON3838 <chr>, …
+2022-06-27 20:07:30 [INFO] Writing 338055 observations to the database...
+
+2022-06-27 20:07:30 [INFO] 2001-03-31 RCA 
+2022-06-27 20:07:30 [INFO] Extracting codebook...
+2022-06-27 20:07:30 [INFO] Extracting observations...
+2022-06-27 20:07:30 [INFO] Parsing observations in FFIEC CDR Call Schedule RCA 03312001.txt
+# A tibble: 8,857 × 18
+   IDRSSD RCFD0010 RCFD0022 RCFD0073 RCFD0074 RCFD0083 RCFD0085 RCFD0090 RCON0010 RCON0020 RCON0070 RCON0073 RCON0074 RCON0080 RCON0082
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     1729     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 2 242    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     618      <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 3 279    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     1507     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 4 354    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     224      <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 5 439    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     8430     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 6 457    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     666      <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 7 505    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     6257     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 8 1146   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     11553    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 9 1155   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     4355     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+10 1351   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     1881     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+# … with 8,847 more rows, and 3 more variables: RCON0083 <chr>, RCON0085 <chr>, RCON0090 <chr>
+2022-06-27 20:07:31 [INFO] Writing 21031 observations to the database...
+
+2022-06-27 20:07:31 [INFO] 2001-03-31 RCB 
+2022-06-27 20:07:31 [INFO] Extracting codebook...
+2022-06-27 20:07:31 [INFO] Extracting observations...
+2022-06-27 20:07:31 [INFO] Parsing observations in FFIEC CDR Call Schedule RCB 03312001.txt
+
+> if (interactive()) rm(list = ls(all = TRUE))
+
+> if (commandArgs()[1] == 'RStudio') {
++   setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
++ }
+
+> library(magrittr)
+
+> library(tidyverse)
+
+> if (file.exists('../callReports.Rproj')) {
++   devtools::load_all('..')
++ } else {
++   if (!nzchar(system.file(package = 'callReports'))) {
++     de .... [TRUNCATED] 
+
+> # Don't post a message about the column types imported -- we need to convert
+> # everything to character to be pivotable.
+> options(readr.show_col_t .... [TRUNCATED] 
+
+> # unlink('./db/ffiec.sqlite')
+> ffiec_db <- db_connector_sqlite('~/db/callreports/ffiec.sqlite')
+
+> extract_all_ffiec_zips(ffiec_db, '~/data/callreports-zips-ffiec')

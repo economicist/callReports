@@ -12,31 +12,33 @@
 #' containing the ZIP files
 #' @return NULL
 #' @importFrom magrittr %>%
-#' @importFrom purrr pwalk
+#' @importFrom DBI dbListTables dbRemoveTable dbDisconnect
+#' @importFrom purrr walk pwalk
 #' @importFrom rlog log_info
 #' @export
 #' @examples
 #' db_connector <- db_connector_sqlite('./db/ffiec.sqlite')
 #' extract_all_ffiec_zips_to_db(db_connector, './zips-ffiec')
-extract_all_ffiec_zips <- function(db_connector, ffiec_zip_path) {
-  if (!dir.exists('./logs')) dir.create('./logs')
-  
-  dttm_str <- 
-    str_remove_all(Sys.time(), '[-:]') %>% 
-    str_replace_all('\\s', '_')
-  log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
-  
-  tryCatch(sink(NULL), 
-           warning = function(w) {
-             log_info('No log is currently open. Will begin logging.')
-           })
-  sink(log_filename, split = TRUE)
-  list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
-    pwalk(function(zip_file, sch_file) {
-      callReports::extract_ffiec_schedule(ffiec_db, zip_file, sch_file)
-    })
-  sink(NULL)
-}
+extract_all_ffiec_zips <- 
+  function(db_connector, ffiec_zip_path, overwrite = FALSE) {
+    if (!dir.exists('./logs')) dir.create('./logs')
+    
+    dttm_str <- 
+      str_remove_all(Sys.time(), '[-:]') %>% 
+      str_replace_all('\\s', '_')
+    log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
+    
+    tryCatch(sink(NULL), 
+             warning = function(w) {
+               log_info('No log is currently open. Will begin logging.')
+             })
+    sink(log_filename, split = TRUE)
+    list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
+      pwalk(function(zip_file, sch_file) {
+        callReports::extract_ffiec_schedule(ffiec_db, zip_file, sch_file)
+      })
+    sink(NULL)
+  }
 
 #' List ZIP and schedule files containing FFIEC bulk call report data
 #' 
@@ -75,15 +77,21 @@ list_ffiec_zips_and_schedules <- function(ffiec_zip_path) {
 #' containing the ZIP files
 #' @return A character vector containing the full paths of valid ZIP files
 #' @importFrom magrittr %>%
+#' @importFrom dplyr arrange
 #' @importFrom purrr map_chr
+#' @importFrom tibble tibble
 #' @export
 #' @examples
 #' list_ffiec_zips('./zips-ffiec')
 list_ffiec_zips <- function(ffiec_zip_path) {
-  list.files(ffiec_zip_path,
-             pattern = 
-               '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$') %>%
-    map_chr(function(filename) paste0(ffiec_zip_path, '/', filename))
+  rx_pattern <- '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$'
+  list.files(ffiec_zip_path, pattern = rx_pattern) %>%
+    map_dfr(function(filename) {
+      tibble(rep_date = extract_ffiec_datestr(filename),
+             filename = paste0(ffiec_zip_path, '/', filename))
+    }) %>%
+    arrange(rep_date) %>%
+    getElement('filename')
 }
 
 #' List schedule files within an FFIEC Call Report ZIP
@@ -178,7 +186,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
                      SCHEDULE_CODE = sch_code,
                      PART_NUM      = sch_info[3],
                      PART_OF       = sch_info[4],
-                     N_OBS         = nrow(df_obs))
+                     N_OBS         = ifelse(is.null(df_obs), 0, nrow(df_obs)))
   
   callReports::write_ffiec_schedule(db_connector, sch_code, df_obs, df_codes, df_summ)
   unlink(sch_unzipped)
@@ -202,8 +210,8 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
 #'
 #' @param db_connector A `function` created by one of the `db_connector_*()`
 #' functions found in this package. It should be passed without the `()`
-#' @param sch_code The code of the schedule you're writing, to tell the database
-#' which table to write to.
+#' @param tbl_name The name of the table you're writing, which should be a
+#' valid schedule code.
 #' @param df_obs A `tibble` containing the observations found in the extracted
 #' schedule file, pivoted to long form.
 #' `VALUE`)
@@ -217,20 +225,13 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
 #' @importFrom rlog log_info log_fatal
 #' @export
 write_ffiec_schedule <- 
-  function(db_connector, sch_code, df_obs, df_codes, df_summ) {
+  function(db_connector, tbl_name, df_obs, df_codes, df_summ) {
     db_conn <- db_connector()
     dbBegin(db_conn)
     tryCatch({
       dbWriteTable(db_conn, 'CODEBOOK', df_codes, append = TRUE)
       log_info(glue('Writing {nrow(df_obs)} observations to the database...'))
-      
-      tbl_needs_index <- !dbExistsTable(db_conn, sch_code)
-      dbWriteTable(db_conn, sch_code, df_obs, append = TRUE)
-      if (tbl_needs_index) {
-        dbExecute(db_conn, glue(
-          'CREATE INDEX ID_VAR_{sch_code} on {sch_code} (VAR_NAME, IDRSSD)'))
-      }
-      
+      dbWriteTable(db_conn, tbl_name, df_obs, append = TRUE)
       dbWriteTable(db_conn, 'SUMMARY', df_summ, append = TRUE)
       dbCommit(db_conn)
     },
@@ -325,25 +326,27 @@ extract_ffiec_obs <- function(sch_unzipped) {
   report_date <- callReports::extract_ffiec_datestr(sch_unzipped)
   log_info(glue('Extracting observations...'))
   
-  df_obs <- tibble()
-  tryCatch(
-    df_obs <<- callReports::parse_ffiec_obs(sch_unzipped),
+  df_obs <- tryCatch(
+    df_obs <- callReports::parse_ffiec_obs(sch_unzipped),
     warning = function(w) {
       log_warn('Warning issued trying to extract. Running repair function...')
       sch_fixed <- callReports::fix_broken_ffiec_obs(sch_unzipped)
       tryCatch(
-        df_obs <<- callReports::parse_ffiec_obs(sch_fixed),
+        df_obs <- callReports::parse_ffiec_obs(sch_fixed),
         warning = function(w) {
           log_warn('Warning still issued after repairing. You may wish to')
           log_warn(glue('investigate table {sch_code} for {report_date}.'))
-          df_obs <<- suppressWarnings(callReports::parse_ffiec_obs(sch_fixed))
+          df_obs <- suppressWarnings(callReports::parse_ffiec_obs(sch_fixed))
         }
       )
     })
   
   if (ncol(df_obs) < 2) {
     log_info('No variables to extract. Moving on...')
-    return(NULL)
+    return(tibble(IDRSSD      = as.character(NULL),
+                  REPORT_DATE = as.character(NULL),
+                  VAR_NAME    = as.character(NULL),
+                  VALUE       = as.character(NULL)))
   }
   
   df_obs %>%

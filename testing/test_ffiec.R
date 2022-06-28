@@ -20,7 +20,7 @@ if (file.exists('../callReports.Rproj')) {
 options(readr.show_col_types = FALSE)
 
 # unlink('./db/ffiec.sqlite')
-ffiec_db <- db_connector_sqlite('~/data/callreports-db/ffiec.sqlite')
+ffiec_db <- db_connector_sqlite('~/db/callreports/ffiec.sqlite', overwrite = TRUE)
 extract_all_ffiec_zips(ffiec_db, '~/data/callreports-zips-ffiec')
 
 # Here is a sample query that requests a variety of variables related to total

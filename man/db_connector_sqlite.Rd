@@ -15,7 +15,7 @@ A \code{function} that opens a connection to the database given in
 \code{sqlite_db_path}. It should be passed to other functions without the \verb{()}
 }
 \description{
-\code{db_connect_sqlite()} returns a \code{function} that allows an SQLite connection
+\code{db_connector_sqlite()} returns a \code{function} that allows an SQLite connection
 to be opened whenever necessary by other functions in this package.
 }
 \examples{

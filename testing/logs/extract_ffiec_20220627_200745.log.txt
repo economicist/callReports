@@ -1,0 +1,124 @@
+2022-06-27 20:07:45 [INFO] 2001-03-31 ENT 
+2022-06-27 20:07:45 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 20:07:45 [INFO] 2001-03-31 LEO 
+2022-06-27 20:07:45 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 20:07:45 [INFO] 2001-03-31 NARR 
+2022-06-27 20:07:45 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 20:07:45 [INFO] 2001-03-31 RC 
+2022-06-27 20:07:46 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 20:07:46 [INFO] 2001-03-31 RCA 
+2022-06-27 20:07:46 [INFO] Schedule already in database. Moving to next...
+
+2022-06-27 20:07:46 [INFO] 2001-03-31 RCB 
+2022-06-27 20:07:46 [INFO] Extracting codebook...
+2022-06-27 20:07:46 [INFO] Extracting observations...
+2022-06-27 20:07:46 [INFO] Parsing observations in FFIEC CDR Call Schedule RCB 03312001.txt
+# A tibble: 8,857 × 195
+   IDRSSD RCFD0211 RCFD0213 RCFD0416 RCFD1286 RCFD1287 RCFD1289 RCFD1290 RCFD1291 RCFD1293 RCFD1294 RCFD1295 RCFD1297 RCFD1298 RCFD1698
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 2 242    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 3 279    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 4 354    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 5 439    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 6 457    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 7 505    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 8 1146   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 9 1155   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+10 1351   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+# … with 8,847 more rows, and 180 more variables: RCFD1699 <chr>, RCFD1701 <chr>, RCFD1702 <chr>, RCFD1703 <chr>, RCFD1705 <chr>,
+#   RCFD1706 <chr>, RCFD1707 <chr>, RCFD1709 <chr>, RCFD1710 <chr>, RCFD1711 <chr>, RCFD1713 <chr>, RCFD1714 <chr>, RCFD1715 <chr>,
+#   RCFD1716 <chr>, RCFD1717 <chr>, RCFD1718 <chr>, RCFD1719 <chr>, RCFD1731 <chr>, RCFD1732 <chr>, RCFD1733 <chr>, RCFD1734 <chr>,
+#   RCFD1735 <chr>, RCFD1736 <chr>, RCFD1737 <chr>, RCFD1738 <chr>, RCFD1739 <chr>, RCFD1741 <chr>, RCFD1742 <chr>, RCFD1743 <chr>,
+#   RCFD1744 <chr>, RCFD1746 <chr>, RCFD1754 <chr>, RCFD1771 <chr>, RCFD1772 <chr>, RCFD1773 <chr>, RCFD1778 <chr>, RCFD8496 <chr>,
+#   RCFD8497 <chr>, RCFD8498 <chr>, RCFD8499 <chr>, RCFD8782 <chr>, RCFD8783 <chr>, RCFDA248 <chr>, RCFDA510 <chr>, RCFDA511 <chr>,
+#   RCFDA549 <chr>, RCFDA550 <chr>, RCFDA551 <chr>, RCFDA552 <chr>, RCFDA553 <chr>, RCFDA554 <chr>, RCFDA555 <chr>, RCFDA556 <chr>, …
+2022-06-27 20:07:47 [INFO] Writing 859278 observations to the database...
+
+2022-06-27 20:07:48 [INFO] 2001-03-31 RCD 
+2022-06-27 20:07:48 [INFO] Extracting codebook...
+2022-06-27 20:07:49 [INFO] Extracting observations...
+2022-06-27 20:07:49 [INFO] Parsing observations in FFIEC CDR Call Schedule RCD 03312001.txt
+# A tibble: 8,857 × 20
+   IDRSSD RCFD3545 RCFD3546 RCFD3547 RCFD3548 RCFN3542 RCFN3543 RCON3531 RCON3532 RCON3533 RCON3534 RCON3535 RCON3536 RCON3537 RCON3541
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 2 242    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 3 279    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 4 354    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 5 439    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 6 457    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 7 505    <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+ 8 1146   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     <NA>    
+ 9 1155   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+10 1351   <NA>     <NA>     <NA>     <NA>     <NA>     <NA>     0        0        0        0        0        0        0        0       
+# … with 8,847 more rows, and 5 more variables: RCON3543 <chr>, RCON3545 <chr>, RCON3546 <chr>, RCON3547 <chr>, RCON3548 <chr>
+2022-06-27 20:07:49 [INFO] Writing 105469 observations to the database...
+
+2022-06-27 20:07:49 [INFO] 2001-03-31 RCE 
+2022-06-27 20:07:49 [INFO] Extracting codebook...
+2022-06-27 20:07:49 [INFO] Extracting observations...
+2022-06-27 20:07:49 [INFO] Parsing observations in FFIEC CDR Call Schedule RCE 03312001.txt
+# A tibble: 8,857 × 37
+   IDRSSD RCON0352 RCON2202 RCON2203 RCON2210 RCON2213 RCON2215 RCON2216 RCON2236 RCON2343 RCON2344 RCON2365 RCON2377 RCON2385 RCON2520
+   <chr>  <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>    <chr>   
+ 1 37     5517     0        4669     7024     0        15215    0        0        0        0        0        0        38500    0       
+ 2 242    2198     0        919      2394     0        5939     0        0        0        0        0        0        12914    0       
+ 3 279    6064     0        0        1507     0        7391     0        0        0        0        0        0        64033    0       
+ 4 354    839      0        63       1148     0        1148     0        0        0        0        0        0        5764     0       
+ 5 439    12053    15       5130     26944    0        42572    0        0        0        0        0        0        97997    0       
+ 6 457    1966     0        141      1859     0        3246     0        0        0        0        0        0        13780    0       
+ 7 505    52979    24       14122    38318    0        63106    0        0        0        0        0        0        151832   0       
+ 8 1146   36222    0        1406     45124    0        71682    0        0        0        0        0        0        187107   0       
+ 9 1155   536      7        1098     11859    0        33093    0        0        0        0        0        0        72089    0       
+10 1351   2618     3        2170     8072     0        13949    0        0        0        0        0        0        52948    0       
+# … with 8,847 more rows, and 22 more variables: RCON2530 <chr>, RCON2604 <chr>, RCON5590 <chr>, RCON6648 <chr>, RCON6810 <chr>,
+#   RCON6835 <chr>, RCONA241 <chr>, RCONA242 <chr>, RCONA243 <chr>, RCONA244 <chr>, RCONA579 <chr>, RCONA580 <chr>, RCONA581 <chr>,
+#   RCONA582 <chr>, RCONA584 <chr>, RCONA585 <chr>, RCONA586 <chr>, RCONA587 <chr>, RCONB549 <chr>, RCONB550 <chr>, RCONB551 <chr>,
+#   RCONB552 <chr>
+2022-06-27 20:07:49 [INFO] Writing 309995 observations to the database...
+
+2022-06-27 20:07:50 [INFO] 2001-03-31 RCEI 
+2022-06-27 20:07:50 [INFO] Extracting codebook...
+
+> #' Extract an entire directory of FFIEC ZIP files to a database
+> #'
+> #' `extract_all_ffiec_zips_to_db()` examines all ZIP files in `ffiec_zip_path .... [TRUNCATED] 
+
+> #' List ZIP and schedule files containing FFIEC bulk call report data
+> #' 
+> #' `list_ffiec_zips_and_schedules()` provides an easiy traversable dat .... [TRUNCATED] 
+
+> #' List ZIP files containing Call Report data from the FFIEC
+> #' 
+> #' `list_ffiec_zips()` lists valid ZIP files for extraction in a given director .... [TRUNCATED] 
+
+> #' List schedule files within an FFIEC Call Report ZIP
+> #' 
+> #' `list_ffiec_schedules()` lists the schedule files contained within a given
+> #' ZI .... [TRUNCATED] 
+
+> #' Extract the FFIEC codebook and all observations for a single schedule
+> #' 
+> #' `extract_ffiec_schedule()` accepts a ZIP file, extracts one of i .... [TRUNCATED] 
+
+> #' Write extracted FFIEC schedule data to a database
+> #'
+> #' `write_ffiec_schedule()` writes the observation, codebook, and summary data
+> #' gene .... [TRUNCATED] 
+
+> #' Extract the FFIEC codebook information for a given schedule file
+> #'
+> #' `extract_ffiec_codebook()` accepts a text file containing tab-separate .... [TRUNCATED] 
+
+> #' Extract the observations for a given FFIEC schedule file to a database
+> #'
+> #' `extract_ffiec_obs()` accepts a text file containing tab-separat .... [TRUNCATED] 
+
+> #' Parse the observations in a given FFIEC schedule file for processing in `R`
+> #'
+> #' `parse_ffiec_obs()` accepts a text file containing tab-sepa .... [TRUNCATED] 

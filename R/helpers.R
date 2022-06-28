@@ -71,8 +71,6 @@ confirm_and_delete <- function(file_path, prompt = glue('Delete {file_path}?')) 
   stop(glue('Permission to delete {file_path} denied. Exiting...'))
 }
 
-
-
 #' Get the components of a schedule filename in easily-referenced format.
 #'
 #' @param sch The name of an FFIEC tab-separated schedule file.
