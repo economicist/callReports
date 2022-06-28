@@ -5,22 +5,10 @@ if (commandArgs()[1] == 'RStudio') {
 
 library(magrittr)
 library(tidyverse)
-
-if (file.exists('../callReports.Rproj')) {
-  devtools::load_all('..')
-} else {
-  if (!nzchar(system.file(package = 'callReports'))) {
-    devtools::install_github('economicist/callReports')
-  }
-  library(callReports)
-}
-
-# Don't post a message about the column types imported -- we need to convert
-# everything to character to be pivotable.
 options(readr.show_col_types = FALSE)
 
-# unlink('./db/ffiec.sqlite')
-ffiec_db <- db_connector_sqlite('~/db/callreports/ffiec.sqlite', overwrite = TRUE)
+library(callReports)
+ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite', overwrite = TRUE)
 extract_all_ffiec_zips(ffiec_db, '~/data/callreports-zips-ffiec')
 
 # Here is a sample query that requests a variety of variables related to total
