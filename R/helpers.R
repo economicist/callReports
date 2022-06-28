@@ -211,3 +211,23 @@ build_schedule_filename <- function(rep_date, sch_code, part_num, part_of) {
     glue('FFIEC CDR Call Schedule {sch_code} {rep_date}{part_str}.txt')
   return(sch_filename)
 }
+
+#' Build a log filename with a prefix and the time it was initiated.
+#'
+#' @param prefix A character value to begin the name of the file. May contain
+#' slashes if you want the generated log file to go in a different folder than
+#' specified by `getwd()`
+#' @return A character value in the form `{prefix}_{datestr}.log.txt`
+#' @importFrom magrittr %>% %<>%
+#' @importFrom stringr str_replace str_replace_all
+#' @importFrom glue glue
+#' @export
+#' @examples
+#' > generate_log_name('extraction_attempt')
+#' [1] "extraction_attempt_20220628_141233.log.txt"
+generate_log_name <- function(prefix) {
+  prefix %<>% str_replace_all('\\s+', '_')
+  timestamp <- 
+    Sys.time() %>% str_replace_all('[-:]', '') %>% str_replace('\\s', '_')
+  return(glue('{prefix}_{timestamp}.log.txt'))
+}

@@ -5,11 +5,13 @@ if (commandArgs()[1] == 'RStudio') {
 
 library(magrittr)
 library(tidyverse)
+library(callReports)
 options(readr.show_col_types = FALSE)
 
-library(callReports)
+sink(file = callReports::generate_log_name('extraction_attempt'), split = TRUE)
 ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite', overwrite = TRUE)
 extract_all_ffiec_zips(ffiec_db, '~/data/callreports-zips-ffiec')
+sink(NULL)
 
 # Here is a sample query that requests a variety of variables related to total
 # assets, liabilities, and equity capital. It took about 5 minutes when I ran

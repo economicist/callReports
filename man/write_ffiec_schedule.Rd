@@ -4,14 +4,14 @@
 \alias{write_ffiec_schedule}
 \title{Write extracted FFIEC schedule data to a database}
 \usage{
-write_ffiec_schedule(db_connector, sch_code, df_obs, df_codes, df_summ)
+write_ffiec_schedule(db_connector, tbl_name, df_obs, df_codes, df_summ)
 }
 \arguments{
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
 functions found in this package. It should be passed without the \verb{()}}
 
-\item{sch_code}{The code of the schedule you're writing, to tell the database
-which table to write to.}
+\item{tbl_name}{The name of the table you're writing, which should be a
+valid schedule code.}
 
 \item{df_obs}{A \code{tibble} containing the observations found in the extracted
 schedule file, pivoted to long form.
