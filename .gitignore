@@ -4,11 +4,8 @@
 .httr-oauth
 .DS_Store
 
-testing/db
-testing/db/
-testing/zips
-testing/zips/
-testing/logs
-testing/logs/
-testing/sandbox
-testing/sandbox/
+testing/db/*.sqlite
+testing/zips/ffiec/*.zip
+testing/zips/chifed/*.zip
+testing/logs/*.txt
+testing/tmp/*.*
