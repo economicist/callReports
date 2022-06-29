@@ -10,7 +10,7 @@ if (commandArgs()[1] == 'RStudio') {
 # library a given run of your script is using.
 
 #library(callReports)
-devtools::load_all('~/code/callReports') # use path to saved/cloned library
+devtools::document('~/code/callReports') # use path to saved/cloned library
 
 # Specify the paths of your desired SQLite database file and the folder where
 # you've stored the ZIP files downloaded from the FFIEC. `db_connector_sqlite()`

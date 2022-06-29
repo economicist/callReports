@@ -126,6 +126,7 @@ list_ffiec_schedules <- function(zip_file) {
 #' @param zf A ZIP file containing schedule files
 #' @param sch A valid FFIEC schedule data file inside the ZIP file `zf`
 #' @return NULL
+#' @importFrom dplyr inner_join
 #' @importFrom glue glue
 #' @importFrom rlog log_info
 #' @export
