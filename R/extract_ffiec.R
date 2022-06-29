@@ -198,7 +198,6 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
                  values_drop_na = TRUE) %>%
     mutate(IDRSSD     = as.integer(IDRSSD),
            QUARTER_ID = as.integer(ffiec_date_str_to_qtr_id(report_date))) %>%
-    select(IDRSSD, QUARTER_ID, everything()) %>%
     inner_join(df_varcodes, by = 'VAR_CODE') %>%
     rename(VAR_CODE_ID = ID) %>%
     select(IDRSSD, QUARTER_ID, VAR_CODE_ID, VALUE)
