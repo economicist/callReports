@@ -181,6 +181,32 @@ extract_values <- function(sch_line) {
   sch_line %>% callReports::str_split1('\\t')
 }
 
+#' Convert a reporting date index back into a date
+#'
+#' @param qtr_int An `integer` representing the index of a quarter since the
+#' beginning of year 2001
+#' @return A `Date` object
+#' @importFrom lubridate yq ceiling_date days
+#' @importFrom glue glue
+#' @export
+ffiec_qtr_id_to_date_str <- function(qtr_int) {
+  yyyy <- 2001 + (qtr_int %/% 4)
+  qq   <- ifelse(qtr_int %% 4 == 0, 4, qtr_int %% 4)
+  return(ceiling_date(yq(glue('{yyyy}-{qq}')), 'quarter') - days(1))
+}
+
+#' Convert a reporting date into an integer quarter index
+#'
+#' @param date_str A `Date` or character value in ISO `YYYY-MM-DD` format
+#' @return The index of the quarter since the beginning of the year 2001.
+#' @importFrom lubridate ymd year quarter
+#' @export
+ffiec_date_str_to_qtr_id <- function(date_str) {
+  yyyy <- year(ymd(date_str))
+  qq   <- quarter(ymd(date_str))
+  return(4 * (yyyy - 2001) + qq)
+}
+
 #' Rebuild an FFIEC schedule filename from its relevant parts
 #'
 #' From the reporting date, schedule code, part number and part code given as

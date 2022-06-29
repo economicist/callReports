@@ -28,6 +28,10 @@ extract_all_ffiec_zips <-
       str_replace_all('\\s', '_')
     log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
     
+    ffiec_zips <- list_ffiec_zips('~/data/callreports/ffiec')
+    date_table <- tibble(ID          = 1:length(ffiec_zips),
+                         REPORT_DATE = extract_ffiec_datestr(ffiec_zips))
+    
     list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
       pwalk(function(zip_file, sch_file) {
         callReports::extract_ffiec_schedule(db_connector, zip_file, sch_file)
@@ -80,10 +84,8 @@ list_ffiec_zips_and_schedules <- function(ffiec_zip_path) {
 list_ffiec_zips <- function(ffiec_zip_path) {
   rx_pattern <- '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$'
   list.files(ffiec_zip_path, pattern = rx_pattern) %>%
-    map_dfr(function(filename) {
-      tibble(rep_date = extract_ffiec_datestr(filename),
-             filename = paste0(ffiec_zip_path, '/', filename))
-    }) %>%
+    map_dfr(~ tibble(rep_date = extract_ffiec_datestr(.),
+                     filename = paste0(ffiec_zip_path, '/', .))) %>%
     arrange(rep_date) %>%
     getElement('filename')
 }
@@ -213,7 +215,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
 #' with the extracted schedule file.
 #' @param df_summ A `tibble` containing information about how many `IDRSSD` 
 #' values are associated with each `VAR_NAME` pair in the schedule
-#' @importFrom DBI dbExecute dbExistsTable dbWriteTable
+#' @importFrom DBI dbExecute dbExistsTable dbCreateTable dbWriteTable
 #' @importFrom DBI dbBegin dbCommit dbRollback
 #' @importFrom glue glue
 #' @importFrom rlog log_info log_fatal
@@ -225,6 +227,16 @@ write_ffiec_schedule <-
     tryCatch({
       dbWriteTable(db_conn, 'CODEBOOK', df_codes, append = TRUE)
       log_info(glue('Writing {nrow(df_obs)} observations to the database...'))
+      if (!dbExistsTable(db_conn, tbl_name)) {
+        # `IDRSSD` and `QUARTER_ID` can both be interpreted as integers, so
+        # force the database to acknowledge them as such.
+        dbCreateTable(conn   = db_conn, 
+                      name   = tbl_name, 
+                      fields = c(IDRSSD     = 'INTEGER',
+                                 QUARTER_ID = 'INTEGER',
+                                 VAR_NAME   = 'TEXT',
+                                 VALUE      = 'TEXT'))
+      }
       dbWriteTable(db_conn, tbl_name, df_obs, append = TRUE)
       dbWriteTable(db_conn, 'SUMMARY', df_summ, append = TRUE)
       dbCommit(db_conn)
@@ -304,7 +316,6 @@ extract_ffiec_codebook <- function(sch_unzipped) {
 #' [FFIEC Bulk Data Download Service](https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx) 
 #' 
 #' @param sch_unzipped A valid FFIEC schedule data file extracted to disk#'
-#' @return NULL
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate select
 #' @importFrom rlog log_info
@@ -337,10 +348,10 @@ extract_ffiec_obs <- function(sch_unzipped) {
   
   if (ncol(df_obs) < 2) {
     log_info('No variables to extract. Moving on...')
-    return(tibble(IDRSSD      = as.character(NULL),
-                  REPORT_DATE = as.character(NULL),
-                  VAR_NAME    = as.character(NULL),
-                  VALUE       = as.character(NULL)))
+    return(tibble(IDRSSD     = as.integer(NULL),
+                  QUARTER_ID = as.integer(NULL),
+                  VAR_NAME   = as.character(NULL),
+                  VALUE      = as.character(NULL)))
   }
   
   df_obs %>%
@@ -348,8 +359,9 @@ extract_ffiec_obs <- function(sch_unzipped) {
                  values_to = 'VALUE',
                  cols = !matches('IDRSSD'),
                  values_drop_na = TRUE) %>%
-    mutate(REPORT_DATE = report_date) %>%
-    select(IDRSSD, REPORT_DATE, everything())
+    mutate(IDRSSD     = as.integer(IDRSSD),
+           QUARTER_ID = as.integer(ffiec_date_str_to_qtr_id(report_date))) %>%
+    select(IDRSSD, QUARTER_ID, everything())
 }
 
 #' Parse the observations in a given FFIEC schedule file for processing in `R`
@@ -393,11 +405,9 @@ parse_ffiec_obs <- function(sch_unzipped) {
              na = c('', 'NA', 'NR', 'CONF'),
              col_names  = extract_ffiec_names(sch_unzipped),
              col_types  = cols(.default = col_character()),
-             name_repair = function(nms) {
-               map2_chr(nms, 1:length(nms), function(nm, idx) {
-                 ifelse(nm == '', paste0('NONAME_', idx), nm)
-               })
-             },
+             name_repair = 
+               ~ map2_chr(.x, 1:length(.x),
+                          ~ ifelse(..1 == '', paste0('NONAME_', ..2), ..1)),
              col_select = !matches('NONAME_'),
              progress   = FALSE) %>%
     rename(IDRSSD = `"IDRSSD"`) %>%

@@ -78,9 +78,9 @@ fix_broken_ffiec_obs <- function(sch_unzipped) {
     log_info("This schedule needs a specific repair. Doing it now.")
     df_lines %<>% mutate(
       raw_contents = 
-        if_else(possible_id == "490937", 
-                str_replace(raw_contents, 'Other\tns Exp', 'Other ns Exp'),
-                raw_contents))
+        ifelse(possible_id == "490937", 
+               str_replace(raw_contents, 'Other\tns Exp', 'Other ns Exp'),
+               raw_contents))
     new_filename <- paste0(sch_unzipped, '.fixed')
     
     fixed_lines <- c(read_lines(sch_unzipped, n_max = 2),

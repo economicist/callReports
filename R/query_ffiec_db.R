@@ -26,10 +26,12 @@ query_ffiec_db <-
     df_out <-
       dbReadTable(db_conn, sch_code) %>%
       filter(VAR_NAME %in% var_names) %>%
-      pivot_wider(id_cols     = c(IDRSSD, REPORT_DATE),
-                         names_from  = VAR_NAME,
-                         values_from = VALUE) %>%
-      arrange(IDRSSD, REPORT_DATE) %>%
+      pivot_wider(id_cols     = c(IDRSSD, QUARTER_ID),
+                  names_from  = VAR_NAME,
+                  values_from = VALUE) %>%
+      arrange(IDRSSD, QUARTER_ID) %>%
+      mutate(REPORT_DATE = ffiec_qtr_id_to_date_str(QUARTER_ID)) %>%
+      select(IDRSSD, REPORT_DATE, !any_of(c('QUARTER_ID'))) %>%
       collect()
     dbDisconnect(db_conn)
     

@@ -42,6 +42,7 @@ closeAllConnections()
 # short to scroll back through for inspection. The `callReports` library has
 # a function called `generate_log_name()` to assist in creating a log filename
 # with a built-in timestamp in case you want to save the log of every run.
+if (!dir.exists('./logs')) dir.create('./logs')
 capture.output(extract_all_ffiec_zips(ffiec_db_connector, ffiec_zip_folder),
                file  = generate_log_name('logs/extraction_attempt'),
                split = TRUE) # (allows for output in the console as well)

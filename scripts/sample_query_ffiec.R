@@ -15,16 +15,11 @@ library(tidyverse)
 #library(callReports)
 devtools::load_all('~/code/callReports')
 
-# Specify the paths of your desired SQLite database file and the folder where
-# you've stored the ZIP files downloaded from the FFIEC. `db_connector_sqlite()`
+# Specify the path of your desired SQLite database file. `db_connector_sqlite()`
 # in the last line below creates a `function` that gets called from within the
-# extraction algorithm to open a new database connection for each schedule file
-# it writes. This allows it to close the database connection after writing a 
-# collection of extracted observations, and reopen the connection later instead
-# of having one long extended connection.
+# query algorithm when it's needed.
 ffiec_sqlite_file  <- '~/db/callreports/ffiec.sqlite'
-ffiec_zip_folder   <- '~/data/callreports/ffiec'
-ffiec_db_connector <- db_connector_sqlite(ffiec_sqlite_file, overwrite = TRUE)
+ffiec_db_connector <- db_connector_sqlite(ffiec_sqlite_file)
 
 # Here is a sample query that requests a variety of variables related to total
 # assets, liabilities, and equity capital. It took about 5 minutes when I ran
@@ -41,7 +36,7 @@ ffiec_db_connector <- db_connector_sqlite(ffiec_sqlite_file, overwrite = TRUE)
 # Anyway, here's a sample query for the FFIEC data, returning results similar
 # to the Chicago query:
 df_sample_query <- 
-  query_ffiec_db(ffiec_db, 'RC', 
+  query_ffiec_db(ffiec_db_connector, 'RC', 
                  'RCFD2170', 'RCON2170',
                  'RCFD2948', 'RCFD2950', 'RCON2948', 'RCON2950', 
                  'RCFD3210', 'RCONG105', 'RCON3210')
