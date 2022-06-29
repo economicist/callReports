@@ -3,16 +3,14 @@ if (commandArgs()[1] == 'RStudio') {
   setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 }
 
-library(magrittr)
-library(tidyverse)
-
 # Uncomment one *and only one* of these two lines. If you change your mind, 
 # start a new session with `Session > Terminate R...` in the menu bar if you are
 # using RStudio. `Session > Restart R` is NOT a reliable way to ensure a library
 # is unloaded, so use `Session > Terminate R...` to ensure that you know which
 # library a given run of your script is using.
-devtools::load_all('~/code/callReports')
+
 #library(callReports)
+devtools::load_all('~/code/callReports') # use path to saved/cloned library
 
 # Specify the paths of your desired SQLite database file and the folder where
 # you've stored the ZIP files downloaded from the FFIEC. `db_connector_sqlite()`
