@@ -173,19 +173,77 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
   
   # If you've gotten this far in the function, the database has no records
   # associated with this schedule file. Attempt to extract the observations
-  # and codebook information into the database. If a warning is issued that
-  # is not explicitly absorbed and reconciled by the observation extraction
+  # and codebook information. Once it's extracted, take the variable names and
+  # add them to the `VAR_CODES` table in the database, where each VAR_CODE will
+  # be assigned a simple integer value for more efficient storage in the main
+  # observation tables.
+  df_codes  <- callReports::extract_ffiec_codebook(sch_unzipped)
+  var_codes <- unique(df_codes$VAR_CODE)
+  write_ffiec_varcodes(db_connector, var_codes)
+  
+  # Attempt to extract the observations for this file. If a warning is issued 
+  # that is not explicitly absorbed and reconciled by the observation extraction
   # function, a visible warning log will be shown here.
-  df_codes <- callReports::extract_ffiec_codebook(sch_unzipped)
-  df_obs   <- callReports::extract_ffiec_obs(sch_unzipped)
-  df_summ  <- tibble(REPORT_DATE   = report_date,
-                     SCHEDULE_CODE = sch_code,
-                     PART_NUM      = sch_info[3],
-                     PART_OF       = sch_info[4],
-                     N_OBS         = ifelse(is.null(df_obs), 0, nrow(df_obs)))
+  db_conn <- db_connector()
+  df_varcodes <- 
+    dbReadTable(db_conn, 'VAR_CODES') %>%
+    filter(VAR_CODE %in% var_codes) %>%
+    collect()
+  df_obs <- 
+    callReports::extract_ffiec_obs(sch_unzipped) %>%
+    inner_join(df_varcodes, by = 'VAR_CODE') %>%
+    rename(VAR_CODE_ID = ID) %>%
+    select(IDRSSD, QUARTER_ID, VAR_CODE_ID, VALUE)
+  df_summ  <- 
+    tibble(REPORT_DATE   = report_date,
+           SCHEDULE_CODE = sch_code,
+           PART_NUM      = sch_info[3],
+           PART_OF       = sch_info[4],
+           N_OBS         = ifelse(is.null(df_obs), 0, nrow(df_obs)))
   
   callReports::write_ffiec_schedule(db_connector, sch_code, df_obs, df_codes, df_summ)
   unlink(sch_unzipped)
+}
+
+#' Add discovered FFIEC variable names to an index table
+#' 
+#' `write_ffiec_varcodes()` takes a list of variable codes and adds each of them
+#' to a database table containing only a pairing between an integer ID and the
+#' variable code. If the variable code is already in the table, it is skipped.
+#' If it is not, it is automatically assigned an integer ID value in the order 
+#' in which it is added.
+#' 
+#' Given the numerous variables in the source data, this library pivots the data
+#' into long form before writing to the database. This offers the benefit of
+#' allowing each table in the database to have a predictable description and 
+#' prevent issues with exceeding the native maximum column support of many
+#' database engines. However, it 
+#'
+#' @param db_connector 
+#' @param var_codes 
+#' @importFrom DBI dbExistsTable dbExecute dbWriteTable dbDisconnect
+#' @importFrom tibble tibble
+#' @export
+write_ffiec_varcodes <- function(db_connector, var_codes) {
+  `%not_in%` <- Negate(`%in%`)
+  db_conn <- db_connector()
+  if (!dbExistsTable(db_conn, 'VAR_CODES')) {
+    tbl_gen_query <- 
+      'CREATE TABLE VAR_CODES' %>%
+      paste('(ID INTEGER PRIMARY KEY AUTOINCREMENT, VAR_CODE TEXT UNIQUE)')
+    dbExecute(db_conn, tbl_gen_query)
+  }
+  existing_codes <- 
+    dbReadTable(db_conn, 'VAR_CODES') %>%
+    select(VAR_CODE) %>% 
+    collect() %>% 
+    getElement('VAR_CODE')
+  new_var_codes <- 
+    tibble(ID = rep(NA, length(var_codes)),
+           VAR_CODE = var_codes) %>%
+    filter(VAR_CODE %not_in% existing_codes)
+  dbWriteTable(db_conn, 'VAR_CODES', new_var_codes, append = TRUE)
+  dbDisconnect(db_conn)
 }
 
 #' Write extracted FFIEC schedule data to a database
@@ -232,10 +290,10 @@ write_ffiec_schedule <-
         # force the database to acknowledge them as such.
         dbCreateTable(conn   = db_conn, 
                       name   = tbl_name, 
-                      fields = c(IDRSSD     = 'INTEGER',
-                                 QUARTER_ID = 'INTEGER',
-                                 VAR_NAME   = 'TEXT',
-                                 VALUE      = 'TEXT'))
+                      fields = c(IDRSSD      = 'INTEGER',
+                                 QUARTER_ID  = 'INTEGER',
+                                 VAR_CODE_ID = 'INTEGER',
+                                 VALUE       = 'TEXT'))
       }
       dbWriteTable(db_conn, tbl_name, df_obs, append = TRUE)
       dbWriteTable(db_conn, 'SUMMARY', df_summ, append = TRUE)
@@ -291,7 +349,7 @@ extract_ffiec_codebook <- function(sch_unzipped) {
     SCHEDULE_CODE = sch_code,
     PART_NUM      = part_code[1],
     PART_OF       = part_code[2],
-    VAR_NAME      = extract_ffiec_names(sch_unzipped),
+    VAR_CODE      = extract_ffiec_names(sch_unzipped),
     VAR_DESC      = extract_ffiec_descs(sch_unzipped)
   ) %>% filter(str_length(VAR_DESC) != 0)
 }
@@ -350,12 +408,12 @@ extract_ffiec_obs <- function(sch_unzipped) {
     log_info('No variables to extract. Moving on...')
     return(tibble(IDRSSD     = as.integer(NULL),
                   QUARTER_ID = as.integer(NULL),
-                  VAR_NAME   = as.character(NULL),
+                  VAR_CODE   = as.character(NULL),
                   VALUE      = as.character(NULL)))
   }
   
   df_obs %>%
-    pivot_longer(names_to  = 'VAR_NAME',
+    pivot_longer(names_to  = 'VAR_CODE',
                  values_to = 'VALUE',
                  cols = !matches('IDRSSD'),
                  values_drop_na = TRUE) %>%

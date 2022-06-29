@@ -40,6 +40,7 @@ df_sample_query <-
                  'RCFD2170', 'RCON2170',
                  'RCFD2948', 'RCFD2950', 'RCON2948', 'RCON2950', 
                  'RCFD3210', 'RCONG105', 'RCON3210')
+print(df_sample_query, n = 20)
 
 # Here we can see that there is in fact only one record for each (ID, DATE).
 # This means we don't have to do anything crazy with the results.
@@ -47,3 +48,4 @@ df_multiple_rows_per_obs <-
   df_sample_query %>%
   group_by(IDRSSD, REPORT_DATE) %>%
   filter(n() > 1)
+print(df_multiple_rows_per_obs)

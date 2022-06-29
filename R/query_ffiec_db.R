@@ -18,26 +18,26 @@
 #' # The database connector only needs to be created once in any given script.
 #' ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
 #' query_ffiec_db(ffiec_db, 'RCON2170', 'RCON2948', 'RCON3210')
-query_ffiec_db <- 
-  function(db_connector, sch_code, ...)
-  {
-    var_names <- c(...)
-    db_conn <- db_connector()
-    df_out <-
-      dbReadTable(db_conn, sch_code) %>%
-      filter(VAR_NAME %in% var_names) %>%
-      pivot_wider(id_cols     = c(IDRSSD, QUARTER_ID),
-                  names_from  = VAR_NAME,
-                  values_from = VALUE) %>%
-      arrange(IDRSSD, QUARTER_ID) %>%
-      mutate(REPORT_DATE = ffiec_qtr_id_to_date_str(QUARTER_ID)) %>%
-      select(IDRSSD, REPORT_DATE, !any_of(c('QUARTER_ID'))) %>%
-      collect()
-    dbDisconnect(db_conn)
-    
-    df_out %<>% type_convert()
-    return(df_out)
-  }
+query_ffiec_db <- function(db_connector, sch_code, ...) {
+  var_codes <- c(...)
+  db_conn <- db_connector()
+  tbl_varcodes <-
+    dbReadTable(db_conn, 'VAR_CODES') %>%
+    filter(VAR_CODE %in% var_codes)
+  df_out <-
+    dbReadTable(db_conn, sch_code) %>%
+    inner_join(tbl_varcodes, by = c('VAR_CODE_ID' = 'ID')) %>%
+    mutate(REPORT_DATE = ffiec_qtr_id_to_date_str(QUARTER_ID)) %>%
+    select(IDRSSD, REPORT_DATE, VAR_CODE, VALUE) %>%
+    pivot_wider(id_cols     = c(IDRSSD, REPORT_DATE),
+                names_from  = VAR_CODE,
+                values_from = VALUE) %>%
+    arrange(IDRSSD, REPORT_DATE) %>%
+    collect() %>%
+    type_convert()
+  dbDisconnect(db_conn)
+  return(df_out)
+}
 
 #' Quickly determine which periods are already in the FFIEC database
 #'
@@ -96,6 +96,16 @@ search_ffiec_codebook <- function(db_connector, var_name = NULL, var_desc = NULL
   return(df_out)
 }
 
+ffiec_varcode_id_to_str <- function(db_connector, varcode_id) {
+  db_conn <- db_connector()
+  varcode_str <-
+    dbReadTable(db_conn, 'VAR_CODES') %>%
+    filter(ID == varcode_id) %>%
+    collect() %>%
+    getElement('VAR_CODE')
+  return(varcode_str)
+}
+
 #' Detect variables in the FFIEC database that exist in multiple tables
 #'
 #' @param db_connector A `function` created by one of the `db_connector_*()` 
@@ -125,9 +135,9 @@ detect_ffiec_cross_references <- function(db_connector) {
     group_by(VAR_NAME) %>%
     mutate(INSTANCE = row_number()) %>%
     pivot_wider(id_cols = VAR_NAME,
-                       names_from = INSTANCE,
-                       names_glue = 'SCHEDULE_{INSTANCE}',
-                       values_from = SCHEDULE_CODE) %>%
+                names_from = INSTANCE,
+                names_glue = 'SCHEDULE_{INSTANCE}',
+                values_from = SCHEDULE_CODE) %>%
     arrange(SCHEDULE_1, SCHEDULE_2) %>%
     ungroup() %>%
     collect() %>%
