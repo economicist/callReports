@@ -34,7 +34,7 @@ extract_all_ffiec_zips <-
     
     list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
       pwalk(function(zip_file, sch_file) {
-        callReports::extract_ffiec_schedule(db_connector, zip_file, sch_file)
+        extract_ffiec_schedule(db_connector, zip_file, sch_file)
       })
   }
 
@@ -144,7 +144,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
   sch_unzipped <- paste0(tempdir(), '/', sch)
   sch_file     <- basename(sch_unzipped)
   
-  sch_info     <- callReports::schedule_name_components(sch_file)
+  sch_info     <- schedule_name_components(sch_file)
   report_date  <- sch_info['report_date']
   sch_code     <- sch_info['sch_code']
   part_str     <- 
@@ -178,7 +178,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
   # add them to the `VAR_CODES` table in the database, where each VAR_CODE will
   # be assigned a simple integer value for more efficient storage in the main
   # observation tables.
-  df_codes  <- callReports::extract_ffiec_codebook(sch_unzipped)
+  df_codes  <- extract_ffiec_codebook(sch_unzipped)
   var_codes <- unique(df_codes$VAR_CODE)
   write_ffiec_varcodes(db_connector, var_codes)
   
@@ -191,7 +191,14 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
     filter(VAR_CODE %in% var_codes) %>%
     collect()
   df_obs <- 
-    callReports::extract_ffiec_obs(sch_unzipped) %>%
+    extract_ffiec_obs(sch_unzipped) %>%
+    pivot_longer(names_to  = 'VAR_CODE',
+                 values_to = 'VALUE',
+                 cols = !matches('IDRSSD'),
+                 values_drop_na = TRUE) %>%
+    mutate(IDRSSD     = as.integer(IDRSSD),
+           QUARTER_ID = as.integer(ffiec_date_str_to_qtr_id(report_date))) %>%
+    select(IDRSSD, QUARTER_ID, everything()) %>%
     inner_join(df_varcodes, by = 'VAR_CODE') %>%
     rename(VAR_CODE_ID = ID) %>%
     select(IDRSSD, QUARTER_ID, VAR_CODE_ID, VALUE)
@@ -202,7 +209,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
            PART_OF       = sch_info[4],
            N_OBS         = ifelse(is.null(df_obs), 0, nrow(df_obs)))
   
-  callReports::write_ffiec_schedule(db_connector, sch_code, df_obs, df_codes, df_summ)
+  write_ffiec_schedule(db_connector, sch_code, df_obs, df_codes, df_summ)
   unlink(sch_unzipped)
 }
 
@@ -338,12 +345,12 @@ write_ffiec_schedule <-
 #' extract_ffiec_codebook(ffiec_db, 'FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_codebook <- function(sch_unzipped) {
   sch_file <- basename(sch_unzipped)
-  sch_code <- callReports::extract_schedule_code(sch_file)
+  sch_code <- extract_schedule_code(sch_file)
   
   log_info(glue('Extracting codebook...'))
-  report_date <- callReports::extract_ffiec_datestr(sch_unzipped)
-  sch_code    <- callReports::extract_schedule_code(sch_unzipped)
-  part_code   <- callReports::extract_part_codes(sch_unzipped)
+  report_date <- extract_ffiec_datestr(sch_unzipped)
+  sch_code    <- extract_schedule_code(sch_unzipped)
+  part_code   <- extract_part_codes(sch_unzipped)
   
   tibble(
     REPORT_DATE   = report_date,
@@ -386,41 +393,26 @@ extract_ffiec_codebook <- function(sch_unzipped) {
 #' extract_ffiec_obs(ffiec_db, 'FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_obs <- function(sch_unzipped) {
   sch_file    <- basename(sch_unzipped)
-  sch_code    <- callReports::extract_schedule_code(sch_unzipped)
-  report_date <- callReports::extract_ffiec_datestr(sch_unzipped)
+  sch_code    <- extract_schedule_code(sch_unzipped)
+  report_date <- extract_ffiec_datestr(sch_unzipped)
   log_info(glue('Extracting observations...'))
   
   df_obs <- tryCatch(
-    df_obs <- callReports::parse_ffiec_obs(sch_unzipped),
+    df_obs <- parse_ffiec_obs(sch_unzipped),
     warning = function(w) {
       log_info('Warning issued trying to extract. Running repair function...')
-      sch_fixed <- callReports::fix_broken_ffiec_obs(sch_unzipped)
+      sch_fixed <- fix_broken_ffiec_obs(sch_unzipped)
       tryCatch(
-        df_obs <- callReports::parse_ffiec_obs(sch_fixed),
+        df_obs <- parse_ffiec_obs(sch_fixed),
         warning = function(w) {
           log_info('Warning still issued after repairing. You may wish to')
           log_info(glue('investigate table {sch_code} for {report_date}.'))
-          df_obs <- suppressWarnings(callReports::parse_ffiec_obs(sch_fixed))
+          df_obs <- suppressWarnings(parse_ffiec_obs(sch_fixed))
         }
       )
     })
   
-  if (ncol(df_obs) < 2) {
-    log_info('No variables to extract. Moving on...')
-    return(tibble(IDRSSD     = as.integer(NULL),
-                  QUARTER_ID = as.integer(NULL),
-                  VAR_CODE   = as.character(NULL),
-                  VALUE      = as.character(NULL)))
-  }
-  
-  df_obs %>%
-    pivot_longer(names_to  = 'VAR_CODE',
-                 values_to = 'VALUE',
-                 cols = !matches('IDRSSD'),
-                 values_drop_na = TRUE) %>%
-    mutate(IDRSSD     = as.integer(IDRSSD),
-           QUARTER_ID = as.integer(ffiec_date_str_to_qtr_id(report_date))) %>%
-    select(IDRSSD, QUARTER_ID, everything())
+  return(df_obs)
 }
 
 #' Parse the observations in a given FFIEC schedule file for processing in `R`
