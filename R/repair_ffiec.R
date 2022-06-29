@@ -47,7 +47,9 @@ fix_broken_ffiec_obs <- function(sch_unzipped) {
   num_vars   <- length(var_names)
   exp_n_tabs <- num_vars - 1
   obs_lines  <- 
-    read_lines(sch_unzipped, skip = 2, skip_empty_rows = TRUE) %>%
+    read_lines(sch_unzipped, skip = 2, 
+               skip_empty_rows    = TRUE,
+               progress           = FALSE) %>%
     subset( !str_detect(., '^[[:space:]]*$') )
   df_lines <-
     map_dfr(obs_lines, function(l) {
@@ -83,7 +85,7 @@ fix_broken_ffiec_obs <- function(sch_unzipped) {
     
     fixed_lines <- c(read_lines(sch_unzipped, n_max = 2),
                      df_lines$raw_contents)
-    write_lines(fixed_lines, new_filename)
+    suppressMessages(write_lines(fixed_lines, new_filename))
     return(new_filename)
   }
   
@@ -130,10 +132,10 @@ fix_broken_ffiec_obs <- function(sch_unzipped) {
       select(possible_id, raw_contents) %>%
       summarize(fixed_line = paste0(raw_contents, collapse = '\\n')) %>%
       .$fixed_line
-    header_rows <- read_lines(sch_unzipped, n_max = 2)
+    header_rows <- read_lines(sch_unzipped, n_max = 2, progress = FALSE)
     sch_repaired_lines <- c(header_rows, good_lines, fixed_lines)
     sch_repaired_file  <- paste0(sch_unzipped, '.fixed')
-    write_lines(sch_repaired_lines, sch_repaired_file)
+    suppressMessages(write_lines(sch_repaired_lines, sch_repaired_file))
     return(sch_repaired_file)
   }
   

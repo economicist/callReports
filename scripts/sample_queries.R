@@ -1,17 +1,3 @@
-if (interactive()) rm(list = ls(all = TRUE))
-if (commandArgs()[1] == 'RStudio') {
-  setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-}
-
-library(magrittr)
-library(tidyverse)
-library(callReports)
-options(readr.show_col_types = FALSE)
-
-sink(file = generate_log_name('logs/extraction_attempt'), split = TRUE)
-ffiec_db <- db_connector_sqlite('~/db/callreports/ffiec.sqlite', overwrite = TRUE)
-extract_all_ffiec_zips(ffiec_db, '~/data/callreports-zips-ffiec')
-sink(NULL)
 
 # Here is a sample query that requests a variety of variables related to total
 # assets, liabilities, and equity capital. It took about 5 minutes when I ran

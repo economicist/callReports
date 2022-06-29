@@ -30,7 +30,7 @@ extract_all_ffiec_zips <-
     
     list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
       pwalk(function(zip_file, sch_file) {
-        callReports::extract_ffiec_schedule(ffiec_db, zip_file, sch_file)
+        callReports::extract_ffiec_schedule(db_connector, zip_file, sch_file)
       })
   }
 
@@ -384,19 +384,25 @@ extract_ffiec_obs <- function(sch_unzipped) {
 parse_ffiec_obs <- function(sch_unzipped) {
   sch_file <- basename(sch_unzipped)
   log_info(glue('Parsing observations in {sch_file}'))
-  read_tsv(sch_unzipped,
-           skip = 2,
-           na = c('', 'NA', 'NR', 'CONF'),
-           col_names  = extract_ffiec_names(sch_unzipped),
-           col_types  = cols(.default = col_character()),
-           name_repair = function(nms) {
-             map2_chr(nms, 1:length(nms), function(nm, idx) {
-               ifelse(nm == '', paste0('NONAME_', idx), nm)
-             })
-           },
-           col_select = !matches('NONAME_'),
-           progress   = FALSE) %>%
+  
+  old_coltype_option <- getOption('readr.show_col_types')
+  options(readr.show_col_types = FALSE)
+  df_out <-
+    read_tsv(sch_unzipped,
+             skip = 2,
+             na = c('', 'NA', 'NR', 'CONF'),
+             col_names  = extract_ffiec_names(sch_unzipped),
+             col_types  = cols(.default = col_character()),
+             name_repair = function(nms) {
+               map2_chr(nms, 1:length(nms), function(nm, idx) {
+                 ifelse(nm == '', paste0('NONAME_', idx), nm)
+               })
+             },
+             col_select = !matches('NONAME_'),
+             progress   = FALSE) %>%
     rename(IDRSSD = `"IDRSSD"`) %>%
     select(!any_of('RCON9999')) %>%
     mutate(IDRSSD = as.character(IDRSSD))
+  options(readr.show_col_types = old_coltype_option)
+  return(df_out) 
 }
