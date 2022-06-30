@@ -31,7 +31,6 @@ extract_all_chifed_zips <-
              warning = function(w) {
                log_info('No log is currently open. Will begin logging.')
              })
-    sink(log_filename, split = TRUE)
     db_conn <- db_connector()
     yymm_in_db <-
       chifed_dates_in_db(db_connector) %>%
@@ -43,7 +42,6 @@ extract_all_chifed_zips <-
     list_all_chifed_zips(chifed_zip_path) %>%
       subset(str_extract(., '[[:digit:]]{4}') %not_in% yymm_in_db) %>%
       walk(function(zip_file) extract_chifed_zip(db_connector, zip_file))
-    sink(NULL)
   }
 
 #' List ZIP files containing Call Report data from the Chicago Fed
@@ -71,56 +69,7 @@ list_all_chifed_zips <- function(chifed_zip_path) {
   return(zips_reordered)
 }
 
-#' Extract the Chicago Fed's codebook data to a database
-#'
-#' `extract_chifed_codebook()` extracts the Chicago Fed's call report data
-#' dictionary provided at (their website)[https://www.federalreserve.gov/apps/mdrm/download_mdrm.htm]
-#' to a database specified in the given database connector function. 
-#'
-#' @param db_connector A `function` created by one of the `db_connector_*()` 
-#' functions found in this package. It should be passed without the `()`
-#' @param codebook_zip An existing copy of `MDRM.zip`
-#' page accompanying the main data.
-#' @return NULL
-#' @importFrom DBI dbWriteTable dbDisconnect
-#' @importFrom dplyr rename_all
-#' @importFrom readr cols read_csv
-#' @importFrom stringr str_replace_all
-#' @export
-#' @examples
-#' The database connector only needs to be created once in any given script.
-#' chifed_db <- sqlite_connector('./db/chifed.sqlite')
-#' extract_chifed_codebook(chifed_db, './MDRM.zip')
-extract_chifed_codebook <- function(db_connector, codebook_zip) {
-  codebook <- 
-    unz(codebook_zip, 'MDRM_CSV.csv') %>% 
-    read_csv(skip = 1, col_types = cols(.default = col_character())) %>%
-    rename_all(function(nm) str_replace_all(toupper(nm), '\\s', '_'))
-  db_conn <- db_connector()
-  try(dbWriteTable(db_conn, 'CODEBOOK', codebook))
-  dbDisconnect(db_conn)
-}
 
-#' What dates have already been extracted to the Chicago Database?
-#'
-#' @param db_connector A `function` created by one of the `db_connector_*()` 
-#' functions found in this package. It should be passed without the `()`
-#' @return A character vector containing dates of already-extracted datasets
-#' in the Chicago database, in ISO 'YYYY-MM-DD' format
-#' @importFrom dplyr distinct collect
-#' @importFrom DBI dbExistsTable dbListFields dbReadTable dbDisconnect
-#' @export
-chifed_dates_in_db <- function(db_connector) {
-  `%not_in%` <- Negate(`%in%`)
-  db_conn <- db_connector()
-  if (!dbExistsTable(db_conn, 'SUMMARY')) return(NULL)
-  if ('REPORT_DATE' %not_in% dbListFields(db_conn, 'SUMMARY')) return(NULL)
-  dates_in_db <- dbReadTable(db_conn, 'SUMMARY') %>%
-    distinct(REPORT_DATE) %>% 
-    collect()
-  dbDisconnect(db_conn)
-  return(dates_in_db)
-}
 
 #' Extract the Chicago Fed's data observations to a database
 #'
@@ -151,7 +100,7 @@ extract_chifed_zip <- function(db_connector, zip_file) {
   mm     <- str_match(zip_file, '[[:digit:]]{2}([[:digit:]]{2})')[1, 2]
   dt_str <- glue('{yyyy}-{mm}-01')
   
-  df_tbl  <- read_chifed_zip(zip_file)
+  df_tbl  <- extract_chifed_obs(zip_file)
   
   log_info('Getting record count per variable for `SUMMARY` table...')
   df_summ <- 
@@ -212,7 +161,7 @@ extract_chifed_zip <- function(db_connector, zip_file) {
 #' @importFrom rlog log_info
 #' @importFrom stringr str_match str_pad
 #' @export
-read_chifed_zip <- function(zip_file) {
+extract_chifed_obs <- function(zip_file) {
   # These are distributed in SAS XPT format, an open-source format that allows
   # SAS users to distribute data in a format compatible with regulators and
   # journals requiring open-source data. They can be easily read with the
@@ -263,16 +212,55 @@ read_chifed_zip <- function(zip_file) {
   return(df_tbl)
 }
 
-#' Get a data frame with all XPT files and variables for the Chicago Fed data 
+#' Extract the Chicago Fed's codebook data to a database
 #'
-#' @param chifed_zip_path Folder containing the Chicago Fed zip files
-#' @return A `tibble` with two columns, one with the name of the XPT file and 
-#' another with the names of the variables found in that XPT file.
-#' @importFrom purrr map_dfr
+#' `extract_chifed_codebook()` extracts the Chicago Fed's call report data
+#' dictionary provided at (their website)[https://www.federalreserve.gov/apps/mdrm/download_mdrm.htm]
+#' to a database specified in the given database connector function. 
+#'
+#' @param db_connector A `function` created by one of the `db_connector_*()` 
+#' functions found in this package. It should be passed without the `()`
+#' @param codebook_zip An existing copy of `MDRM.zip`
+#' page accompanying the main data.
+#' @return NULL
+#' @importFrom DBI dbWriteTable dbDisconnect
+#' @importFrom dplyr rename_all
+#' @importFrom readr cols read_csv
+#' @importFrom stringr str_replace_all
 #' @export
-get_all_chifed_varnames <- function(chifed_zip_path) {
-  zips <- list_all_chifed_zips(chifed_zip_path)
-  map_dfr(zips, get_chifed_varnames)
+#' @examples
+#' The database connector only needs to be created once in any given script.
+#' chifed_db <- sqlite_connector('./db/chifed.sqlite')
+#' extract_chifed_codebook(chifed_db, './MDRM.zip')
+extract_chifed_codebook <- function(db_connector, codebook_zip) {
+  codebook <- 
+    unz(codebook_zip, 'MDRM_CSV.csv') %>% 
+    read_csv(skip = 1, col_types = cols(.default = col_character())) %>%
+    rename_all(function(nm) str_replace_all(toupper(nm), '\\s', '_'))
+  db_conn <- db_connector()
+  try(dbWriteTable(db_conn, 'CODEBOOK', codebook))
+  dbDisconnect(db_conn)
+}
+
+#' What dates have already been extracted to the Chicago Database?
+#'
+#' @param db_connector A `function` created by one of the `db_connector_*()` 
+#' functions found in this package. It should be passed without the `()`
+#' @return A character vector containing dates of already-extracted datasets
+#' in the Chicago database, in ISO 'YYYY-MM-DD' format
+#' @importFrom dplyr distinct collect
+#' @importFrom DBI dbExistsTable dbListFields dbReadTable dbDisconnect
+#' @export
+chifed_dates_in_db <- function(db_connector) {
+  `%not_in%` <- Negate(`%in%`)
+  db_conn <- db_connector()
+  if (!dbExistsTable(db_conn, 'SUMMARY')) return(NULL)
+  if ('REPORT_DATE' %not_in% dbListFields(db_conn, 'SUMMARY')) return(NULL)
+  dates_in_db <- dbReadTable(db_conn, 'SUMMARY') %>%
+    distinct(REPORT_DATE) %>% 
+    collect()
+  dbDisconnect(db_conn)
+  return(dates_in_db)
 }
 
 #' Get a data from with variables for a single Chicago Fed dataset
