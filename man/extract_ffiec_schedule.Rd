@@ -2,33 +2,34 @@
 % Please edit documentation in R/extract_ffiec.R
 \name{extract_ffiec_schedule}
 \alias{extract_ffiec_schedule}
-\title{Extract the FFIEC codebook and all observations for a single schedule}
+\title{Extract the observations for a given FFIEC schedule file to a database}
 \usage{
-extract_ffiec_schedule(db_connector, zf, sch)
+extract_ffiec_schedule(sch_unzipped)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
-\item{zf}{A ZIP file containing schedule files}
-
-\item{sch}{A valid FFIEC schedule data file inside the ZIP file \code{zf}}
+\item{sch_unzipped}{A valid FFIEC schedule data file extracted to disk#'}
 }
 \description{
-\code{extract_ffiec_schedule()} accepts a ZIP file, extracts one of its enclosed
-tab-separated-value schedule files, and writes the extracted data to a given
-database.
+\code{extract_ffiec_schedule()} accepts a text file containing tab-separated-value
+bulk data provided by the FFIEC, and writes it to a given database.
 }
 \details{
-ZIP files containing the bulk data 2001-present offered at the
+If any warnings are triggered about parsing issues, they are absorbed by the
+function and an attempt is made to repair the schedule file. A second attempt
+is then made, and a visible warning issued it was not resolved. Any data
+extracted will still be written to the database, but you may wish to
+investigate their integrity. Tests existing data sets as of 2022 June 17
+have been working without warnings.
+
+Most applications will not use this function as it is called by
+\code{process_ffiec_schedule()} as part of extracting the codebook and observations
+simultaneously.
+
+ZIP files containing valid schedule files for 2001-present are offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-The database connector only needs to be created once in any given script.
-ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
-extract_ffiec_schedule(
-  ffiec_db,
-  './zips-ffiec/FFIEC FFIEC CDR Call Bulk All Schedules 03312018.zip',
-  'FFIEC CDR Call Schedule RCCII 06302002.txt'
-)
+# The database connector only needs to be created once in any given script.
+ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite')
+extract_ffiec_schedule(ffiec_db, 'FFIEC CDR Call Schedule RCCII 06302002.txt')
 }

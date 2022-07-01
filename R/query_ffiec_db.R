@@ -9,10 +9,6 @@
 #' @param ... Quoted variable names, separated by commas
 #' @return A `tibble` containing bank ID, report date, and the values of the
 #' requested variables.
-#' @importFrom magrittr %>% %<>%
-#' @importFrom DBI dbReadTable dbDisconnect
-#' @importFrom dplyr arrange collect filter
-#' @importFrom tidyr pivot_wider
 #' @export
 #' @examples
 #' # The database connector only needs to be created once in any given script.
@@ -22,20 +18,20 @@ query_ffiec_db <- function(db_connector, sch_code, ...) {
   var_codes <- c(...)
   db_conn <- db_connector()
   tbl_varcodes <-
-    dbReadTable(db_conn, 'VAR_CODES') %>%
-    filter(VAR_CODE %in% var_codes)
+    DBI::dbReadTable(db_conn, 'VAR_CODES') %>%
+    dplyr::filter(VAR_CODE %in% var_codes)
   df_out <-
-    dbReadTable(db_conn, sch_code) %>%
-    inner_join(tbl_varcodes, by = c('VAR_CODE_ID' = 'ID')) %>%
-    mutate(REPORT_DATE = ffiec_qtr_id_to_date_str(QUARTER_ID)) %>%
-    select(IDRSSD, REPORT_DATE, VAR_CODE, VALUE) %>%
-    pivot_wider(id_cols     = c(IDRSSD, REPORT_DATE),
+    DBI::dbReadTable(db_conn, sch_code) %>%
+    dplyr::inner_join(tbl_varcodes, by = c('VAR_CODE_ID' = 'ID')) %>%
+    dplyr::mutate(REPORT_DATE = qtr_id_to_date_str(QUARTER_ID)) %>%
+    dplyr::select(IDRSSD, REPORT_DATE, VAR_CODE, VALUE) %>%
+    tidyr::pivot_wider(id_cols     = c(IDRSSD, REPORT_DATE),
                 names_from  = VAR_CODE,
                 values_from = VALUE) %>%
-    arrange(IDRSSD, REPORT_DATE) %>%
-    collect() %>%
-    type_convert()
-  dbDisconnect(db_conn)
+    dplyr::arrange(IDRSSD, REPORT_DATE) %>%
+    dplyr::collect() %>%
+    readr::type_convert()
+  DBI::dbDisconnect(db_conn)
   return(df_out)
 }
 
@@ -43,19 +39,16 @@ query_ffiec_db <- function(db_connector, sch_code, ...) {
 #'
 #' @param db_connector A `function` created by one of the `db_connector_*()`
 #' functions found in this package. It should be passed without the `()`
-#'
 #' @return A character vector of dates in ISO YYYY-MM-DD format
-#' @importFrom magrittr %>%
-#' @importFrom DBI dbExistsTable dbReadTable dbDisconnect
 #' @export
 ffiec_schedules_in_db <- function(db_connector) {
   db_conn <- db_connector()
-  if (!dbExistsTable(db_conn, 'SUMMARY')) {
-    dbDisconnect(db_conn)
-    return(tibble())
+  if (!DBI::dbExistsTable(db_conn, 'SUMMARY')) {
+    DBI::dbDisconnect(db_conn)
+    return(tibble::tibble())
   }
-  df_out <- dbReadTable(db_conn, 'SUMMARY') %>% collect()
-  dbDisconnect(db_conn)
+  df_out <- DBI::dbReadTable(db_conn, 'SUMMARY') %>% dplyr::collect()
+  DBI::dbDisconnect(db_conn)
   return(df_out)
 }
 
@@ -69,9 +62,6 @@ ffiec_schedules_in_db <- function(db_connector) {
 #' @param var_desc Any substring (case-insensitive) you hope to find in a
 #' variable description
 #' @return A `tibble` containing matching results in the codebook
-#' @importFrom magrittr %>% %<>%
-#' @importFrom DBI dbReadTable dbDisconnect
-#' @importFrom dplyr collect distinct filter
 #' @export
 #' @examples
 #' # The database connector only needs to be created once in any given script.
@@ -80,30 +70,20 @@ ffiec_schedules_in_db <- function(db_connector) {
 #' search_ffiec_codebook(ffiec_db, var_desc = 'TOTAL LIABILITIES')
 search_ffiec_codebook <- function(db_connector, var_name = NULL, var_desc = NULL) {
   db_conn <- db_connector()
-  df_out <- dbReadTable(db_conn, 'CODEBOOK')
+  df_out <- DBI::dbReadTable(db_conn, 'CODEBOOK')
   if (!is.null(var_name)) {
-    df_out %<>% filter(VAR_NAME == toupper(var_name))
+    df_out %<>% dplyr::filter(VAR_CODE == toupper(var_name))
   }
   if (!is.null(var_desc)) {
     df_out %<>% 
-      filter(str_detect(toupper(VAR_DESC), toupper(var_desc)))
+      dplyr::filter(stringr::str_detect(toupper(VAR_DESC), toupper(var_desc)))
   }
   df_out %<>%
-    filter(VAR_NAME == toupper(var_name)) %>%
-    distinct(SCHEDULE_CODE, VAR_NAME, VAR_DESC) %>%
-    collect()
-  dbDisconnect(db_conn)
+    dplyr::filter(VAR_CODE == toupper(var_name)) %>%
+    dplyr::distinct(SCHEDULE_CODE, VAR_CODE, VAR_DESC) %>%
+    dplyr::collect()
+  DBI::dbDisconnect(db_conn)
   return(df_out)
-}
-
-ffiec_varcode_id_to_str <- function(db_connector, varcode_id) {
-  db_conn <- db_connector()
-  varcode_str <-
-    dbReadTable(db_conn, 'VAR_CODES') %>%
-    filter(ID == varcode_id) %>%
-    collect() %>%
-    getElement('VAR_CODE')
-  return(varcode_str)
 }
 
 #' Detect variables in the FFIEC database that exist in multiple tables
@@ -112,11 +92,6 @@ ffiec_varcode_id_to_str <- function(db_connector, varcode_id) {
 #' functions found in this package. It should be passed without the `()`
 #' @return A `tibble` telling you which tables a variable appearing in multiple
 #' parts of the FFIEC reporting form can be found
-#' @importFrom magrittr %>%
-#' @importFrom DBI dbReadTable dbDisconnect
-#' @importFrom dplyr arrange collect filter group_by mutate summarize ungroup
-#' @importFrom readr type_convert
-#' @importFrom tidyr pivot_wider
 #' @export
 #' @examples
 #' The database connector only needs to be created once in any given script.
@@ -125,24 +100,24 @@ ffiec_varcode_id_to_str <- function(db_connector, varcode_id) {
 detect_ffiec_cross_references <- function(db_connector) {
   db_conn <- db_connector()
   df_out <-
-    dbReadTable(db_conn, 'CODEBOOK') %>%
-    group_by(VAR_NAME) %>%
-    summarize(NUM_SCHEDULES = n_distinct(SCHEDULE_CODE),
-                     SCHEDULE_CODE = sort(unique(SCHEDULE_CODE)),
-                     .groups = 'drop') %>%
-    filter(NUM_SCHEDULES > 1) %>%
-    arrange(VAR_NAME, SCHEDULE_CODE) %>%
-    group_by(VAR_NAME) %>%
-    mutate(INSTANCE = row_number()) %>%
-    pivot_wider(id_cols = VAR_NAME,
+    DBI::dbReadTable(db_conn, 'CODEBOOK') %>%
+    dplyr::group_by(VAR_CODE) %>%
+    dplyr::summarize(NUM_SCHEDULES = dplyr::n_distinct(SCHEDULE_CODE),
+              SCHEDULE_CODE = sort(unique(SCHEDULE_CODE)),
+              .groups = 'drop') %>%
+    dplyr::filter(NUM_SCHEDULES > 1) %>%
+    dplyr::arrange(VAR_CODE, SCHEDULE_CODE) %>%
+    dplyr::group_by(VAR_CODE) %>%
+    dplyr::mutate(INSTANCE = row_number()) %>%
+    tidyr::pivot_wider(id_cols = VAR_CODE,
                 names_from = INSTANCE,
                 names_glue = 'SCHEDULE_{INSTANCE}',
                 values_from = SCHEDULE_CODE) %>%
-    arrange(SCHEDULE_1, SCHEDULE_2) %>%
-    ungroup() %>%
-    collect() %>%
-    type_convert()
-  dbDisconnect(db_conn)
+    dplyr::arrange(SCHEDULE_1, SCHEDULE_2) %>%
+    dplyr::ungroup() %>%
+    dplyr::collect() %>%
+    readr::type_convert()
+  DBI::dbDisconnect(db_conn)
   return(df_out)
 }
 
@@ -159,14 +134,6 @@ detect_ffiec_cross_references <- function(db_connector) {
 #' by the results of `search_ffiec_codebook()`
 #' @return A `tibble` in the same format as results of `query_ffiec_db()`, but
 #' the column names represent the schedule in which the column is from
-#' @importFrom magrittr %>%
-#' @importFrom DBI dbReadTable dbDisconnect
-#' @importFrom dplyr distinct filter
-#' @importFrom glue glue
-#' @importFrom purrr map_dfr
-#' @importFrom rlog log_info
-#' @importFrom readr type_convert
-#' @importFrom tidyr pivot_wider
 #' @export
 #' @examples
 #' # The database connector only needs to be created once in any given script.
@@ -175,40 +142,40 @@ detect_ffiec_cross_references <- function(db_connector) {
 query_multischedule_variable <- function(db_connector, var_name) {
   db_conn <- db_connector()
   
-  log_info(
-    glue('Checking codebook to find schedules containing {var_name}...')
+  rlog::log_info(
+    glue::glue('Checking codebook to find schedules containing {var_name}...')
   )
   schedules <- 
-    dbReadTable(db_conn, 'CODEBOOK') %>%
-    filter(VAR_NAME == str_to_upper(var_name)) %>%
-    distinct(SCHEDULE_CODE) %>%
+    DBI::dbReadTable(db_conn, 'CODEBOOK') %>%
+    dplyr::filter(VAR_CODE == str_to_upper(var_name)) %>%
+    dplyr::distinct(SCHEDULE_CODE) %>%
     .$SCHEDULE_CODE
   
   if (length(schedules) == 1) {
-    log_info(glue('Found only in schedule {sch}...'))
-    log_info(glue('Querying {var_name} from {sch}...'))
+    rlog::log_info(glue::glue('Found only in schedule {sch}...'))
+    rlog::log_info(glue::glue('Querying {var_name} from {sch}...'))
     cat('\n')
     return(get_var_from_schedule(schedules[1], var_name))
   }
   
   schedules_str <- paste(schedules, collapse = ', ')
-  log_info(
-    glue('Variable {var_name} found in schedules {schedules_str}...')
+  rlog::log_info(
+    glue::glue('Variable {var_name} found in schedules {schedules_str}...')
   )
   df_out <-
-    map_dfr(schedules, function(sch) {
-      log_info(glue('Querying {var_name} from {sch}...'))
+    purrr::map_dfr(schedules, function(sch) {
+      rlog::log_info(glue::glue('Querying {var_name} from {sch}...'))
       return(get_var_from_schedule(sch, var_name))
     })
   
-  dbDisconnect(db_conn)
+  DBI::dbDisconnect(db_conn)
   cat('\n')
   
   df_out %>%
-    pivot_wider(id_cols = c(IDRSSD, REPORT_DATE),
+    tidyr::pivot_wider(id_cols = c(IDRSSD, REPORT_DATE),
                        names_from  = SCHEDULE_CODE,
                        values_from = VALUE) %>%
-    type_convert()
+    readr::type_convert()
 }
 
 #' How much of this ZIP file has been extracted to the database?
@@ -224,35 +191,32 @@ query_multischedule_variable <- function(db_connector, var_name) {
 #' @return A `tibble` containing a record for each period, schedule, and part
 #' code already extracted to the database, as determined by a query of the 
 #' `SUMMARY` table.
-#' @importFrom magrittr %>%
-#' @importFrom DBI dbReadTable dbDisconnect
-#' @importFrom dplyr distinct collect
 #' @export
 zipped_schedules_not_in_db <- function(db_connector, zip_file) {
   schedules_in_zip <- 
     list_ffiec_schedules(zip_file) %>%
-    map_dfr(function(sch) {
-      tibble(REPORT_DATE   = extract_ffiec_datestr(sch),
-             SCHEDULE_CODE = extract_schedule_code(sch),
-             PART_NUM      = extract_part_codes(sch)[1],
-             PART_OF       = extract_part_codes(sch)[2])
+    purrr::map_dfr(function(sch) {
+      tibble::tibble(REPORT_DATE   = extract_ffiec_datestr(sch),
+                     SCHEDULE_CODE = extract_schedule_code(sch),
+                     PART_NUM      = extract_part_codes(sch)[1],
+                     PART_OF       = extract_part_codes(sch)[2])
     })
   sch_date <- unique(schedules_in_zip$REPORT_DATE)
   
   db_conn <- db_connector()
   df_summ <- 
-    dbReadTable(db_conn, 'SUMMARY') %>%
-    filter(REPORT_DATE == sch_date) %>%
-    distinct(REPORT_DATE, SCHEDULE_CODE, PART_NUM, PART_OF) %>%
-    collect() %>% as_tibble() %>%
+    DBI::dbReadTable(db_conn, 'SUMMARY') %>%
+    dplyr::filter(REPORT_DATE == sch_date) %>%
+    dplyr::distinct(REPORT_DATE, SCHEDULE_CODE, PART_NUM, PART_OF) %>%
+    dplyr::collect() %>% tibble::as_tibble() %>%
     mutate_at(vars(starts_with('PART_')), ~ as.numeric(.x))
-  dbDisconnect(db_conn)
+  DBI::dbDisconnect(db_conn)
   
   schedules_not_in_db <-
     schedules_in_zip %>%
     anti_join(df_summ,
               by = c('REPORT_DATE', 'SCHEDULE_CODE', 'PART_NUM', 'PART_OF')) %>%
-    pmap_chr(callReports::build_schedule_filename)
+    purrr::map_chr(build_schedule_filename)
   
   return(schedules_not_in_db)
 }

@@ -8,13 +8,12 @@
 #' @param str A single character value
 #' @param pattern A regular expression on which to split the string
 #' @return A character vector containing the split values
-#' @importFrom stringr str_split
 #' @export
 #' @examples
 #' > str_split1('Hello world')
 #' [1] "Hello" "world"
 str_split1 <- function(str, pattern) {
-  str_split(str, pattern)[[1]]
+  stringr::str_split(str, pattern)[[1]]
 }
 
 #' Replace `NA` values with last-seen non-`NA` value
@@ -26,13 +25,12 @@ str_split1 <- function(str, pattern) {
 #' @return A vector containing all non-`NA` values from `x`, but with all `NA`
 #' values replaced with the "last-seen" non-`NA` value up to that point in the
 #' vector
-#' @importFrom purrr reduce
 #' @export
 #' @examples
 #' > fill_na_with_previous(c(1, 2, NA, NA, 3))
 #' [1] 1 2 2 2 3
 fill_na_with_previous <- function(x) {
-  reduce(x, function(a, b) {
+  purrr::reduce(x, function(a, b) {
     # `a` is the vector of values we've already validated or filled with NAs
     #     Thus `a[length(a)`, the final value of that vector, is the last non-NA
     # `b` is the next value we're checking in the vector
@@ -51,24 +49,23 @@ fill_na_with_previous <- function(x) {
 #' @param prompt A yes/no question to ask the user
 #' @return `TRUE` if the user responds with any of "Y", "YES", "T", or "TRUE"
 #' (case-insensitive).
-#' @importFrom glue glue
 #' @export
-confirm_and_delete <- function(file_path, prompt = glue('Delete {file_path}?')) {
+confirm_and_delete <- function(file_path, prompt = glue::glue('Delete {file_path}?')) {
   # If the file isn't there to delete, pretend we've deleted it.
   if (!file.exists(file_path)) return(TRUE)
   
   # If it is, prompt the user for confirmation to delete it.
-  permission <- readline(prompt = glue('{prompt} [y/N]: ')) %>% toupper()
+  permission <- readline(prompt = glue::glue('{prompt} [y/N]: ')) %>% toupper()
   
   # Delete the file if permission to delete is granted.
   if (permission %in% c('Y', 'YES', 'T', 'TRUE')) {
-    log_info(glue('Deleting {file_path}...'))
+    rlog::log_info(glue::glue('Deleting {file_path}...'))
     unlink(file_path)
     return(TRUE)
   }
   
   # Signal an error if permission to delete is denied.
-  stop(glue('Permission to delete {file_path} denied. Exiting...'))
+  stop(glue::glue('Permission to delete {file_path} denied. Exiting...'))
 }
 
 #' Get the components of a schedule filename in easily-referenced format.
@@ -85,7 +82,7 @@ confirm_and_delete <- function(file_path, prompt = glue('Delete {file_path}?')) 
 schedule_name_components <- function(sch) {
   sch_info <- c(report_date = extract_ffiec_datestr(sch),
                 sch_code    = extract_schedule_code(sch))
-  part_codes <- callReports::extract_part_codes(sch)
+  part_codes <- extract_part_codes(sch)
   return(c(sch_info, part_codes))
 }
 
@@ -93,13 +90,12 @@ schedule_name_components <- function(sch) {
 #'
 #' @param sch_unzipped The path to an FFIEC schedule file on disk.
 #' @return A character vector containing the variable names found in the top line.
-#' @importFrom readr read_lines
 #' @export
 #' @examples
 #' extract_ffiec_names('FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_names <- function(sch_unzipped) { 
-  read_lines(sch_unzipped, n_max = 1, progress = FALSE) %>% 
-    callReports::str_split1('\\t')
+  readr::read_lines(sch_unzipped, n_max = 1, progress = FALSE) %>% 
+    str_split1('\\t')
 }
 
 #' Extract the variable descriptions from an FFIEC schedule file
@@ -107,13 +103,12 @@ extract_ffiec_names <- function(sch_unzipped) {
 #' @param sch_unzipped The path to an FFIEC schedule file on disk.
 #' @return A character vector containing the variable descriptions found in the 
 #' second line of the file.
-#' @importFrom readr read_lines
 #' @export
 #' @examples
 #' extract_ffiec_descs('FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_descs <- function(sch_unzipped) { 
-  read_lines(sch_unzipped, skip = 1, n_max = 1, progress = FALSE) %>%
-    callReports::str_split1('\\t')
+  readr::read_lines(sch_unzipped, skip = 1, n_max = 1, progress = FALSE) %>%
+    str_split1('\\t')
 }
 
 #' Extract the date from an FFIEC schedule filename in `YYYY-MM-DD` format
@@ -123,13 +118,11 @@ extract_ffiec_descs <- function(sch_unzipped) {
 #' interpreted as a date in `MMDDYYYY` format.
 #' @return A character value in `YYYY-MM-DD` format containing the date of the
 #' report corresponding to that schedule filename.
-#' @importFrom lubridate mdy
-#' @importFrom stringr str_extract
 #' @export
 #' @examples
 #' extract_ffiec_datestr('FFIEC CDR Call Schedule RCCII 06302002.txt')
 extract_ffiec_datestr <- function(filename) {
-  as.character(mdy(str_extract(filename, '[[:digit:]]{8}')))
+  as.character(lubridate::mdy(stringr::str_extract(filename, '[[:digit:]]{8}')))
 }
 
 #' Extract the alphabetical schedule code from an FFIEC schedule filename
@@ -137,13 +130,12 @@ extract_ffiec_datestr <- function(filename) {
 #' @param sch The name of an FFIEC schedule file, existent or not.
 #' @return A character value containing the alphabetical schedule code 
 #' corresponding to the given schedule filename.
-#' @importFrom stringr str_match
 #' @export
 #' @examples
 #' > extract_schedule_code('FFIEC CDR Call Schedule RCCII 06302002.txt')
 #' [1] "RCCII"
 extract_schedule_code <- function(sch) {
-  str_match(sch, '([[:alpha:]]+) [[:digit:]]{8}')[1, 2]
+  stringr::str_match(sch, '([[:alpha:]]+) [[:digit:]]{8}')[1, 2]
 }
 
 #' Extract the schedule part number from an FFIEC schedule filename
@@ -154,8 +146,6 @@ extract_schedule_code <- function(sch) {
 #' @param sch The name of an FFIEC schedule file, existent or not.
 #' @return A numeric vector with two named values: `part_num` and `part_of`,
 #' with both being `1` if no part is indicated in the filename.
-#' 
-#' @importFrom stringr str_match
 #' @export
 #' @examples
 #' > extract_part_code('FFIEC CDR Call Schedule RCB 03312013(2 of 2).txt')
@@ -163,7 +153,7 @@ extract_schedule_code <- function(sch) {
 #'        1        2 
 extract_part_codes <- function(sch) {
   rx <- '([[:digit:]]{8})(\\(([[:digit:]]) of ([[:digit:]])\\))*'
-  part_codes <- str_match(sch, rx)
+  part_codes <- stringr::str_match(sch, rx)
   if (is.na(part_codes[1, 3])) return(c(part_num = 1, part_of = 1))
   return(c(part_num = as.numeric(part_codes[1, 4]), 
            part_of  = as.numeric(part_codes[1, 5])))
@@ -178,33 +168,82 @@ extract_part_codes <- function(sch) {
 #' extract_values('12311  2031  298310')
 #' [1] "12311" "2031" "298310"
 extract_values <- function(sch_line) {
-  sch_line %>% callReports::str_split1('\\t')
+  sch_line %>% str_split1('\\t')
 }
 
-#' Convert a reporting date index back into a date
+#' Convert a quarter ID back into a date
 #'
+#' The Chicago Fed and FFIEC source data altogether run quarterly from the
+#' first quarter of 1976 to the present (roughly, the last quarter that ended
+#' roughly at least 6 weeks ago). This function converts either a `Date` or a
+#' string containing a date in ISO `YYYY-MM-DD` format into a small integer ID
+#' value, where `1976-Q1` is represented by `1` and incrementing from there.
+#' 
+#' Pivoting the source data into long form before writing it to the database
+#' has the benefit of giving the database tables a simple and comprehensible
+#' structure, but requires each date to be written thousands or millions of
+#' times due to the sheer number of bank-variable pairs each period.
+#' 
+#' Creating an integer ID to index the dates allows the date column in each
+#' table to be stored as an integer, which requires significantly less space (2 
+#' bytes max) than even the most conservative string format that keeps the date
+#' readable (8 bytes). This significantly reduces the storage requirement of the
+#' extracted data sets, and potentially improves query performance when the
+#' database is kept on slower storage devices such as spinning-platter hard
+#' drives.
+#' 
+#' The extraction functions found in this library use this function's inverse,
+#' `date_str_to_qtr_id()`, to convert the quarter-end reporting dates found in
+#' the source data into integer-valued quarter IDs.
+#' 
 #' @param qtr_int An `integer` representing the index of a quarter since the
-#' beginning of year 2001
-#' @return A `Date` object
-#' @importFrom lubridate yq ceiling_date days
-#' @importFrom glue glue
+#' beginning of year 1976
+#' @return The `Date` of the last day of the requested quarter.
 #' @export
-ffiec_qtr_id_to_date_str <- function(qtr_int) {
-  yyyy <- 2001 + (qtr_int %/% 4)
+qtr_id_to_date_str <- function(qtr_int) {
+  yyyy <- 1976 + (qtr_int %/% 4)
   qq   <- ifelse(qtr_int %% 4 == 0, 4, qtr_int %% 4)
-  return(ceiling_date(yq(glue('{yyyy}-{qq}')), 'quarter') - days(1))
+  next_qtr_start <-
+    glue::glue('{yyyy}-{qq}') %>%
+    lubridate::yq() %>% 
+    lubridate::ceiling_date('quarter')
+  this_qtr_end <- next_qtr_start - lubridate::days(1)
+  return(this_qtr_end)
 }
 
-#' Convert a reporting date into an integer quarter index
+#' Convert a reporting date into an integer-valued quarter ID
+#'
+#' The Chicago Fed and FFIEC source data altogether run quarterly from the
+#' first quarter of 1976 to the present (roughly, the last quarter that ended
+#' roughly at least 6 weeks ago). This function converts either a `Date` or a
+#' string containing a date in ISO `YYYY-MM-DD` format into a small integer ID
+#' value, where `1976-Q1` is represented by `1` and incrementing from there.
+#' 
+#' Pivoting the source data into long form before writing it to the database
+#' has the benefit of giving the database tables a simple and comprehensible
+#' structure, but requires each date to be written thousands or millions of
+#' times due to the sheer number of bank-variable pairs each period.
+#' 
+#' Creating an integer ID to index the dates allows the date column in each
+#' table to be stored as an integer, which requires significantly less space (2 
+#' bytes max) than even the most conservative string format that keeps the date
+#' readable (8 bytes). This significantly reduces the storage requirement of the
+#' extracted data sets, and potentially improves query performance when the
+#' database is kept on slower storage devices such as spinning-platter hard
+#' drives.
+#' 
+#' Query functions found in this library use this function's inverse,
+#' `qtr_id_to_date_str()`, which converts quarter IDs back into readable dates
+#' for output to the end user.
 #'
 #' @param date_str A `Date` or character value in ISO `YYYY-MM-DD` format
-#' @return The index of the quarter since the beginning of the year 2001.
-#' @importFrom lubridate ymd year quarter
+#' @return The index of the quarter since the beginning of the year 1976, the
+#' initial year of data available from the Chicago Federal Reserve.
 #' @export
-ffiec_date_str_to_qtr_id <- function(date_str) {
-  yyyy <- year(ymd(date_str))
-  qq   <- quarter(ymd(date_str))
-  return(4 * (yyyy - 2001) + qq)
+date_str_to_qtr_id <- function(date_str) {
+  yyyy <- lubridate::year(lubridate::ymd(date_str))
+  qq   <- lubridate::quarter(lubridate::ymd(date_str))
+  return(4 * (yyyy - 1976) + qq)
 }
 
 #' Rebuild an FFIEC schedule filename from its relevant parts
@@ -232,9 +271,9 @@ ffiec_date_str_to_qtr_id <- function(date_str) {
 #' @export
 build_schedule_filename <- function(rep_date, sch_code, part_num, part_of) {
   part_str <- 
-    ifelse(as.numeric(part_of) == 1, '', glue('({part_num} of {part_of})'))
+    ifelse(as.numeric(part_of) == 1, '', glue::glue('({part_num} of {part_of})'))
   sch_filename <- 
-    glue('FFIEC CDR Call Schedule {sch_code} {rep_date}{part_str}.txt')
+    glue::glue('FFIEC CDR Call Schedule {sch_code} {rep_date}{part_str}.txt')
   return(sch_filename)
 }
 
@@ -245,15 +284,13 @@ build_schedule_filename <- function(rep_date, sch_code, part_num, part_of) {
 #' specified by `getwd()`
 #' @return A character value in the form `{prefix}_{datestr}.log.txt`
 #' @importFrom magrittr %>% %<>%
-#' @importFrom stringr str_replace str_replace_all
-#' @importFrom glue glue
 #' @export
 #' @examples
 #' > generate_log_name('extraction_attempt')
 #' [1] "extraction_attempt_20220628_141233.log.txt"
 generate_log_name <- function(prefix) {
-  prefix %<>% str_replace_all('\\s+', '_')
+  prefix %<>% stringr::str_replace_all('\\s+', '_')
   timestamp <- 
-    Sys.time() %>% str_replace_all('[-:]', '') %>% str_replace('\\s', '_')
-  return(glue('{prefix}_{timestamp}.log.txt'))
+    Sys.time() %>% stringr::str_replace_all('[-:]', '') %>% stringr::str_replace('\\s', '_')
+  return(glue::glue('{prefix}_{timestamp}.log.txt'))
 }

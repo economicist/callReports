@@ -4,7 +4,7 @@
 \alias{query_chifed_db}
 \title{Retreive Chicago Fed observations from a database}
 \usage{
-query_chifed_db(db_connector, ...)
+query_chifed_db(db_connector, tbl_name, ...)
 }
 \arguments{
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}

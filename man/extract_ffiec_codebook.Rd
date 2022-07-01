@@ -16,7 +16,7 @@ descriptions, and the table where they can be found to a given database.
 }
 \details{
 Most applications will not use this function as it is called by
-\code{extract_ffiec_schedule()} as part of extracting the codebook and observations
+\code{process_ffiec_schedule()} as part of extracting the codebook and observations
 simultaneously.
 
 ZIP files containing valid schedule files for 2001-present are offered at the

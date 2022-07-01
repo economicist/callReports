@@ -10,10 +10,6 @@
 #' @param overwrite_sqlite (default `FALSE`) Should we overwrite an existing
 #' SQLite DB? This is meaningful only for SQLite databases.
 #' @return A character vector containing the full paths of valid ZIP files
-#' @importFrom magrittr %>%
-#' @importFrom glue glue
-#' @importFrom lubridate month year
-#' @importFrom stringr str_extract str_remove_all str_replace_all str_pad
 #' @export
 #' @examples
 #' extract_all_chifed_zips('./zips-chifed')
@@ -22,26 +18,22 @@ extract_all_chifed_zips <-
     `%not_in%`  <- Negate(`%in%`)
     if (!dir.exists('./logs')) dir.create('./logs')
     
-    dttm_str <- 
-      str_remove_all(Sys.time(), '[-:]') %>% 
-      str_replace_all('\\s', '_')
-    log_filename <- glue('./logs/extract_chifed_{dttm_str}.log.txt')
-    
-    tryCatch(sink(NULL), 
-             warning = function(w) {
-               log_info('No log is currently open. Will begin logging.')
-             })
+    codebook_path <- glue::glue('{chifed_zip_folder}/MDRM.zip')
+    extract_chifed_codebook(sqlite_connector, codebook_path)
+        
     db_conn <- db_connector()
     yymm_in_db <-
       chifed_dates_in_db(db_connector) %>%
       sapply(function(dt) {
-        yy <- year(dt) %% 100
-        mm <- month(dt)
-        paste0(yy, str_pad(mm, 2, 'left', '0'))
+        yy <- lubridate::year(dt) %% 100
+        mm <- lubridate::month(dt)
+        paste0(yy, stringr::str_pad(mm, 2, 'left', '0'))
       })
+    DBI::dbDisconnect(db_conn)
+    
     list_all_chifed_zips(chifed_zip_path) %>%
-      subset(str_extract(., '[[:digit:]]{4}') %not_in% yymm_in_db) %>%
-      walk(function(zip_file) extract_chifed_zip(db_connector, zip_file))
+      subset(stringr::str_extract(., '[[:digit:]]{4}') %not_in% yymm_in_db) %>%
+      purrr::walk(function(zip_file) extract_chifed_zip(db_connector, zip_file))
   }
 
 #' List ZIP files containing Call Report data from the Chicago Fed
@@ -63,13 +55,11 @@ list_all_chifed_zips <- function(chifed_zip_path) {
   
   # Put the year 2000 zips at the end so they're in order. The year is two
   # digits so just using `sort()` won't do it.
-  zips_2000  <- matching_zips[str_detect(matching_zips, '(CALL|call)00')]
-  zips_other <- matching_zips[!str_detect(matching_zips, '(CALL|call)00')]
+  zips_2000  <- matching_zips[stringr::str_detect(matching_zips, '(CALL|call)00')]
+  zips_other <- matching_zips[!stringr::str_detect(matching_zips, '(CALL|call)00')]
   zips_reordered <- c(zips_other, zips_2000)
   return(zips_reordered)
 }
-
-
 
 #' Extract the Chicago Fed's data observations to a database
 #'
@@ -81,13 +71,6 @@ list_all_chifed_zips <- function(chifed_zip_path) {
 #' @param db_connector A `function` created by one of the `db_connector_*()` 
 #' functions found in this package. It should be passed without the `()`
 #' @param zip_file An existing ZIP file containing a valid XPT data file
-#' @return NULL
-#' @importFrom DBI dbWriteTable dbDisconnect
-#' @importFrom dplyr mutate rename select
-#' @importFrom glue glue
-#' @importFrom haven read_xpt
-#' @importFrom rlog log_info log_fatal
-#' @importFrom tidyr pivot_longer
 #' @export
 #' @examples
 #' # The database connector only needs to be created once in any given script.
@@ -95,22 +78,22 @@ list_all_chifed_zips <- function(chifed_zip_path) {
 #' extract_chifed_zip(chifed_db, './zips-chifed/call0003-zip.zip')
 extract_chifed_zip <- function(db_connector, zip_file) {
   `%not_in%` <- Negate(`%in%`)
-  yy     <- str_match(zip_file, '([[:digit:]]{2})[[:digit:]]{2}')[1, 2]
+  yy     <- stringr::str_match(zip_file, '([[:digit:]]{2})[[:digit:]]{2}')[1, 2]
   yyyy   <- ifelse(yy == '00', '2000', paste0('19', yy))
-  mm     <- str_match(zip_file, '[[:digit:]]{2}([[:digit:]]{2})')[1, 2]
-  dt_str <- glue('{yyyy}-{mm}-01')
+  mm     <- stringr::str_match(zip_file, '[[:digit:]]{2}([[:digit:]]{2})')[1, 2]
+  dt_str <- glue::glue('{yyyy}-{mm}-01')
   
   df_tbl  <- extract_chifed_obs(zip_file)
   
-  log_info('Getting record count per variable for `SUMMARY` table...')
+  rlog::log_info('Getting record count per variable for `CHIFED.SUMMARY` table...')
   df_summ <- 
-    select(df_tbl, !any_of(c('IDRSSD', 'REPORT_DATE'))) %>%
-    summarize_all(~ sum(!is.na(.x) | is.null(.x))) %>%
-    pivot_longer(cols      = everything(),
-                 names_to  = 'VAR_NAME',
+    dplyr::select(df_tbl, !any_of(c('IDRSSD', 'QUARTER_ID'))) %>%
+    dplyr::summarize_all(~ sum(!is.na(.x) | is.null(.x))) %>%
+    tidyr::pivot_longer(cols      = everything(),
+                 names_to  = 'VAR_CODE',
                  values_to = 'N_RECORDS') %>%
-    mutate(REPORT_DATE = dt_str) %>%
-    select(REPORT_DATE, VAR_NAME, 'N_RECORDS')
+    dplyr::mutate(REPORT_DATE = dt_str) %>%
+    dplyr::select(REPORT_DATE, VAR_CODE, 'N_RECORDS')
 
   # The Chicago Fed's quarterly call report data is disributed all in one table
   # each period. The table has more columns than the SQLite database backend
@@ -119,32 +102,53 @@ extract_chifed_zip <- function(db_connector, zip_file) {
   # did with the data from the FFIEC. We'll rename the date and ID columns to
   # match those ones.
   
-  log_info('Pivoting to long form for writing to `OBSERVATIONS` table...')
-  if ('CALL8787' %not_in% df_summ$VAR_NAME) df_tbl %<>% mutate(CALL8787 = NA)
+  # Get a list of the variable code in this ZIP, and send them to the function
+  # that assigns an ID value to each code (for codes already in the DB, their
+  # previously-assigned ID value is persistent). Then retrieve 
+  new_var_codes <- 
+    names(df_tbl) %>%
+    subset(. %not_in% c('IDRSSD', 'QUARTER_ID'))
+  write_var_codes(db_connector, new_var_codes)
+  var_codes_in_db <- fetch_var_codes(db_connector)
+  
+  rlog::log_info('Pivoting to long form for writing to `CHIFED.OBS_ALL` table...')
+  if ('CALL8787' %not_in% df_summ$VAR_CODE) df_tbl %<>% dplyr::mutate(CALL8787 = NA)
   df_out <-
     df_tbl %>%
-    pivot_longer(cols = !matches(c('IDRSSD', 'REPORT_DATE',
-                                   'CALL8786', 'CALL8787')),
-                 names_to         = 'VAR_NAME',
+    tidyr::pivot_longer(cols = 
+                   !any_of(c('IDRSSD', 'QUARTER_ID', 'CALL8786', 'CALL8787')),
+                 names_to         = 'VAR_CODE',
                  values_to        = 'VALUE',
                  values_transform = as.character,
-                 values_drop_na   = TRUE)
+                 values_drop_na   = TRUE) %>%
+    dplyr::inner_join(var_codes_in_db, by = 'VAR_CODE') %>%
+    dplyr::rename(VAR_CODE_ID = ID) %>%
+    dplyr::select(IDRSSD, QUARTER_ID, CALL8786, CALL8787, VAR_CODE_ID, VALUE)
   
-  num_vars      <- ncol(df_tbl) - 2 # Don't count `IDRSSD` or `REPORT_DATE`
+  num_vars      <- ncol(df_tbl) - 2 # Don't count `IDRSSD` or `QUARTERID`
   num_rows_long <- nrow(df_out)
-  log_info(
-    glue('Writing {num_rows_long} rows of {num_vars} variables to database...'))
+  rlog::log_info(
+    glue::glue('Writing {num_rows_long} rows of {num_vars} variables to database...'))
   
   db_conn <- db_connector()
   tryCatch({
-    dbBegin(db_conn)
-    dbWriteTable(db_conn, 'OBSERVATIONS', df_out, append = TRUE)
-    dbWriteTable(db_conn, 'SUMMARY', df_summ, append = TRUE)
-    dbCommit(db_conn)
+    DBI::dbBegin(db_conn)
+    if (!DBI::dbExistsTable(db_conn, 'CHIFED.OBS_ALL')) {
+      DBI::dbCreateTable(db_conn, 'CHIFED.OBS_ALL',
+                    fields = c(IDRSSD      = 'INTEGER',
+                               QUARTER_ID  = 'INTEGER',
+                               CALL8786    = 'INTEGER',
+                               CALL8787    = 'INTEGER',
+                               VAR_CODE_ID = 'INTEGER',
+                               VALUE       = 'TEXT'))
+    }
+    DBI::dbWriteTable(db_conn, 'CHIFED.OBS_ALL', df_out, append = TRUE)
+    DBI::dbWriteTable(db_conn, 'CHIFED.SUMMARY', df_summ, append = TRUE)
+    DBI::dbCommit(db_conn)
   }, warning = stop, error = stop)
-  dbDisconnect(db_conn)
+  DBI::dbDisconnect(db_conn)
   
-  log_info(glue('Successfully extracted {zip_file} to the database!'))
+  rlog::log_info(glue::glue('Successfully extracted {zip_file} to the database!'))
   cat('\n')
 }
 
@@ -155,11 +159,6 @@ extract_chifed_zip <- function(db_connector, zip_file) {
 #'
 #' @param zip_file the path to a ZIP file on disk containing a valid XPT file
 #' @return A `tibble` containing the observations in wide form.
-#' @importFrom magrittr %>%
-#' @importFrom glue glue
-#' @importFrom haven read_xpt
-#' @importFrom rlog log_info
-#' @importFrom stringr str_match str_pad
 #' @export
 extract_chifed_obs <- function(zip_file) {
   # These are distributed in SAS XPT format, an open-source format that allows
@@ -170,45 +169,46 @@ extract_chifed_obs <- function(zip_file) {
   # Some ZIP files contain superfluous files beyond the desired XPT, and the
   # XPT file uses different capitalization by period. We need to get the correct
   # name of the enclosed file before extracting it.
-  yymm_str <- str_extract(zip_file, '[[:digit:]]{4}')
+  yymm_str <- stringr::str_extract(zip_file, '[[:digit:]]{4}')
   xpt_file <- 
     unzip(zip_file, list = TRUE)[['Name']] %>%
-    subset(str_detect(., '\\.(XPT|xpt)'))
+    subset(stringr::str_detect(., '\\.(XPT|xpt)'))
   
-  yy     <- str_match(zip_file, '([[:digit:]]{2})[[:digit:]]{2}')[1, 2]
+  yy     <- stringr::str_match(zip_file, '([[:digit:]]{2})[[:digit:]]{2}')[1, 2]
   yyyy   <- ifelse(yy == '00', '2000', paste0('19', yy))
-  mm     <- str_match(zip_file, '[[:digit:]]{2}([[:digit:]]{2})')[1, 2]
-  dt_str <- glue('{yyyy}-{mm}-01')
-
-  log_info(glue('Reading observations from {xpt_file} in {zip_file}'))
-  df_tbl    <- unz(zip_file, xpt_file) %>% read_xpt()
-  var_names <- names(df_tbl)
+  mm     <- stringr::str_match(zip_file, '[[:digit:]]{2}([[:digit:]]{2})')[1, 2]
+  dt_str <- glue::glue('{yyyy}-{mm}-01')
+  qtr_id <- date_str_to_qtr_id(dt_str)
   
-  log_info(glue(
+  rlog::log_info(glue::glue('Reading observations from {xpt_file} in {zip_file}'))
+  df_tbl    <- unz(zip_file, xpt_file) %>% haven::read_xpt()
+  var_codes <- names(df_tbl)
+  
+  rlog::log_info(glue::glue(
     'Extracted {nrow(df_tbl)} rows containing {ncol(df_tbl)} columns'))
   
   # Most periods have the reporting institution listed as "ENTITY". For whatever
   # reason, this file has no formal "ENTITY" column and we need to copy it over
   # from another variable called "RSSD9001".
-  if ('RSSD9001' %in% var_names) {
-    log_info('ID Column `RSSD9001` detected...')
-    df_tbl %<>% select(!any_of(c('IDRSSD', 'ENTITY')))
-  } else if ('ENTITY' %in% var_names) {
-    log_info('ID Column `RSSD9001` not detected. Renaming `ENTITY`-->`RSSD9001')
-    df_tbl %<>% mutate(RSSD9001 = ENTITY) %>% select(!any_of(c('ENTITY')))
-  } else if ('IDRSSD' %in% var_names) {
-    log_info('ID Column `RSSD9001` not detected. Renaming `IDRSSD`-->`RSSD9001')
-    df_tbl %<>% mutate(RSSD9001 = IDRSSD) %>% select(!any_of(c('IDRSSD')))
+  if ('RSSD9001' %in% var_codes) {
+    rlog::log_info('ID Column `RSSD9001` detected...')
+    df_tbl %<>% dplyr::select(!any_of(c('IDRSSD', 'ENTITY')))
+  } else if ('ENTITY' %in% var_codes) {
+    rlog::log_info('ID Column `RSSD9001` not detected. Renaming `ENTITY`-->`RSSD9001')
+    df_tbl %<>% dplyr::mutate(RSSD9001 = ENTITY) %>% dplyr::select(!any_of(c('ENTITY')))
+  } else if ('IDRSSD' %in% var_codes) {
+    rlog::log_info('ID Column `RSSD9001` not detected. Renaming `IDRSSD`-->`RSSD9001')
+    df_tbl %<>% dplyr::mutate(RSSD9001 = IDRSSD) %>% dplyr::select(!any_of(c('IDRSSD')))
   } else {
-    stop(glue('No valid ID column found in {xpt_file}... Cannot go on!'))
+    stop(glue::glue('No valid ID column found in {xpt_file}... Cannot go on!'))
   }
   
-  log_info('Renaming `RSSD9001` to `IDRSSD` for consistency with FFIEC data.')
+  rlog::log_info('Renaming `RSSD9001` to `IDRSSD` for consistency with FFIEC data.')
   df_tbl %<>%
-    mutate(IDRSSD = as.character(RSSD9001), REPORT_DATE = dt_str) %>%
-    select(IDRSSD, REPORT_DATE, 
+    dplyr::mutate(IDRSSD = as.character(RSSD9001), QUARTER_ID = qtr_id) %>%
+    dplyr::select(IDRSSD, QUARTER_ID, 
            !any_of(c('RSSD9999', 'RSSD9001', 'ENTITY', 'DATE')))
-  log_info(glue('Done parsing {xpt_file}...'))
+  rlog::log_info(glue::glue('Done parsing {xpt_file}...'))
   return(df_tbl)
 }
 
@@ -223,10 +223,6 @@ extract_chifed_obs <- function(zip_file) {
 #' @param codebook_zip An existing copy of `MDRM.zip`
 #' page accompanying the main data.
 #' @return NULL
-#' @importFrom DBI dbWriteTable dbDisconnect
-#' @importFrom dplyr rename_all
-#' @importFrom readr cols read_csv
-#' @importFrom stringr str_replace_all
 #' @export
 #' @examples
 #' The database connector only needs to be created once in any given script.
@@ -235,11 +231,11 @@ extract_chifed_obs <- function(zip_file) {
 extract_chifed_codebook <- function(db_connector, codebook_zip) {
   codebook <- 
     unz(codebook_zip, 'MDRM_CSV.csv') %>% 
-    read_csv(skip = 1, col_types = cols(.default = col_character())) %>%
-    rename_all(function(nm) str_replace_all(toupper(nm), '\\s', '_'))
+    readr::read_csv(skip = 1, col_types = readr::cols(.default = readr::col_character())) %>%
+    dplyr::rename_all(function(nm) stringr::str_replace_all(toupper(nm), '\\s', '_'))
   db_conn <- db_connector()
-  try(dbWriteTable(db_conn, 'CODEBOOK', codebook))
-  dbDisconnect(db_conn)
+  try(DBI::dbWriteTable(db_conn, 'CHIFED.CODEBOOK', codebook))
+  DBI::dbDisconnect(db_conn)
 }
 
 #' What dates have already been extracted to the Chicago Database?
@@ -248,43 +244,16 @@ extract_chifed_codebook <- function(db_connector, codebook_zip) {
 #' functions found in this package. It should be passed without the `()`
 #' @return A character vector containing dates of already-extracted datasets
 #' in the Chicago database, in ISO 'YYYY-MM-DD' format
-#' @importFrom dplyr distinct collect
-#' @importFrom DBI dbExistsTable dbListFields dbReadTable dbDisconnect
 #' @export
 chifed_dates_in_db <- function(db_connector) {
   `%not_in%` <- Negate(`%in%`)
   db_conn <- db_connector()
-  if (!dbExistsTable(db_conn, 'SUMMARY')) return(NULL)
-  if ('REPORT_DATE' %not_in% dbListFields(db_conn, 'SUMMARY')) return(NULL)
-  dates_in_db <- dbReadTable(db_conn, 'SUMMARY') %>%
-    distinct(REPORT_DATE) %>% 
-    collect()
-  dbDisconnect(db_conn)
+  if (!DBI::dbExistsTable(db_conn, 'SUMMARY')) return(NULL)
+  if ('REPORT_DATE' %not_in% DBI::dbListFields(db_conn, 'SUMMARY')) return(NULL)
+  dates_in_db <-
+    DBI::dbReadTable(db_conn, 'SUMMARY') %>%
+    dplyr::distinct(REPORT_DATE) %>% 
+    dplyr::collect()
+  DBI::dbDisconnect(db_conn)
   return(dates_in_db)
-}
-
-#' Get a data from with variables for a single Chicago Fed dataset
-#'
-#' @param zf A zip file containing an `XPT` file from the Chicago Fed
-#'
-#' @return A `tibble` with the `XPT` filename in one column and all of its
-#' variables names in the other
-#' @importFrom magrittr %>%
-#' @importFrom glue glue
-#' @importFrom haven read_xpt
-#' @importFrom rlog log_info
-#' @importFrom stringr str_detect
-#' @export
-get_chifed_varnames <- function(zf) {
-  log_info(glue('Reading {zf}...'))
-  xpt_file <- 
-    unzip(zf, list = TRUE) %>% 
-    filter(str_detect(Name, '\\.(XPT|xpt)')) %>%
-    getElement('Name')
-  log_info(glue('Getting variable names from {xpt_file}...'))
-  df_xpt    <- unz(zf, xpt_file) %>% read_xpt(n_max = 1)
-  var_names <- names(df_xpt)
-  log_info(glue('Found {length(var_names)} columns in {xpt_file}'))
-  cat('\n')
-  return(tibble(XPT_FILE = xpt_file, VAR_NAME = names(df_xpt)))
 }

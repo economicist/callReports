@@ -4,7 +4,7 @@
 \alias{confirm_and_delete}
 \title{Confirm deletion of an existing file}
 \usage{
-confirm_and_delete(file_path, prompt = glue("Delete {file_path}?"))
+confirm_and_delete(file_path, prompt = glue::glue("Delete {file_path}?"))
 }
 \arguments{
 \item{prompt}{A yes/no question to ask the user}

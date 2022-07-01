@@ -4,6 +4,20 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Robert", "Roper", , "rob@rcroper.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
+Imports:
+    DBI,
+    dplyr,
+    glue,
+    haven,
+    lubridate,
+    purrr,
+    readr,
+    rlog,
+    stringr,
+    tibble,
+    tidyr
+Suggests:
+    RSQLite
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

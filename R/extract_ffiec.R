@@ -11,10 +11,6 @@
 #' @param ffiec_zip_path A single character value containing an existing folder
 #' containing the ZIP files
 #' @return NULL
-#' @importFrom magrittr %>%
-#' @importFrom DBI dbListTables dbRemoveTable dbDisconnect
-#' @importFrom purrr walk pwalk
-#' @importFrom rlog log_info
 #' @export
 #' @examples
 #' db_connector <- db_connector_sqlite('./db/ffiec.sqlite')
@@ -24,24 +20,24 @@ extract_all_ffiec_zips <-
     if (!dir.exists('./logs')) dir.create('./logs')
     
     dttm_str <- 
-      str_remove_all(Sys.time(), '[-:]') %>% 
-      str_replace_all('\\s', '_')
-    log_filename <- glue('./logs/extract_ffiec_{dttm_str}.log.txt')
+      stringr::str_remove_all(Sys.time(), '[-:]') %>% 
+      stringr::str_replace_all('\\s', '_')
+    log_filename <- glue::glue('./logs/extract_ffiec_{dttm_str}.log.txt')
     
     ffiec_zips <- list_ffiec_zips('~/data/callreports/ffiec')
-    date_table <- tibble(ID          = 1:length(ffiec_zips),
-                         REPORT_DATE = extract_ffiec_datestr(ffiec_zips))
+    date_table <- tibble::tibble(ID          = 1:length(ffiec_zips),
+                                 REPORT_DATE = extract_ffiec_datestr(ffiec_zips))
     
     list_ffiec_zips_and_schedules(ffiec_zip_path) %>%
-      pwalk(function(zip_file, sch_file) {
-        extract_ffiec_schedule(db_connector, zip_file, sch_file)
+      purrr::pwalk(function(zip_file, sch_file) {
+        process_ffiec_schedule(db_connector, zip_file, sch_file)
       })
   }
 
 #' List ZIP and schedule files containing FFIEC bulk call report data
 #' 
 #' `list_ffiec_zips_and_schedules()` provides an easiy traversable data frame
-#' full of zip-schedule pairs that can be used by `extract_ffiec_schedule()`
+#' full of zip-schedule pairs that can be used by `process_ffiec_schedule()`
 #' 
 #' ZIP files containing the bulk data 2001-present offered at the
 #' [FFIEC Bulk Data Download Service](https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx) 
@@ -50,17 +46,14 @@ extract_all_ffiec_zips <-
 #' containing the ZIP files
 #' @return A `tibble` containing the full paths of valid ZIP files in one column
 #' paired with the schedule files contained therein in the other
-#' @importFrom magrittr %>%
-#' @importFrom purrr map_dfr
-#' @importFrom tibble tibble
 #' @export
 #' @examples
 #' list_ffiec_zips_and_schedules('./zips-ffiec')
 list_ffiec_zips_and_schedules <- function(ffiec_zip_path) {
   list_ffiec_zips(ffiec_zip_path) %>%
-    map_dfr(function(zip_file) {
-      tibble(zip_file = zip_file,
-             sch_file = list_ffiec_schedules(zip_file))
+    purrr::map_dfr(function(zip_file) {
+      tibble::tibble(zip_file = zip_file,
+                     sch_file = list_ffiec_schedules(zip_file))
     })
   }
 
@@ -74,19 +67,15 @@ list_ffiec_zips_and_schedules <- function(ffiec_zip_path) {
 #' @param ffiec_zip_path A single character value containing an existing folder
 #' containing the ZIP files
 #' @return A character vector containing the full paths of valid ZIP files
-#' @importFrom magrittr %>%
-#' @importFrom dplyr arrange
-#' @importFrom purrr map_chr
-#' @importFrom tibble tibble
 #' @export
 #' @examples
 #' list_ffiec_zips('./zips-ffiec')
 list_ffiec_zips <- function(ffiec_zip_path) {
   rx_pattern <- '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$'
   list.files(ffiec_zip_path, pattern = rx_pattern) %>%
-    map_dfr(~ tibble(rep_date = extract_ffiec_datestr(.),
+    purrr::map_dfr(~ tibble::tibble(rep_date = extract_ffiec_datestr(.),
                      filename = paste0(ffiec_zip_path, '/', .))) %>%
-    arrange(rep_date) %>%
+    dplyr::arrange(rep_date) %>%
     getElement('filename')
 }
 
@@ -100,8 +89,6 @@ list_ffiec_zips <- function(ffiec_zip_path) {
 #'
 #' @param zip_file A ZIP file containing bulk data provided by the FFIEC
 #' @return A `tibble` with the name of  containing the schedule filenames contained in `zip_file`
-#' @importFrom magrittr %>%
-#' @importFrom stringr str_detect
 #' @export
 #' @examples
 #' list_ffiec_schedules('FFIEC CDR Call Bulk All Schedules 06302004.zip')
@@ -109,16 +96,12 @@ list_ffiec_schedules <- function(zip_file) {
   rx <- paste0('FFIEC CDR Call Schedule [[:alpha:]]+ [[:digit:]]{8}',
                '(\\([[:digit:]] of [[:digit:]]\\))*\\.txt')
   unzip(zip_file, list = TRUE) %>% getElement('Name') %>%
-    subset(str_detect(., rx)) %>% subset(!str_detect(., 'CI|GCI|GI|GL'))
+    subset(stringr::str_detect(., rx)) %>% subset(!stringr::str_detect(., 'CI|GCI|GI|GL'))
 }
-
-
-
-
 
 #' Extract the FFIEC codebook and all observations for a single schedule
 #' 
-#' `extract_ffiec_schedule()` accepts a ZIP file, extracts one of its enclosed
+#' `process_ffiec_schedule()` accepts a ZIP file, extracts one of its enclosed
 #' tab-separated-value schedule files, and writes the extracted data to a given
 #' database.
 #' 
@@ -129,20 +112,16 @@ list_ffiec_schedules <- function(zip_file) {
 #' functions found in this package. It should be passed without the `()`
 #' @param zf A ZIP file containing schedule files
 #' @param sch A valid FFIEC schedule data file inside the ZIP file `zf`
-#' @return NULL
-#' @importFrom dplyr inner_join
-#' @importFrom glue glue
-#' @importFrom rlog log_info
 #' @export
 #' @examples
 #' The database connector only needs to be created once in any given script.
 #' ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
-#' extract_ffiec_schedule(
+#' process_ffiec_schedule(
 #'   ffiec_db,
 #'   './zips-ffiec/FFIEC FFIEC CDR Call Bulk All Schedules 03312018.zip',
 #'   'FFIEC CDR Call Schedule RCCII 06302002.txt'
 #' )
-extract_ffiec_schedule <- function(db_connector, zf, sch) {
+process_ffiec_schedule <- function(db_connector, zf, sch) {
   # Unzip the schedule file and get some basic metadata for the codebook
   unzip(zf, sch, exdir = tempdir(), unzip = getOption('unzip'))
   sch_unzipped <- paste0(tempdir(), '/', sch)
@@ -152,8 +131,8 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
   report_date  <- sch_info['report_date']
   sch_code     <- sch_info['sch_code']
   part_str     <- 
-    ifelse(sch_info[4] != "1", glue('({sch_info[3]} of {sch_info[4]})'), '')
-  log_info(glue('{report_date} {sch_code} {part_str}'))
+    ifelse(sch_info[4] != "1", glue::glue('({sch_info[3]} of {sch_info[4]})'), '')
+  rlog::log_info(glue::glue('{report_date} {sch_code} {part_str}'))
   
   # Move on if we've already extracted this one. A schedule file's codebook
   # record is written to the database only if the respective observations are 
@@ -164,13 +143,13 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
   db_not_empty <- nrow(scheds_in_db) > 0
 
   if (db_not_empty) {
-    matching_sch_in_db <- filter(scheds_in_db,
+    matching_sch_in_db <- dplyr::filter(scheds_in_db,
                                  REPORT_DATE   == report_date,
                                  SCHEDULE_CODE == sch_code,
                                  PART_NUM      == sch_info['part_num'],
                                  PART_OF       == sch_info['part_of'])
     if (nrow(matching_sch_in_db) == 1) {
-      log_info('Schedule already in database. Moving to next...')
+      rlog::log_info('Schedule already in database. Moving to next...')
       cat('\n')
       return()
     }
@@ -184,33 +163,33 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
   # observation tables.
   df_codes  <- extract_ffiec_codebook(sch_unzipped)
   var_codes <- unique(df_codes$VAR_CODE)
-  write_ffiec_varcodes(db_connector, var_codes)
+  write_var_codes(db_connector, var_codes)
   
   # Attempt to extract the observations for this file. If a warning is issued 
   # that is not explicitly absorbed and reconciled by the observation extraction
   # function, a visible warning log will be shown here.
   db_conn <- db_connector()
   df_varcodes <- 
-    dbReadTable(db_conn, 'VAR_CODES') %>%
-    filter(VAR_CODE %in% var_codes) %>%
-    collect()
+    DBI::dbReadTable(db_conn, 'VAR_CODES') %>%
+    dplyr::filter(VAR_CODE %in% var_codes) %>%
+    dplyr::collect()
   df_obs <- 
-    extract_ffiec_obs(sch_unzipped) %>%
-    pivot_longer(names_to  = 'VAR_CODE',
+    extract_ffiec_schedule(sch_unzipped) %>%
+    tidyr::pivot_longer(names_to  = 'VAR_CODE',
                  values_to = 'VALUE',
-                 cols = !matches('IDRSSD'),
+                 cols = !any_of(c('IDRSSD')),
                  values_drop_na = TRUE) %>%
-    mutate(IDRSSD     = as.integer(IDRSSD),
-           QUARTER_ID = as.integer(ffiec_date_str_to_qtr_id(report_date))) %>%
-    inner_join(df_varcodes, by = 'VAR_CODE') %>%
-    rename(VAR_CODE_ID = ID) %>%
-    select(IDRSSD, QUARTER_ID, VAR_CODE_ID, VALUE)
+    dplyr::mutate(IDRSSD     = as.integer(IDRSSD),
+           QUARTER_ID = as.integer(date_str_to_qtr_id(report_date))) %>%
+    dplyr::inner_join(df_varcodes, by = 'VAR_CODE') %>%
+    dplyr::rename(VAR_CODE_ID = ID) %>%
+    dplyr::select(IDRSSD, QUARTER_ID, VAR_CODE_ID, VALUE)
   df_summ  <- 
-    tibble(REPORT_DATE   = report_date,
-           SCHEDULE_CODE = sch_code,
-           PART_NUM      = sch_info[3],
-           PART_OF       = sch_info[4],
-           N_OBS         = ifelse(is.null(df_obs), 0, nrow(df_obs)))
+    tibble::tibble(REPORT_DATE   = report_date,
+                   SCHEDULE_CODE = sch_code,
+                   PART_NUM      = sch_info[3],
+                   PART_OF       = sch_info[4],
+                   N_OBS         = ifelse(is.null(df_obs), 0, nrow(df_obs)))
   
   write_ffiec_schedule(db_connector, sch_code, df_obs, df_codes, df_summ)
   unlink(sch_unzipped)
@@ -218,7 +197,7 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
 
 #' Extract the observations for a given FFIEC schedule file to a database
 #'
-#' `extract_ffiec_obs()` accepts a text file containing tab-separated-value
+#' `extract_ffiec_schedule()` accepts a text file containing tab-separated-value
 #' bulk data provided by the FFIEC, and writes it to a given database.
 #' 
 #' If any warnings are triggered about parsing issues, they are absorbed by the
@@ -229,39 +208,35 @@ extract_ffiec_schedule <- function(db_connector, zf, sch) {
 #' have been working without warnings.
 #'
 #' Most applications will not use this function as it is called by
-#' `extract_ffiec_schedule()` as part of extracting the codebook and observations
+#' `process_ffiec_schedule()` as part of extracting the codebook and observations
 #' simultaneously.
 #'
 #' ZIP files containing valid schedule files for 2001-present are offered at the
 #' [FFIEC Bulk Data Download Service](https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx) 
 #' 
 #' @param sch_unzipped A valid FFIEC schedule data file extracted to disk#'
-#' @importFrom magrittr %>%
-#' @importFrom dplyr mutate select
-#' @importFrom rlog log_info
-#' @importFrom tidyr pivot_longer
 #' @export
 #' @examples 
 #' # The database connector only needs to be created once in any given script.
 #' ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite')
-#' extract_ffiec_obs(ffiec_db, 'FFIEC CDR Call Schedule RCCII 06302002.txt')
-extract_ffiec_obs <- function(sch_unzipped) {
+#' extract_ffiec_schedule(ffiec_db, 'FFIEC CDR Call Schedule RCCII 06302002.txt')
+extract_ffiec_schedule <- function(sch_unzipped) {
   sch_file    <- basename(sch_unzipped)
   sch_code    <- extract_schedule_code(sch_unzipped)
   report_date <- extract_ffiec_datestr(sch_unzipped)
-  log_info(glue('Extracting observations...'))
+  rlog::log_info(glue::glue('Extracting observations...'))
   
   df_obs <- tryCatch(
-    df_obs <- parse_ffiec_obs(sch_unzipped),
+    df_obs <- parse_ffiec_schedule(sch_unzipped),
     warning = function(w) {
-      log_info('Warning issued trying to extract. Running repair function...')
+      rlog::log_info('Warning issued trying to extract. Running repair function...')
       sch_fixed <- fix_broken_ffiec_obs(sch_unzipped)
       tryCatch(
-        df_obs <- parse_ffiec_obs(sch_fixed),
+        df_obs <- parse_ffiec_schedule(sch_fixed),
         warning = function(w) {
-          log_info('Warning still issued after repairing. You may wish to')
-          log_info(glue('investigate table {sch_code} for {report_date}.'))
-          df_obs <- suppressWarnings(parse_ffiec_obs(sch_fixed))
+          rlog::log_info('Warning still issued after repairing. You may wish to')
+          rlog::log_info(glue::glue('investigate table {sch_code} for {report_date}.'))
+          df_obs <- suppressWarnings(parse_ffiec_schedule(sch_fixed))
         }
       )
     })
@@ -271,7 +246,7 @@ extract_ffiec_obs <- function(sch_unzipped) {
 
 #' Parse the observations in a given FFIEC schedule file for processing in `R`
 #'
-#' `parse_ffiec_obs()` accepts a text file containing tab-separated-value
+#' `parse_ffiec_schedule()` accepts a text file containing tab-separated-value
 #' bulk data provided by the FFIEC, and parses them into an object that can
 #' be manipulated in `R`.
 #'
@@ -290,34 +265,29 @@ extract_ffiec_obs <- function(sch_unzipped) {
 #' functions found in this package. It should be passed without the `()`
 #' @param sch_unzipped A valid FFIEC schedule data file extracted to disk#'
 #' @return A `tibble` containing the schedule data in wide form
-#' @importFrom magrittr %>%
-#' @importFrom dplyr rename select
-#' @importFrom purrr map2_chr
-#' @importFrom readr cols col_character read_tsv
-#' @importFrom rlog log_info
 #' @export
 #' @examples 
-#' parse_ffiec_obs('FFIEC CDR Call Schedule RCCII 06302002.txt')
-parse_ffiec_obs <- function(sch_unzipped) {
+#' parse_ffiec_schedule('FFIEC CDR Call Schedule RCCII 06302002.txt')
+parse_ffiec_schedule <- function(sch_unzipped) {
   sch_file <- basename(sch_unzipped)
-  log_info(glue('Parsing observations in {sch_file}'))
+  rlog::log_info(glue::glue('Parsing observations in {sch_file}'))
   
   old_coltype_option <- getOption('readr.show_col_types')
   options(readr.show_col_types = FALSE)
   df_out <-
-    read_tsv(sch_unzipped,
-             skip = 2,
-             na = c('', 'NA', 'NR', 'CONF'),
-             col_names  = extract_ffiec_names(sch_unzipped),
-             col_types  = cols(.default = col_character()),
-             name_repair = 
-               ~ map2_chr(.x, 1:length(.x),
-                          ~ ifelse(..1 == '', paste0('NONAME_', ..2), ..1)),
-             col_select = !matches('NONAME_'),
-             progress   = FALSE) %>%
-    rename(IDRSSD = `"IDRSSD"`) %>%
-    select(!any_of('RCON9999')) %>%
-    mutate(IDRSSD = as.character(IDRSSD))
+    readr::read_tsv(sch_unzipped,
+                    skip = 2,
+                    na = c('', 'NA', 'NR', 'CONF'),
+                    col_names  = extract_ffiec_names(sch_unzipped),
+                    col_types  = readr::cols(.default = readr::col_character()),
+                    name_repair = 
+                      ~ purrr::map2_chr(.x, 1:length(.x),
+                                        ~ ifelse(..1 == '', paste0('NONAME_', ..2), ..1)),
+                    col_select = !matches('NONAME_'),
+                    progress   = FALSE) %>%
+    dplyr::rename(IDRSSD = `"IDRSSD"`) %>%
+    dplyr::select(!any_of('RCON9999')) %>%
+    dplyr::mutate(IDRSSD = as.character(IDRSSD))
   options(readr.show_col_types = old_coltype_option)
   return(df_out) 
 }
@@ -331,7 +301,7 @@ parse_ffiec_obs <- function(sch_unzipped) {
 #' descriptions, and the table where they can be found to a given database.
 #'
 #' Most applications will not use this function as it is called by
-#' `extract_ffiec_schedule()` as part of extracting the codebook and observations
+#' `process_ffiec_schedule()` as part of extracting the codebook and observations
 #' simultaneously.
 #'
 #' ZIP files containing valid schedule files for 2001-present are offered at the
@@ -339,8 +309,6 @@ parse_ffiec_obs <- function(sch_unzipped) {
 #' 
 #' @param sch_unzipped The path to a valid FFIEC schedule data file on disk
 #' @return NULL
-#' @importFrom stringr str_extract
-#' @importFrom tibble tibble
 #' @export
 #' @examples
 #' # The database connector only needs to be created once in any given script.
@@ -350,18 +318,18 @@ extract_ffiec_codebook <- function(sch_unzipped) {
   sch_file <- basename(sch_unzipped)
   sch_code <- extract_schedule_code(sch_file)
   
-  log_info(glue('Extracting codebook...'))
+  rlog::log_info(glue::glue('Extracting codebook...'))
   report_date <- extract_ffiec_datestr(sch_unzipped)
   sch_code    <- extract_schedule_code(sch_unzipped)
   part_code   <- extract_part_codes(sch_unzipped)
   
-  tibble(
+  tibble::tibble(
     REPORT_DATE   = report_date,
     SCHEDULE_CODE = sch_code,
     PART_NUM      = part_code[1],
     PART_OF       = part_code[2],
     VAR_CODE      = extract_ffiec_names(sch_unzipped),
     VAR_DESC      = extract_ffiec_descs(sch_unzipped)
-  ) %>% filter(str_length(VAR_DESC) != 0)
+  ) %>% dplyr::filter(stringr::str_length(VAR_DESC) != 0)
 }
 

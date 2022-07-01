@@ -16,7 +16,7 @@ paired with the schedule files contained therein in the other
 }
 \description{
 \code{list_ffiec_zips_and_schedules()} provides an easiy traversable data frame
-full of zip-schedule pairs that can be used by \code{extract_ffiec_schedule()}
+full of zip-schedule pairs that can be used by \code{process_ffiec_schedule()}
 }
 \details{
 ZIP files containing the bulk data 2001-present offered at the
