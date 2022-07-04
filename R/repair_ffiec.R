@@ -1,6 +1,6 @@
 #' Repair a broken FFIEC schedule file
 #' 
-#' `fix_broken_ffiec_obs()` takes the path to an unzipped FFIEC schedule file
+#' `repair_ffiec_schedule()` takes the path to an unzipped FFIEC schedule file
 #' suspected to contain broken observations, and repairs them if found, returning
 #' either the path to the new file if changed, or the path to the unchanged
 #' file otherwise.
@@ -26,11 +26,11 @@
 #' unchanged file if there were no repairs to be made
 #' @export
 #' @examples
-#' fix_broken_ffiec_obs('FFIEC CDR Call Schedule RIE 06302004.txt')
-fix_broken_ffiec_obs <- function(sch_unzipped) {
+#' repair_ffiec_schedule('FFIEC CDR Call Schedule RIE 06302004.txt')
+repair_ffiec_schedule <- function(sch_unzipped) {
   rlog::log_info(glue::glue('Checking integrity of {sch_unzipped}...'))
-  var_codes <- extract_ffiec_names(sch_unzipped)
-  var_descs <- extract_ffiec_descs(sch_unzipped)
+  var_codes <- read_ffiec_varcodes(sch_unzipped)
+  var_descs <- read_ffiec_vardescs(sch_unzipped)
   
   if (length(var_codes) != length(var_descs)) {
     rlog::log_info('Unequal number of values in name and description rows.')
