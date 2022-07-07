@@ -4,7 +4,7 @@
 \alias{extract_chifed_zip}
 \title{Extract the Chicago Fed's data observations to a database}
 \usage{
-extract_chifed_zip(db_connector, zip_file)
+extract_chifed_zip(db_connector, zip_file = NULL)
 }
 \arguments{
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}

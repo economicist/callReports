@@ -4,7 +4,7 @@
 \alias{list_chifed_zips}
 \title{List ZIP files containing Call Report data from the Chicago Fed}
 \usage{
-list_chifed_zips(chifed_zip_path)
+list_chifed_zips(chifed_zip_path = get_chifed_zip_path())
 }
 \arguments{
 \item{chifed_zip_path}{A single character value containing an existing folder

@@ -4,7 +4,7 @@
 \alias{db_connector_sqlite}
 \title{Create a \code{function} that opens an SQLite connection on command.}
 \usage{
-db_connector_sqlite(sqlite_db_path, overwrite = FALSE)
+db_connector_sqlite(sqlite_db_path = get_sqlite_file(), overwrite = FALSE)
 }
 \arguments{
 \item{sqlite_db_path}{The path to an SQLite database file. Must be in an

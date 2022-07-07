@@ -9,7 +9,7 @@
 #' @export
 #' @examples
 #' list_chifed_zips('./zips-chifed')
-list_chifed_zips <- function(chifed_zip_path) {
+list_chifed_zips <- function(chifed_zip_path = get_chifed_zip_path()) {
   matching_zips <- 
     list.files(chifed_zip_path,
                pattern = '(CALL|call)[[:digit:]]{4}-(ZIP|zip)\\.(ZIP|zip)',
@@ -59,12 +59,14 @@ list_ffiec_zips_and_tsvs <- function(ffiec_zip_path) {
 #' @export
 #' @examples
 #' list_ffiec_zips('./zips-ffiec')
-list_ffiec_zips <- function(ffiec_zip_path) {
+list_ffiec_zips <- function(ffiec_zip_path = get_ffiec_zip_path()) {
   rx_pattern <- '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$'
   list.files(ffiec_zip_path, pattern = rx_pattern) %>%
-    purrr::map_dfr(~ tibble::tibble(rep_date = parse_mdy_substring(.),
-                                    filename = paste0(ffiec_zip_path, '/', .))) %>%
-    dplyr::arrange(rep_date) %>%
+    purrr::map_dfr(
+      ~ tibble::tibble(report_date = parse_mdy_substring(.),
+                       filename = paste0(ffiec_zip_path, '/', .))
+    ) %>%
+    dplyr::arrange(report_date) %>%
     getElement('filename')
 }
 
@@ -81,7 +83,7 @@ list_ffiec_zips <- function(ffiec_zip_path) {
 #' @export
 #' @examples
 #' list_ffiec_tsvs('FFIEC CDR Call Bulk All Schedules 06302004.zip')
-list_ffiec_tsvs <- function(zip_file) {
+list_ffiec_tsvs <- function(zip_file = rstudioapi::selectFile()) {
   rx <- paste0('FFIEC CDR Call Schedule [[:alpha:]]+ [[:digit:]]{8}',
                '(\\([[:digit:]] of [[:digit:]]\\))*\\.txt')
   unzip(zip_file, list = TRUE) %>% getElement('Name') %>%

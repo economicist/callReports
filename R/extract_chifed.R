@@ -13,11 +13,16 @@
 #' @examples
 #' extract_all_chifed_zips('./zips-chifed')
 extract_all_chifed_zips <- 
-  function(db_connector, chifed_zip_path) {
-    codebook_path <- glue::glue('{chifed_zip_folder}/MDRM.zip')
-    extract_chifed_mdrm(db_connector, codebook_path)
-    list_chifed_zips(chifed_zip_path) %>%
-      purrr::walk(~ extract_chifed_zip(db_connector, .))
+  function(db_connector, chifed_zip_path = get_chifed_zip_dir()) {
+    closeAllConnections()
+    codebook_path <- glue::glue('{chifed_zip_path}/MDRM.zip')
+    capture.output({
+      extract_chifed_mdrm(db_connector, codebook_path)
+      list_chifed_zips(chifed_zip_path) %>%
+        purrr::walk(~ extract_chifed_zip(db_connector, .))
+    },
+    file = generate_log_name('extraction_chifed'),
+    split = TRUE)
   }
 
 #' Extract the Chicago Fed's data observations to a database
@@ -35,7 +40,10 @@ extract_all_chifed_zips <-
 #' # The database connector only needs to be created once in any given script.
 #' chifed_db <- sqlite_connector('./db/chifed.sqlite')
 #' extract_chifed_zip(chifed_db, './zips-chifed/call0003-zip.zip')
-extract_chifed_zip <- function(db_connector, zip_file) {
+extract_chifed_zip <- function(db_connector, zip_file = NULL) {
+  if (is.null(zip_file)) {
+    zip_file <- rstudioapi::selectFile(path = get_chifed_zip_dir())
+  }
   yy     <- stringr::str_match(zip_file, '([[:digit:]]{2})[[:digit:]]{2}')[1, 2]
   yyyy   <- ifelse(yy == '00', '2000', paste0('19', yy))
   mm     <- stringr::str_match(zip_file, '[[:digit:]]{2}([[:digit:]]{2})')[1, 2]

@@ -4,7 +4,7 @@
 \alias{extract_all_chifed_zips}
 \title{List ZIP files containing Call Report data from the Chicago Fed}
 \usage{
-extract_all_chifed_zips(db_connector, chifed_zip_path)
+extract_all_chifed_zips(db_connector, chifed_zip_path = get_chifed_zip_dir())
 }
 \arguments{
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}

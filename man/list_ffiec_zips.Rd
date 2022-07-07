@@ -4,7 +4,7 @@
 \alias{list_ffiec_zips}
 \title{List ZIP files containing Call Report data from the FFIEC}
 \usage{
-list_ffiec_zips(ffiec_zip_path)
+list_ffiec_zips(ffiec_zip_path = get_ffiec_zip_path())
 }
 \arguments{
 \item{ffiec_zip_path}{A single character value containing an existing folder

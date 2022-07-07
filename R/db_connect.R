@@ -10,34 +10,30 @@
 #' @export
 #' @examples
 #' db_connector_sqlite('./db/ffiec.sqlite')
-db_connector_sqlite <- function(sqlite_db_path, overwrite = FALSE) {
-  dir_name  <- dirname(sqlite_db_path)
-  dir_name  <- ifelse(dir_name == '.', getwd(), dir_name)
-  file_name <- basename(sqlite_db_path)
-  
-  if (!dir.exists(dir_name)) {
-    stop(glue::glue(
-      'Directory `{dir_name}` does not exist. Confirm or create it.'))
-  }
-  
-  if (file.exists(sqlite_db_path)) {
-    journal_path <- glue::glue('{sqlite_db_path}-journal')
-    if (file.exists(journal_path)) {
-      cat(glue::glue('Database lock file {journal_path} detected.'), '\n')
-      cat('This can be because there is an active transaction being performed\n')
-      cat('on the database, or perhaps because a transaction was interrupted.\n')
-      confirm_and_delete(journal_path)
+db_connector_sqlite <- 
+  function(sqlite_db_path = get_sqlite_file(), overwrite = FALSE) {
+    dir_name  <- dirname(sqlite_db_path)
+    dir_name  <- ifelse(dir_name == '.', getwd(), dir_name)
+    file_name <- basename(sqlite_db_path)
+    
+    if (!dir.exists(dir_name)) {
+      stop(glue::glue(
+        'Directory `{dir_name}` does not exist. Confirm or create it.'))
     }
-    if (overwrite) confirm_and_delete(sqlite_db_path)
-  } else {
-    cat(glue::glue(
-      '`{file_name}` does not exist in directory `{dir_name}`'), '\n')
-    cat('Attempting to create it...\n')
-    tryCatch(create_new_sqlite_db(sqlite_db_path), error = stop)
+    
+    if (file.exists(sqlite_db_path)) {
+      journal_path <- glue::glue('{sqlite_db_path}-journal')
+      if (file.exists(journal_path)) confirm_and_delete(journal_path)
+      if (overwrite) confirm_and_delete(sqlite_db_path)
+    } else {
+      cat(glue::glue(
+        '`{file_name}` does not exist in directory `{dir_name}`'), '\n')
+      cat('Attempting to create it...\n')
+      tryCatch(create_new_sqlite_db(sqlite_db_path), error = stop)
+    }
+    
+    function() DBI::dbConnect(RSQLite::SQLite(), sqlite_db_path)
   }
-  
-  function() DBI::dbConnect(RSQLite::SQLite(), sqlite_db_path)
-}
 
 #' Create a new SQLite database to extract data into
 #' 

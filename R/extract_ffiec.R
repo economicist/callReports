@@ -16,17 +16,17 @@
 #' db_connector <- db_connector_sqlite('./db/ffiec.sqlite')
 #' extract_ffiec_zips_to_db(db_connector, './zips-ffiec')
 extract_ffiec_zips <- 
-  function(db_connector, ffiec_zip_path, overwrite = FALSE) {
-    if (!dir.exists('./logs')) dir.create('./logs')
-    
-    ffiec_zips <- list_ffiec_zips('~/data/callreports/ffiec')
-    date_table <- tibble::tibble(ID          = 1:length(ffiec_zips),
-                                 REPORT_DATE = parse_mdy_substring(ffiec_zips))
-    
-    list_ffiec_zips_and_tsvs(ffiec_zip_path) %>%
-      purrr::pwalk(function(zip_file, sch_file) {
-        extract_ffiec_tsv(db_connector, zip_file, sch_file)
-      })
+  function(db_connector   = get_db_connector, 
+           ffiec_zip_path = get_ffiec_zip_dir()) {
+    closeAllConnections()
+    capture.output({
+      list_ffiec_zips_and_tsvs(ffiec_zip_path) %>%
+        purrr::pwalk(function(zip_file, sch_file) {
+          extract_ffiec_tsv(db_connector, zip_file, sch_file)
+        })
+    },
+    file  = generate_log_name('extraction_ffiec'),
+    split = TRUE)
   }
 
 #' Extract the FFIEC codebook and all observations for a single schedule

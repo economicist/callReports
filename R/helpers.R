@@ -8,23 +8,24 @@
 #' @return `TRUE` if the user responds with any of "Y", "YES", "T", or "TRUE"
 #' (case-insensitive).
 #' @export
-confirm_and_delete <- function(file_path, prompt = glue::glue('Delete {file_path}?')) {
-  # If the file isn't there to delete, pretend we've deleted it.
-  if (!file.exists(file_path)) return(TRUE)
-  
-  # If it is, prompt the user for confirmation to delete it.
-  permission <- readline(prompt = glue::glue('{prompt} [y/N]: ')) %>% toupper()
-  
-  # Delete the file if permission to delete is granted.
-  if (permission %in% c('Y', 'YES', 'T', 'TRUE')) {
+confirm_and_delete <- 
+  function(file_path, prompt = glue::glue('Delete {file_path}?')) {
+    # If the file isn't there to delete, pretend we've deleted it.
+    if (!file.exists(file_path)) return(TRUE)
+    
+    # If it is, prompt the user for confirmation to delete it.
+    permission <- toupper(readline(prompt = glue::glue('{prompt} [y/N]: ')))
+
+    # Stop and signal an error if permission is not granted.
+    if (permission %not_in% c('Y', 'YES', 'T', 'TRUE')) {
+      stop(glue::glue('Permission to delete {file_path} denied. Exiting...'))
+    }
+    
+    # Otherwise, delete the file
     rlog::log_info(glue::glue('Deleting {file_path}...'))
     unlink(file_path)
     return(TRUE)
   }
-  
-  # Signal an error if permission to delete is denied.
-  stop(glue::glue('Permission to delete {file_path} denied. Exiting...'))
-}
 
 #' Create a directory if it doesn't exist
 #' 
@@ -74,11 +75,12 @@ fill_na_with_previous <- function(x) {
 #' > generate_log_name('extraction_attempt')
 #' [1] "extraction_attempt_20220628_141233.log.txt"
 generate_log_name <- function(prefix) {
+  logging_dir <- get_logging_dir()
   prefix %<>% stringr::str_replace_all('\\s+', '_')
   timestamp <- 
     Sys.time() %>% stringr::str_replace_all('[-:]', '') %>% 
     stringr::str_replace('\\s', '_')
-  return(glue::glue('{prefix}_{timestamp}.log.txt'))
+  return(glue::glue('{logging_dir}/{prefix}_{timestamp}.log.txt'))
 }
 
 #' Find and parse a date substring
@@ -104,7 +106,7 @@ parse_mdy_substring <- function(chr, format) {
 #' parse_tsv_line('12311  2031  298310')
 #' [1] "12311" "2031" "298310"
 parse_tsv_line <- function(tsv_line) {
-  tsv_line %>% str_split1('\\t')
+  str_split1(tsv_line, '\\t')
 }
 
 #' Repair any invalid column names
@@ -120,14 +122,11 @@ parse_tsv_line <- function(tsv_line) {
 #' @export
 repair_colnames <- function(nms, prefix = 'UNNAMED') {
   repair_colname <- function(nm, idx) {
-    if (is.null(nm) | stringr::str_length(nm) == 0) {
-      return(glue::glue('{prefix}_{idx}'))
-    }
-    new_name <- 
-      stringr::str_trim(nm) %>% 
-      stringr::str_to_upper() %>% 
-      stringr::str_replace_all('[\\.[:space:]]+', '_')
-    return(new_name)
+    ifelse(is.null(nm) | stringr::str_length(stringr::str_trim(nm)) == 0,
+           glue::glue('{prefix}_{idx}'),
+           stringr::str_trim(nm) %>% 
+             stringr::str_to_upper() %>% 
+             stringr::str_replace_all('[\\.[:space:]]+', '_'))
   }
   new_names <- purrr::map2_chr(nms, 1:length(nms), ~ repair_colname(.x, .y))
   return(new_names)

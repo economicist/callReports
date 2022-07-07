@@ -4,7 +4,7 @@
 \alias{list_ffiec_tsvs}
 \title{List schedule files within an FFIEC Call Report ZIP}
 \usage{
-list_ffiec_tsvs(zip_file)
+list_ffiec_tsvs(zip_file = rstudioapi::selectFile())
 }
 \arguments{
 \item{zip_file}{A ZIP file containing bulk data provided by the FFIEC}

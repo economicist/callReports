@@ -4,7 +4,10 @@
 \alias{extract_ffiec_zips}
 \title{Extract an entire directory of FFIEC ZIP files to a database}
 \usage{
-extract_ffiec_zips(db_connector, ffiec_zip_path, overwrite = FALSE)
+extract_ffiec_zips(
+  db_connector = get_db_connector,
+  ffiec_zip_path = get_ffiec_zip_dir()
+)
 }
 \arguments{
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
