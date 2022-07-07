@@ -3,8 +3,8 @@ if (rstudioapi::isAvailable()) {
   setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 }
 
-# library(callReports)
-devtools::document('~/code/callReports/')
+library(callReports)
+# devtools::document('~/code/callReports/')
 
 # Latest feature: Persistent configuration with interactive selections
 #
