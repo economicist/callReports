@@ -86,6 +86,8 @@ list_ffiec_zips <- function(ffiec_zip_path = get_ffiec_zip_path()) {
 list_ffiec_tsvs <- function(zip_file = rstudioapi::selectFile()) {
   rx <- paste0('FFIEC CDR Call Schedule [[:alpha:]]+ [[:digit:]]{8}',
                '(\\([[:digit:]] of [[:digit:]]\\))*\\.txt')
-  unzip(zip_file, list = TRUE) %>% getElement('Name') %>%
-    subset(stringr::str_detect(., rx)) %>% subset(!stringr::str_detect(., 'CI|GCI|GI|GL'))
+  unzip(zip_file, list = TRUE) %>%
+    getElement('Name') %>%
+    subset(stringr::str_detect(., rx)) %>%
+    subset(!stringr::str_detect(., 'CI|GCI|GI|GL'))
 }

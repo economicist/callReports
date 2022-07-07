@@ -1,6 +1,6 @@
 Package: callReports
 Title: A library that extracts and queries call report data from the FFIEC and Chicago Fed
-Version: 0.0.0.9000
+Version: 0.0.0.9100
 Authors@R: 
     person("Robert", "Roper", , "rob@rcroper.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
