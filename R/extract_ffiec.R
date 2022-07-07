@@ -53,10 +53,16 @@ extract_ffiec_zips <-
 #' )
 extract_ffiec_tsv <- function(db_connector, zf, sch) {
   # Unzip the schedule file and get some basic metadata for the codebook
-  unzip(zf, sch, exdir = tempdir(), unzip = getOption('unzip'))
-  sch_unzipped <- paste0(tempdir(), '/', sch)
+  sch_unzipped <- 
+    ifelse(is.null(zf), {
+      ifelse(is.null(sch), 
+             rstudioapi::selectFile(filter = 'Text File (*.txt)'),
+             sch)
+    }, {
+      unzip(zf, sch, exdir = tempdir())
+      paste0(tempdir(), '/', sch)
+    })
   sch_file     <- basename(sch_unzipped)
-  
   sch_info     <- read_ffiec_filename(sch_file)
   report_date  <- sch_info['report_date']
   sch_code     <- sch_info['sch_code']

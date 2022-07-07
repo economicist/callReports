@@ -60,12 +60,13 @@ list_ffiec_zips_and_tsvs <- function(ffiec_zip_path) {
 #' @examples
 #' list_ffiec_zips('./zips-ffiec')
 list_ffiec_zips <- function(ffiec_zip_path = get_ffiec_zip_path()) {
+  print(ffiec_zip_path)
   rx_pattern <- '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$'
   list.files(ffiec_zip_path, pattern = rx_pattern) %>%
     purrr::map_dfr(
       ~ tibble::tibble(report_date = parse_mdy_substring(.),
                        filename = paste0(ffiec_zip_path, '/', .))
-    ) %>%
+    ) %T>% print() %>%
     dplyr::arrange(report_date) %>%
     getElement('filename')
 }

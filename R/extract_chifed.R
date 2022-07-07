@@ -11,8 +11,8 @@
 #' @return A character vector containing the full paths of valid ZIP files
 #' @export
 #' @examples
-#' extract_all_chifed_zips('./zips-chifed')
-extract_all_chifed_zips <- 
+#' extract_chifed_zips('./zips-chifed')
+extract_chifed_zips <- 
   function(db_connector, chifed_zip_path = get_chifed_zip_dir()) {
     closeAllConnections()
     codebook_path <- glue::glue('{chifed_zip_path}/MDRM.zip')
