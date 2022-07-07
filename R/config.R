@@ -11,7 +11,7 @@ get_chifed_zip_dir <- function() {
 #' @return A directory character value
 #' @export
 get_ffiec_zip_dir <- function() {
-  pkgconfig::get_config('chifed_zip_dir', fallback = set_ffiec_zip_dir())
+  pkgconfig::get_config('ffiec_zip_dir', fallback = set_ffiec_zip_dir())
 }
 
 #' Get the directory where the extraction and query logs are stored
@@ -26,8 +26,8 @@ get_logging_dir <- function() {
 #'
 #' @return A directory character value
 #' @export
-get_sqlite_file <- function() {
-  pkgconfig::get_config('sqlite_file', fallback = set_sqlite_file())
+get_sqlite_filename <- function() {
+  pkgconfig::get_config('sqlite_file', fallback = set_sqlite_filename())
 }
 
 #' Set the directory where the Chicago Fed ZIP files are stored
@@ -73,7 +73,7 @@ set_logging_dir <- function(path = NULL) {
 #'
 #' @return A directory character value
 #' @export
-set_sqlite_file <- function(path = NULL) {
+set_sqlite_filename <- function(path = NULL) {
   ext_filter <- 'SQLite Databases (*.db, *.db3, *.sqlite, *.sqlite3)'
   if (is.null(path)) {
     prompt <- 'Select an SQLite database to save extracted data to:'

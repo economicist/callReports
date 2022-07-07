@@ -4,10 +4,10 @@
 \alias{create_new_sqlite_db}
 \title{Create a new SQLite database to extract data into}
 \usage{
-create_new_sqlite_db(sqlite_db_path)
+create_new_sqlite_db(sqlite_path, overwrite = FALSE, confirm = TRUE)
 }
 \arguments{
-\item{sqlite_db_path}{A path containing at least a valid SQLite filename. It
+\item{sqlite_path}{A path containing at least a valid SQLite filename. It
 will be created in the current working directory if is not specified as part
 of the filename.}
 }
@@ -16,12 +16,12 @@ A \code{function} that opens a connection to the newly created SQLite
 database on demand
 }
 \description{
-If the SQLite database filename specified in \code{sqlite_db_path} already exists
+If the SQLite database filename specified in \code{sqlite_path} already exists
 and \code{overwrite} is set to \code{FALSE}, the user will be prompted to explicitly
 permit overwriting it it.
 }
 \details{
-\code{db_connector_sqlite(sqlite_db_path)} requires the path to a valid existing
+\code{db_connector_sqlite(sqlite_path)} requires the path to a valid existing
 SQLite database file. If one does not exist, one should be created using this
 function before proceeding to extract data.
 }
