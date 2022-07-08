@@ -1,3 +1,9 @@
+#' Write a dataframe of Chicago Fed observations to the database
+#'
+#' @param db_connector A `function` created by one of the `db_connector_*()` 
+#' functions found in this package. It should be passed without the `()`
+#' @param df_long A dataframe of observations in long form
+#' @export
 write_chifed_observations <- function(db_connector, df_long) {
   db_conn <- db_connector()
   tryCatch({
