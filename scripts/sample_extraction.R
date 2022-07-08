@@ -1,6 +1,6 @@
 rm(list = ls(all.names = TRUE))
-library(callReports)
-
+# library(callReports)
+devtools::document()
 # Latest feature: Persistent configuration with interactive selections
 #
 # Not necessary to run the following `setter` functions the first time you use

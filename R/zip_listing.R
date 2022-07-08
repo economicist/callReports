@@ -63,7 +63,9 @@ list_ffiec_zips <- function(ffiec_zip_path = get_ffiec_zip_path()) {
   rx_pattern <- '^FFIEC CDR Call Bulk All Schedules [[:digit:]]{8}\\.zip$'
   list.files(ffiec_zip_path, pattern = rx_pattern) %>%
     purrr::map_dfr(
-      ~ tibble::tibble(report_date = lubridate::mdy(.),
+      ~ tibble::tibble(report_date = 
+                         stringr::str_extract(., '[[:digit:]]{8}') %>%
+                         lubridate::mdy(),
                        filename    = paste0(ffiec_zip_path, '/', .))
     ) %>%
     dplyr::arrange(report_date) %>%
