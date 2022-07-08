@@ -59,7 +59,7 @@ extract_ffiec_tsv <- function(db_connector, zf, sch) {
              rstudioapi::selectFile(filter = 'Text File (*.txt)'),
              sch)
     }, {
-      unzip(zf, sch, exdir = tempdir())
+      unzip(zf, sch, exdir = tempdir(), unzip = getOption('unzip'))
       paste0(tempdir(), '/', sch)
     })
   sch_file     <- basename(sch_unzipped)
