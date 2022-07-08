@@ -76,8 +76,10 @@ set_logging_dir <- function(path = NULL) {
 set_sqlite_filename <- function(path = NULL) {
   ext_filter <- 'SQLite Databases (*.db, *.db3, *.sqlite, *.sqlite3)'
   if (is.null(path)) {
-    prompt <- 'Select an SQLite database to save extracted data to:'
-    path <- rstudioapi::selectFile(filter = ext_filter, existing = FALSE)
+    prompt <- 'Select or create an SQLite database for extracted data:'
+    path <- rstudioapi::selectFile(caption = prompt, 
+                                   filter = ext_filter, 
+                                   existing = FALSE)
   }
   pkgconfig::set_config(sqlite_file = path)
   pkgconfig::get_config('sqlite_file')

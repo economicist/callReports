@@ -83,20 +83,6 @@ generate_log_name <- function(prefix) {
   return(glue::glue('{logging_dir}/{prefix}_{timestamp}.log.txt'))
 }
 
-#' Find and parse a date substring
-#'
-#' @param A character scalar containing a substring that can be interpreted
-#' as a date.
-#' @return A character value in `YYYY-MM-DD` format containing the date of the
-#' report corresponding to that schedule filename.
-#' @export
-#' @examples
-#' > parse_mdy_substring('FFIEC CDR Call Schedule RCCII 06302002.txt')
-#' 
-parse_mdy_substring <- function(chr, format) {
-  as.character(lubridate::mdy(stringr::str_extract(chr, '[[:digit:]]{8}')))
-}
-
 #' Extract the values from one line of an FFIEC schedule file
 #' 
 #' @param sch_line A line from an FFIEC tab-separated schedule file

@@ -159,7 +159,7 @@ extract_ffiec_tsv <- function(db_connector, zf, sch) {
 parse_ffiec_tsv <- function(sch_unzipped) {
   sch_file    <- basename(sch_unzipped)
   sch_code    <- read_ffiec_sch_code(sch_unzipped)
-  report_date <- parse_mdy_substring(sch_unzipped)
+  report_date <- lubridate::mdy(sch_file)
   rlog::log_info(glue::glue('Extracting observations...'))
   
   parse_attempt <- function(sch_unzipped) {
@@ -231,7 +231,7 @@ read_ffiec_codebook <- function(sch_unzipped) {
   sch_code <- read_ffiec_sch_code(sch_file)
   
   rlog::log_info(glue::glue('Extracting codebook...'))
-  report_date <- parse_mdy_substring(sch_unzipped)
+  report_date <- lubridate::mdy(sch_file)
   sch_code    <- read_ffiec_sch_code(sch_unzipped)
   part_code   <- read_ffiec_part_codes(sch_unzipped)
   
@@ -257,7 +257,7 @@ read_ffiec_codebook <- function(sch_unzipped) {
 #'  report_date     sch_code     part_num      part_of 
 #' "2012-03-31"        "RCB"          "1"          "2" 
 read_ffiec_filename <- function(sch) {
-  sch_info <- c(report_date = parse_mdy_substring(sch),
+  sch_info <- c(report_date = as.character(lubridate::mdy(basename(sch))),
                 sch_code    = read_ffiec_sch_code(sch))
   part_codes <- read_ffiec_part_codes(sch)
   return(c(sch_info, part_codes))

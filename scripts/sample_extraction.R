@@ -1,6 +1,6 @@
 rm(list = ls(all.names = TRUE))
-library(callReports)
-
+# library(callReports)
+devtools::document('~/code/callReports')
 # Latest feature: Persistent configuration with interactive selections
 #
 # Not necessary to run the following `setter` functions the first time you use
@@ -18,5 +18,5 @@ library(callReports)
 # The `get_*()` functions used as arguments below can all be used on their own
 # if you ever want to know the current database and ZIP folder configuration.
 create_new_sqlite_db(get_sqlite_filename(), overwrite = TRUE, confirm = FALSE)
-extract_chifed_zips(db_connector_sqlite(), get_chifed_zip_dir())
+# extract_chifed_zips(db_connector_sqlite(), get_chifed_zip_dir())
 extract_ffiec_zips(db_connector_sqlite(), get_ffiec_zip_dir())
