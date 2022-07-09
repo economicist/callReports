@@ -6,60 +6,63 @@
 #' optional subdirectory specified by the parameter `subdir_name`. This
 #' function builds and returns the full path.
 #'
-#' @param subdir_name (default `economicist`) A subdirectory within your local
-#' user configuration directory
-#' @param yaml_name (default `callReports.yml`) A name for this package's
-#' configuration file
-#' @return A constructed file path
+#' @param subdir_name (default `economicist`) A subdirectory of your local
+#' user configuration directory, in which to place the configuration file
+#' given by `yaml_name`
+#' @param yaml_name (default `callReports.yml`) A name for the configuration file
+#' @return A full constructed file path to the configuration file given by
+#' `subdir_name` and `yaml_name`
 #' @export
-build_config_filename <-
+get_cfg_filename <-
   function(subdir_name = "economicist", yaml_name = "callReports.yml") {
-    cfg_dir <- rappdirs::user_config_dir(subdir_name)
-    cfg_file <- file.path(cfg_dir, yaml_name)
-    return(cfg_file)
+    list(
+      user = file.path(rappdirs::user_config_dir(subdir_name), yaml_name),
+      template = file.path(system.file(package = "callReports"), yaml_name)
+    )
   }
 
-
-
-#' Fetch selected configuration settings for the package
+#' Delete all user configurations for this package
 #'
-#' @param ... The character-valued names of the configuration settings you wish
-#' to retrieve
-#' @param cfg_file The path to a YAML configuration file containing the settings
-#' given in `...`
-#' @return A named list with the values of the requested configuration settings
+#' @param subdir_name (default `economicist`) A subdirectory of your local
+#' user configuration directory, in which to place the configuration file
+#' given by `yaml_name`
+#' @param yaml_name (default `callReports.yml`) A name for the configuration file
 #' @export
-get_config_setting <-
-  function(key, cfg_file = build_config_filename()) {
-    cfg_list <- yaml::read_yaml(cfg_file)
-    if (...length() == 0) {
-      return(cfg_list)
-    }
-
-    cfg_keys <- names(c(...))
-    cfg_keys <- subset(cfg_keys, cfg_keys %in% names(cfg_list))
-    return(cfg_list[cfg_keys])
+reset_user_cfg <- 
+  function(subdir_name = "economicist", yaml_name = "callReports.yml") {
+    unlink(get_cfg_filename()$user)
+    create_user_cfg_if_not_exists(subdir_name, yaml_name)
+    return(invisible())
   }
 
-put_config_setting <-
-  function(..., cfg_file = build_config_filename()) {
-    if (...length() != 1) {
-      stop("`put_config_setting()` requires a single named parameter.")
-    }
-    cfg_list <- yaml::read_yaml(cfg_file)
-  }
-
-#' Update the package configuration with new parameters
+#' Create a configuration file for this package in the local user configuration
+#' directory
 #'
-#' @param cfg_file The path to a YAML configuration file.
-#' @return The updated package settings
+#' `create_user_cfg_if_not_exists()` uses `get_cfg_filename()` to determine the
+#' location of the user configuration file for this package. If no configuration
+#' file is found at that location, the template provided with the package is
+#' copied to it.
+#'
+#' @param subdir_name (default `economicist`) A subdirectory of your local
+#' user configuration directory, in which to place the configuration file
+#' given by `yaml_name`
+#' @param yaml_name (default `callReports.yml`) A name for the configuration file
+#'
 #' @export
-update_cr_config_settings <-
-  function(..., cfg_file = build_config_filename()) {
-    cfg_list <- yaml::read_yaml(cfg_file)
-    cfg_list <- modifyList(cfg_list, list(...))
-    yaml::write_yaml(cfg_list, cfg_file)
-    return(cfg_list)
+create_user_cfg_if_not_exists <-
+  function(subdir_name = "economicist", yaml_name = "callReports.yml") {
+    if (!file.exists(get_cfg_filename()$user)) {
+      cfg_subdir <- rappdirs::user_config_dir(subdir_name)
+      if (!dir.exists(cfg_subdir)) dir.create(cfg_subdir)
+      tryCatch(file.copy(get_cfg_filename()$template, get_cfg_filename()$user),
+        warning = warning, error = stop
+      )
+    }
+  }
+
+get_user_cfg <- 
+  function(subdir_name = "economicist", yaml_name = "callReports.yml") {
+    cfg_list <- yaml::read_yaml(get_user_cfg)
   }
 
 #' Get the directory where the Chicago Fed ZIP files are stored
@@ -67,7 +70,11 @@ update_cr_config_settings <-
 #' @return A directory character value
 #' @export
 get_chifed_zip_dir <- function() {
-  pkgconfig::get_config("chifed_zip_dir", fallback = set_chifed_zip_dir())
+  create_user_cfg_if_not_exists()
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_val <- cfg_list$zips_chifed
+  if (is.null(cfg_val)) cfg_val <- set_chifed_zip_dir()
+  return(cfg_val)
 }
 
 #' Get the directory where the FFIEC ZIP files are stored
@@ -75,7 +82,11 @@ get_chifed_zip_dir <- function() {
 #' @return A directory character value
 #' @export
 get_ffiec_zip_dir <- function() {
-  pkgconfig::get_config("ffiec_zip_dir", fallback = set_ffiec_zip_dir())
+  create_user_cfg_if_not_exists()
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_val <- cfg_list$zips_ffiec
+  if (is.null(cfg_val)) return(set_ffiec_zip_dir())
+  return(cfg_val)
 }
 
 #' Get the directory where the extraction and query logs are stored
@@ -83,7 +94,11 @@ get_ffiec_zip_dir <- function() {
 #' @return A directory character value
 #' @export
 get_logging_dir <- function() {
-  pkgconfig::get_config("logging_dir", fallback = set_logging_dir())
+  create_user_cfg_if_not_exists()
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_val <- cfg_list$logging_dir
+  if (is.null(cfg_val)) return(set_logging_dir())
+  return(cfg_val)
 }
 
 #' Get the name of the SQLite database
@@ -91,7 +106,11 @@ get_logging_dir <- function() {
 #' @return A directory character value
 #' @export
 get_sqlite_filename <- function() {
-  pkgconfig::get_config("sqlite_file", fallback = set_sqlite_filename())
+  create_user_cfg_if_not_exists()
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_val <- cfg_list$sqlite_file
+  if (is.null(cfg_val)) return(set_sqlite_filename())
+  return(cfg_val)
 }
 
 #' Set the directory where the Chicago Fed ZIP files are stored
@@ -103,8 +122,11 @@ set_chifed_zip_dir <- function(path = NULL) {
     prompt <- "Select a folder containing ZIP files from the Chicago Fed:"
     path <- rstudioapi::selectDirectory(caption = prompt)
   }
-  pkgconfig::set_config(chifed_zip_dir = path)
-  pkgconfig::get_config("chifed_zip_dir")
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_list$zips_chifed <- path
+  yaml::write_yaml(cfg_list, get_cfg_filename()$user)
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  return(cfg_list$zips_chifed)
 }
 
 #' Set the directory where the FFIEC ZIP files are stored
@@ -116,8 +138,11 @@ set_ffiec_zip_dir <- function(path = NULL) {
     prompt <- "Select a folder containing ZIP files from the FFIEC:"
     path <- rstudioapi::selectDirectory(caption = prompt)
   }
-  pkgconfig::set_config(ffiec_zip_dir = path)
-  pkgconfig::get_config("ffiec_zip_dir")
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_list$zips_ffiec <- path
+  yaml::write_yaml(cfg_list, get_cfg_filename()$user)
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  return(cfg_list$zips_ffiec)
 }
 
 #' Get the directory where the extraction and query logs are stored
@@ -129,8 +154,11 @@ set_logging_dir <- function(path = NULL) {
     prompt <- "Select a folder to save extraction logs to:"
     path <- rstudioapi::selectDirectory(caption = prompt)
   }
-  pkgconfig::set_config(logging_dir = path)
-  pkgconfig::get_config("logging_dir")
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_list$logging_dir <- path
+  yaml::write_yaml(cfg_list, get_cfg_filename()$user)
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  return(cfg_list$logging_dir)
 }
 
 #' Get the name of the SQLite database
@@ -147,6 +175,9 @@ set_sqlite_filename <- function(path = NULL) {
       existing = FALSE
     )
   }
-  pkgconfig::set_config(sqlite_file = path)
-  pkgconfig::get_config("sqlite_file")
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  cfg_list$sqlite_file <- path
+  yaml::write_yaml(cfg_list, get_cfg_filename()$user)
+  cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
+  return(cfg_list$sqlite_file)
 }
