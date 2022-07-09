@@ -20,7 +20,6 @@ ZIP files containing the data are available at the \href{https://www.chicagofed.
 They should be saved (but not extracted) to an empty folder.
 }
 \examples{
-# The database connector only needs to be created once in any given script.
-chifed_db <- sqlite_connector('./db/chifed.sqlite')
-extract_chifed_zip(chifed_db, './zips-chifed/call0003-zip.zip')
+chifed_db <- sqlite_connector("./db/chifed.sqlite")
+extract_chifed_zip(chifed_db, "./zips-chifed/call0003-zip.zip")
 }

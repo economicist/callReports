@@ -21,6 +21,6 @@ function skips schedule files that have already been successfully extracted
 to the database.
 }
 \examples{
-db_connector <- db_connector_sqlite('./db/ffiec.sqlite')
-extract_ffiec_zips_to_db(db_connector, './zips-ffiec')
+db_connector <- db_connector_sqlite("./db/ffiec.sqlite")
+extract_ffiec_zips_to_db(db_connector, "./zips-ffiec")
 }

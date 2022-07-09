@@ -18,6 +18,5 @@ A character value in the form \verb{\{prefix\}_\{datestr\}.log.txt}
 Build a log filename with a prefix and the time it was initiated.
 }
 \examples{
-> generate_log_name('extraction_attempt')
-[1] "extraction_attempt_20220628_141233.log.txt"
+generate_log_name("extraction_attempt") ## [1] "extraction_attempt_20220628_141233.log.txt"
 }

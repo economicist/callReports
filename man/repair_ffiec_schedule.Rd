@@ -38,5 +38,5 @@ write the repaired schedule to disk, and return the path to the repaired
 schedule file. Otherwise, return NULL if the file is irreparable.
 }
 \examples{
-repair_ffiec_schedule('FFIEC CDR Call Schedule RIE 06302004.txt')
+repair_ffiec_schedule("FFIEC CDR Call Schedule RIE 06302004.txt")
 }

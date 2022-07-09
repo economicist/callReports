@@ -18,7 +18,5 @@ and number of parts available for the schedule.
 Get the components of a schedule filename in easily-referenced format.
 }
 \examples{
-> read_ffiec_filename('FFIEC CDR Call Schedule RCB 03312012(1 of 2).txt')
- report_date     sch_code     part_num      part_of 
-"2012-03-31"        "RCB"          "1"          "2" 
+read_ffiec_filename("FFIEC CDR Call Schedule RCB 03312012(1 of 2).txt")
 }

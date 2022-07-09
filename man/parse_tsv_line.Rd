@@ -16,6 +16,5 @@ A character vector of the values in that line
 Extract the values from one line of an FFIEC schedule file
 }
 \examples{
-parse_tsv_line('12311  2031  298310')
-[1] "12311" "2031" "298310"
+parse_tsv_line("12311  2031  298310") ## [1] "12311" "2031" "298310"
 }

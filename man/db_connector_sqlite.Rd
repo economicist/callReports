@@ -23,5 +23,5 @@ A \code{function} that opens a connection to the database given in
 to be opened whenever necessary by other functions in this package.
 }
 \examples{
-db_connector_sqlite('./db/ffiec.sqlite')
+db_connector_sqlite("./db/ffiec.sqlite")
 }

@@ -24,11 +24,10 @@ ZIP files containing the bulk data 2001-present offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-The database connector only needs to be created once in any given script.
-ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
+ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
 extract_ffiec_tsv(
   ffiec_db,
-  './zips-ffiec/FFIEC FFIEC CDR Call Bulk All Schedules 03312018.zip',
-  'FFIEC CDR Call Schedule RCCII 06302002.txt'
+  "./zips-ffiec/FFIEC FFIEC CDR Call Bulk All Schedules 03312018.zip",
+  "FFIEC CDR Call Schedule RCCII 06302002.txt"
 )
 }

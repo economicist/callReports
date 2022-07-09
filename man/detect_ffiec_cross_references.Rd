@@ -18,7 +18,6 @@ parts of the FFIEC reporting form can be found
 Detect variables in the FFIEC database that exist in multiple tables
 }
 \examples{
-The database connector only needs to be created once in any given script.
-ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
+ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
 detect_ffiec_cross_references(ffiec_db)
 }

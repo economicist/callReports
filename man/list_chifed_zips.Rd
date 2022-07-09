@@ -18,5 +18,5 @@ A character vector containing the full paths of valid ZIP files
 files for 1976-2000 offered at the \href{https://www.chicagofed.org/banking/financial-institution-reports/commercial-bank-data-complete-1976-2000}{Chicago Fed's website}
 }
 \examples{
-list_chifed_zips('./zips-chifed')
+list_chifed_zips("./zips-chifed")
 }

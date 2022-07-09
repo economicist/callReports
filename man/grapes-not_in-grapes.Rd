@@ -19,8 +19,6 @@ x \%not_in\% table
 \code{TRUE} if the scalar value \code{x} is \emph{not} an element of the vector \code{table}.
 }
 \examples{
-> 1 \%not_in\% 2:4
-[1] TRUE
-> 1 \%not_in\% 1:4
-[1] FALSE
+1 \%not_in\% 2:4 ## [1] TRUE
+1 \%not_in\% 1:4 ## [1] FALSE
 }

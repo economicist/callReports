@@ -21,6 +21,5 @@ value. Use the same was as you would \code{stringr::str_split()} but skip the ne
 to extract the first element from the result.
 }
 \examples{
-> str_split1('Hello world')
-[1] "Hello" "world"
+str_split1("Hello world") ## [1] "Hello" "world"
 }

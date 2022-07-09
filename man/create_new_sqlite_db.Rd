@@ -27,5 +27,5 @@ function before proceeding to extract data.
 }
 \examples{
 # Create a new database file:
-create_new_sqlite_db('./zips-ffiec/ffiec.sqlite')
+create_new_sqlite_db("./zips-ffiec/ffiec.sqlite")
 }

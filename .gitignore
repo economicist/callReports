@@ -4,5 +4,5 @@
 .httr-oauth
 .DS_Store
 
-scripts/logs/*.txt
-scripts/tmp/*.*
+inst/scripts/logs/*.txt
+inst/scripts/tmp/*.*

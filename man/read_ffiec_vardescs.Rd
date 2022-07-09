@@ -17,5 +17,5 @@ second line of the file.
 Extract the variable descriptions from an FFIEC schedule file
 }
 \examples{
-read_ffiec_vardescs('FFIEC CDR Call Schedule RCCII 06302002.txt')
+read_ffiec_vardescs("FFIEC CDR Call Schedule RCCII 06302002.txt")
 }

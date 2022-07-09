@@ -16,5 +16,5 @@ A character vector containing the variable names found in the top line.
 Extract the variable names from an FFIEC schedule file
 }
 \examples{
-read_ffiec_varcodes('FFIEC CDR Call Schedule RCCII 06302002.txt')
+read_ffiec_varcodes("FFIEC CDR Call Schedule RCCII 06302002.txt")
 }

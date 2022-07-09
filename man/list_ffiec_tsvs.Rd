@@ -21,5 +21,5 @@ ZIP files containing the bulk data 2001-present offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-list_ffiec_tsvs('FFIEC CDR Call Bulk All Schedules 06302004.zip')
+list_ffiec_tsvs("FFIEC CDR Call Bulk All Schedules 06302004.zip")
 }

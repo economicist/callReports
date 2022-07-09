@@ -19,7 +19,6 @@ dictionary provided at (their website)\link{https://www.federalreserve.gov/apps/
 to a database specified in the given database connector function.
 }
 \examples{
-The database connector only needs to be created once in any given script.
-chifed_db <- sqlite_connector('./db/chifed.sqlite')
-extract_chifed_mdrm(chifed_db, './MDRM.zip')
+chifed_db <- sqlite_connector("./db/chifed.sqlite")
+extract_chifed_mdrm(chifed_db, "./MDRM.zip")
 }

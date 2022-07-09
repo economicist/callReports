@@ -26,7 +26,6 @@ variables requested in \code{...}
 Retreive Chicago Fed observations from a database
 }
 \examples{
-# The database connector only needs to be created once in any given script.
-chifed_db <- sqlite_connector('./db/chifed.sqlite')
-query_chifed_db('RCON2170', 'RCON2950', 'RCON3210')
+chifed_db <- sqlite_connector("./db/chifed.sqlite")
+query_chifed_db("RCON2170", "RCON2950", "RCON3210")
 }

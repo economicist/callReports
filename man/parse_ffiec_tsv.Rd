@@ -29,7 +29,6 @@ ZIP files containing valid schedule files for 2001-present are offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-# The database connector only needs to be created once in any given script.
-ffiec_db <- db_connector_sqlite('./db/ffiec.sqlite')
-parse_ffiec_tsv(ffiec_db, 'FFIEC CDR Call Schedule RCCII 06302002.txt')
+ffiec_db <- db_connector_sqlite("./db/ffiec.sqlite")
+parse_ffiec_tsv(ffiec_db, "FFIEC CDR Call Schedule RCCII 06302002.txt")
 }

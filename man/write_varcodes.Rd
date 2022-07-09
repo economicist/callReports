@@ -10,7 +10,8 @@ write_varcodes(db_connector, var_codes)
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
 functions found in this package. It should be passed without the \verb{()}}
 
-\item{var_codes}{}
+\item{var_codes}{A character vector of variable codes to put into the
+database. Variable codes already assigned a database ID will be skipped.}
 }
 \description{
 \code{write_varcodes()} takes a list of variable codes and adds each of them

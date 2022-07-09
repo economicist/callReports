@@ -18,7 +18,5 @@ If data for a schedule is issued in one part (true for most), then it will
 be determined to be part 1 of 1.
 }
 \examples{
-> extract_part_code('FFIEC CDR Call Schedule RCB 03312013(2 of 2).txt')
-part_num  part_of 
-       1        2 
+extract_part_code("FFIEC CDR Call Schedule RCB 03312013(2 of 2).txt")
 }

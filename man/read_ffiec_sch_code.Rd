@@ -17,6 +17,5 @@ corresponding to the given schedule filename.
 Extract the alphabetical schedule code from an FFIEC schedule filename
 }
 \examples{
-> read_ffiec_sch_code('FFIEC CDR Call Schedule RCCII 06302002.txt')
-[1] "RCCII"
+read_ffiec_sch_code("FFIEC CDR Call Schedule RCCII 06302002.txt")
 }

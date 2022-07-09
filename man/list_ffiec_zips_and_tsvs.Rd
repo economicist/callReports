@@ -23,5 +23,5 @@ ZIP files containing the bulk data 2001-present offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-list_ffiec_zips_and_tsvs('./zips-ffiec')
+list_ffiec_zips_and_tsvs("./zips-ffiec")
 }

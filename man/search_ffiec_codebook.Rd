@@ -22,8 +22,7 @@ A \code{tibble} containing matching results in the codebook
 Either a \code{var_name} or \code{var_desc} must be provided.
 }
 \examples{
-# The database connector only needs to be created once in any given script.
-ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
-search_ffiec_codebook(ffiec_db, var_name = 'RCON2950')
-search_ffiec_codebook(ffiec_db, var_desc = 'TOTAL LIABILITIES')
+ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
+search_ffiec_codebook(ffiec_db, var_name = "RCON2950")
+search_ffiec_codebook(ffiec_db, var_desc = "TOTAL LIABILITIES")
 }

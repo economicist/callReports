@@ -23,7 +23,6 @@ requested variables.
 schedule table for the requested variables.
 }
 \examples{
-# The database connector only needs to be created once in any given script.
-ffiec_db <- sqlite_connector('./db/ffiec.sqlite')
-query_ffiec_db(ffiec_db, 'RCON2170', 'RCON2948', 'RCON3210')
+ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
+query_ffiec_db(ffiec_db, "RCON2170", "RCON2948", "RCON3210")
 }

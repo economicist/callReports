@@ -20,6 +20,5 @@ progressively replacing each NA value with the value of the last non-NA
 value of an earlier index
 }
 \examples{
-> fill_na_with_previous(c(1, 2, NA, NA, 3))
-[1] 1 2 2 2 3
+fill_na_with_previous(c(1, 2, NA, NA, 3)) ## [1] 1 2 2 2 3
 }
