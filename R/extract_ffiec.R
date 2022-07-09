@@ -16,8 +16,7 @@
 #' db_connector <- db_connector_sqlite('./db/ffiec.sqlite')
 #' extract_ffiec_zips_to_db(db_connector, './zips-ffiec')
 extract_ffiec_zips <- 
-  function(db_connector   = get_db_connector, 
-           ffiec_zip_path = get_ffiec_zip_dir()) {
+  function(db_connector, ffiec_zip_path = get_ffiec_zip_dir()) {
     closeAllConnections()
     capture.output({
       list_ffiec_zips_and_tsvs(ffiec_zip_path) %>%
