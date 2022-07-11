@@ -97,6 +97,17 @@ parse_tsv_line <- function(tsv_line) {
   str_split1(tsv_line, "\\t")
 }
 
+#' Get the last day of a calendar quarter
+#'
+#' @param dt A `Date`, or a character value in ISO `YYYY-MM-DD` format
+#' @return The `Date` of the final day of the quarter `dt` is in.
+#' @export
+qtr_end <- function(ymd_chr = Sys.Date()) {
+  lubridate::ymd(ymd_chr) %>%
+    lubridate::ceiling_date('quarter') -
+    lubridate::days(1)
+}
+
 #' Repair any invalid column names
 #'
 #' `vroom::vroom()` display a message about renaming variables with invalid

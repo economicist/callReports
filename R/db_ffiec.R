@@ -27,14 +27,15 @@ fetch_ffiec_observations <- function(tbl_name, ...) {
   df_out <-
     DBI::dbFetch(db_res) %>%
     tibble::as_tibble() %>%
-    dplyr::mutate(REPORT_DATE = qtr_id_to_date_str(QUARTER_ID)) %>%
+    dplyr::mutate(REPORT_DATE = qtr_id_to_ymd_chr(QUARTER_ID)) %>%
     dplyr::inner_join(df_varcodes, by = c("VARCODE_ID" = "ID")) %>%
     dplyr::select(IDRSSD, REPORT_DATE, VARCODE, VALUE)
   DBI::dbClearResult(db_res)
   DBI::dbDisconnect(db_conn)
 
   rlog::log_info(glue::glue(
-    "Collected {nrow(df_out)} observations from the database."))
+    "Collected {nrow(df_out)} observations from the database."
+  ))
   rlog::log_info("Pivoting to wide format...")
   df_out %<>%
     tidyr::pivot_wider(
@@ -66,7 +67,7 @@ fetch_ffiec_extracted_schedules <- function() {
     DBI::dbDisconnect(db_conn)
     return(tibble::tibble())
   }
-  df_out <- 
+  df_out <-
     DBI::dbReadTable(db_conn, "SUMMARY") %>%
     dplyr::collect()
   DBI::dbDisconnect(db_conn)
@@ -127,7 +128,7 @@ detect_ffiec_cross_references <- function() {
 #' @examples
 #' search_ffiec_codebook(ffiec_db, var_name = "RCON2950")
 #' search_ffiec_codebook(ffiec_db, var_desc = "TOTAL LIABILITIES")
-search_ffiec_codebook <- 
+search_ffiec_codebook <-
   function(var_name = NULL, var_desc = NULL) {
     db_connector <- db_connector_sqlite()
     db_conn <- db_connector()

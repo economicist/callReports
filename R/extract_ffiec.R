@@ -1,6 +1,6 @@
 #' Extract an entire directory of FFIEC ZIP files to a database
 #'
-#' `extract_ffiec_zips()` examines all ZIP files in `ffiec_zip_path` and 
+#' `extract_ffiec_zips()` examines all ZIP files in `ffiec_zip_path` and
 #' attempts to extract each enclosed schedule file to the database set by the
 #' user. The underlying extraction function skips schedule files that have
 #' already been successfully extracted to the database.
@@ -8,20 +8,23 @@
 #' @param ffiec_zip_path (default `get_ffiec_zip_dir()`) A single character
 #' value containing an existing folder containing the ZIP files
 #' @export
-extract_ffiec_zips <- 
+extract_ffiec_zips <-
   function(ffiec_zip_path = get_ffiec_zip_dir()) {
-    old_vroom_progress_option <- Sys.getenv('VROOM_SHOW_PROGRESS')
-    Sys.setenv(VROOM_SHOW_PROGRESS = 'false')
-    closeAllConnections()
-    capture.output(
-      purrr::pwalk(
-        list_ffiec_zips_and_tsvs(ffiec_zip_path), 
-        ~ extract_ffiec_tsv(..1, ..2)
-      ),
-      file = generate_log_name("extraction_ffiec"),
-      split = TRUE
+    old_options <- list(
+      warn = unname(unlist(options("warn"))),
+      vroom_show_progress = Sys.getenv("VROOM_SHOW_PROGRESS")
     )
-    Sys.setenv(VROOM_SHOW_PROGRESS = old_vroom_progress_option)
+    options(warn = 0)
+    Sys.setenv(VROOM_SHOW_PROGRESS = "false")
+    closeAllConnections()
+
+    purrr::pwalk(
+      list_ffiec_zips_and_tsvs(ffiec_zip_path),
+      ~ extract_ffiec_tsv(..1, ..2)
+    )
+    
+    Sys.setenv(VROOM_SHOW_PROGRESS = old_options$vroom_show_progress)
+    options(warn = old_options$warn)
   }
 
 #' Extract the FFIEC codebook and all observations for a single schedule
@@ -33,60 +36,55 @@ extract_ffiec_zips <-
 #' ZIP files containing the bulk data 2001-present offered at the
 #' [FFIEC Bulk Data Download Service](https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx)
 #'
-#' @param db_connector A `function` created by one of the `db_connector_*()`
-#' functions found in this package. It should be passed without the `()`
 #' @param zf A ZIP file containing schedule files
 #' @param sch A valid FFIEC schedule data file inside the ZIP file `zf`
 #' @export
 #' @examples
-#' ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
 #' extract_ffiec_tsv(
-#'   ffiec_db,
 #'   "./zips-ffiec/FFIEC FFIEC CDR Call Bulk All Schedules 03312018.zip",
 #'   "FFIEC CDR Call Schedule RCCII 06302002.txt"
 #' )
-extract_ffiec_tsv <- 
+extract_ffiec_tsv <-
   function(zf, sch) {
     fname_parts <- split_ffiec_sch_name(sch)
-    
+
     date_sch <- glue::glue("{fname_parts$ymd_chr} {fname_parts$sch_code}")
     part_str <- glue::glue("({fname_parts$part_num} of {fname_parts$part_of})")
-    if (part_str == "(1 of 1)") part_str <- ""
-    
-    rlog::log_info(glue::glue("{date_sch} {part_str}"))
+    part_str <- ifelse(part_str == "(1 of 1)", "", part_str)
+
+    db_log.ffiec_ext(fname_parts, glue::glue("{date_sch} {part_str}"))
     unzip(zf, sch, exdir = tempdir(), unzip = getOption("unzip"))
     tsv_tmp <- file.path(tempdir(), sch)
-    
-    rlog::log_info(glue::glue("Reading observations from schedule..."))
+
     parsed_data <- parse_ffiec_tsv(tsv_tmp)
     df_codebook <- parsed_data$codebook
     df_wide <- parsed_data$observations
     df_problems <- parsed_data$problems
-    rlog::log_info(glue::glue(
+    db_log.ffiec_ext(fname_parts, glue::glue(
       "Read {nrow(df_wide)} rows containing {ncol(df_wide)} columns"
     ))
-    
+
     db_connector <- db_connector_sqlite()
     db_conn <- db_connector()
     DBI::dbWithTransaction(
       db_conn,
       {
-        if (nrow(df_problems) > 0) {
-          rlog::log_info(glue::glue(
-            'Writing details on {nrow(df_problems)} parsing ', 
-            'problems to "FFIEC.PROBLEMS"'
-          ))
-          DBI::dbWriteTable(
-            db_conn, "FFIEC.PROBLEMS", df_problems, append = TRUE
-          )
-        }
         if (nrow(df_wide) > 0 & ncol(df_wide) > 1) {
-          names(df_wide) %>%
+          num_newvars <-
+            names(df_wide) %>%
             subset(. %not_in% c("IDRSSD", "RCON9999")) %>%
-            subset(!stringr::str_detect(., "^UNNAMED_[[:digit:]]+$")) %>%
+            subset(!grepl("^UNNAMED_[[:digit:]]+$", .)) %>%
             write_varcodes(db_conn)
-
-          rlog::log_info("Pivoting to long form...")
+          if (num_newvars > 0) {
+            db_log.ffiec_ext(
+              fname_parts,
+              glue::glue(
+                'Assigned database IDs to {num_newvars} new variable codes.'
+              ),
+              db_conn
+            )
+          }
+          db_log.ffiec_ext(fname_parts, "Pivoting to long form...", db_conn)
           df_long <-
             tidyr::pivot_longer(
               df_wide,
@@ -97,37 +95,85 @@ extract_ffiec_tsv <-
             ) %>%
             dplyr::inner_join(fetch_varcodes(db_conn), by = "VARCODE") %>%
             dplyr::mutate(
-              QUARTER_ID = date_str_to_qtr_id(fname_parts$ymd_chr)
+              QUARTER_ID = ymd_chr_to_qtr_id(fname_parts$ymd_chr)
             ) %>%
             dplyr::rename(VARCODE_ID = ID) %>%
-            dplyr::select(QUARTER_ID, VARCODE_ID, VARCODE, VALUE)
-          
+            dplyr::select(IDRSSD, QUARTER_ID, VARCODE_ID, VALUE)
+
           if (nrow(df_long) == 0) {
-            rlog::log_info('No non-NA observations to write. Moving on...')
+            db_log.ffiec_ext(
+              fname_parts, 
+              "No non-NA observations to write. Moving on...",
+              db_conn
+            )
             DBI::dbDisconnect(db_conn)
-            cat(paste0(rep('-', 80), collapse = ''), '\n')
+            cat(paste0(rep("-", 80), collapse = ""), "\n")
             unlink(c(tsv_tmp))
             return()
           }
-          
-          rlog::log_info(glue::glue(
-            'Writing {nrow(df_codebook)} variable codes ',
-            'and descriptions to "FFIEC.CODEBOOK"'
-          ))
-          DBI::dbWriteTable(
-            db_conn, "FFIEC.CODEBOOK", df_codebook, append = TRUE
+
+          db_log.ffiec_ext(
+            fname_parts, 
+            paste(
+              "Writing", nrow(df_codebook), "variable codes",
+              'and descriptions to "FFIEC.CODEBOOK"'
+            ), 
+            db_conn
           )
-          
+          if (!DBI::dbExistsTable(db_conn, "FFIEC.CODEBOOK")) {
+            DBI::dbCreateTable(
+              db_conn, "FFIEC.CODEBOOK",
+              fields = c(
+                REPORT_DATE = "TEXT",
+                SCHEDULE_CODE = "TEXT",
+                PART_NUM = "INTEGER",
+                PART_OF = "INTEGER",
+                VARCODE = "TEXT",
+                DESCRIPTION = "TEXT"
+              )
+            )
+          }
+          DBI::dbWriteTable(
+            db_conn, "FFIEC.CODEBOOK", df_codebook,
+            append = TRUE
+          )
+
           tbl_name <- glue::glue("FFIEC.OBS_{fname_parts$sch_code}")
-          rlog::log_info(glue::glue(
-            'Writing {nrow(df_long)} non-NA observations to "{tbl_name}"...'
-          ))
+          db_log.ffiec_ext(
+            fname_parts, 
+            glue::glue(
+              'Writing {nrow(df_long)} non-NA observations to "{tbl_name}"...'
+            ),
+            db_conn
+          )
+          if (!DBI::dbExistsTable(db_conn, tbl_name)) {
+            DBI::dbCreateTable(
+              db_conn, tbl_name,
+              fields = c(
+                IDRSSD = "INTEGER",
+                QUARTER_ID = "INTEGER",
+                VARCODE_ID = "INTEGER",
+                VALUE = "TEXT"
+              )
+            )
+          }
           DBI::dbWriteTable(db_conn, tbl_name, df_long, append = TRUE)
+        }
+        if (nrow(df_problems) > 0) {
+          db_log.ffiec_ext(
+            fname_parts, 
+            paste(
+              "Writing details on", nrow(df_problems),
+              'parsing problems to "FFIEC.PROBLEMS"'
+            ),
+            db_conn
+          )
+          DBI::dbWriteTable(db_conn, "FFIEC.PROBLEMS", df_problems, append = TRUE)
         }
       }
     )
     DBI::dbDisconnect(db_conn)
-    cat(paste0(rep('-', 80), collapse = ''), '\n')
+    cat(paste0(rep("-", 80), collapse = ""), "\n")
     unlink(c(tsv_tmp))
   }
 
@@ -148,6 +194,8 @@ extract_ffiec_tsv <-
 #' parse_ffiec_tsv("FFIEC CDR Call Schedule RCCII 06302002.txt")
 parse_ffiec_tsv <- function(tsv) {
   fname_parts <- split_ffiec_sch_name(tsv)
+  db_connector <- db_connector_sqlite()
+  db_conn <- db_connector()
 
   line_varcode <- vroom::vroom_lines(tsv, n_max = 1)
   line_vardesc <- vroom::vroom_lines(tsv, n_max = 1, skip = 1)
@@ -161,16 +209,25 @@ parse_ffiec_tsv <- function(tsv) {
   # the `problems` attribute attached to the resulting `tibble`. Instead, here
   # we read the data using only the `NA` detection, then extract the problems,
   # and only then do we repair the column names.
-  df_wide <- 
-    vroom::vroom(
-      tsv_nodesc,
-      na = c("", "NA", "NR", "CONF"),
-      col_types = vroom::cols(.default = vroom::col_character()),
-      show_col_types = FALSE,
-      progress = FALSE,
-      .name_repair = ~ repair_colnames(.)
-    )
-  
+  db_log.ffiec_ext(db_conn, fname_parts, glue::glue(
+    "Reading observations from schedule...")
+  )
+  df_wide <- tryCatch(
+    {
+      vroom::vroom(
+        tsv_nodesc,
+        na = c("", "NA", "NR", "CONF"),
+        col_types = vroom::cols(.default = vroom::col_character()),
+        show_col_types = FALSE,
+        progress = FALSE,
+        .name_repair = ~ repair_colnames(.)
+      )
+    },
+    warning = function(w) {
+      db_log.ffiec_ext(db_conn, fname_parts, "Warning issued while parsing")
+    }
+  )
+
   # If there were problems parsing the data, `df_probs` will have rows. Append
   # information about the schedule file to each row for easier analysis later.
   df_probs <- vroom::problems(df_wide)

@@ -54,11 +54,11 @@ fetch_chifed_observations <-
     varcode_ids_csv <- paste(df_varcodes$ID, collapse = ", ")
     where_clause <- glue::glue('WHERE "VARCODE_ID" IN ({varcode_ids_csv})')
     if (!is.null(min_date)) {
-      min_qtr_id <- date_str_to_qtr_id(min_date)
+      min_qtr_id <- ymd_chr_to_qtr_id(min_date)
       where_clause <- glue::glue("{where_clause} AND QUARTER_ID >= {min_qtr_id}")
     }
     if (!is.null(max_date)) {
-      max_qtr_id <- date_str_to_qtr_id(max_date)
+      max_qtr_id <- ymd_chr_to_qtr_id(max_date)
       where_clause <- glue::glue("{where_clause} AND QUARTER_ID <= {max_qtr_id}")
     }
     db_query <- glue::glue('SELECT * FROM "CHIFED.OBS_ALL" {where_clause}')
@@ -68,7 +68,7 @@ fetch_chifed_observations <-
     df_out <-
       DBI::dbFetch(db_res) %>%
       tibble::as_tibble() %>%
-      dplyr::mutate(REPORT_DATE = qtr_id_to_date_str(QUARTER_ID)) %>%
+      dplyr::mutate(REPORT_DATE = qtr_id_to_ymd_chr(QUARTER_ID)) %>%
       dplyr::inner_join(df_varcodes, by = c("VARCODE_ID" = "ID")) %>%
       dplyr::select(IDRSSD, REPORT_DATE, CALL8786, CALL8787, VARCODE, VALUE)
     DBI::dbClearResult(db_res)
@@ -164,11 +164,11 @@ available_chifed_varcodes <-
 
     where_predicates <- c()
     if (!is.null(min_date)) {
-      min_qtr_id <- date_str_to_qtr_id(min_date)
+      min_qtr_id <- ymd_chr_to_qtr_id(min_date)
       where_predicates %<>% c('"QUARTER_ID" >= {min_qtr_id}')
     }
     if (!is.null(max_date)) {
-      max_qtr_id <- date_str_to_qtr_id(max_date)
+      max_qtr_id <- ymd_chr_to_qtr_id(max_date)
       where_predicates %<>% c('"QUARTER_ID" <= {max_qtr_id}')
     }
     where_pred_and <- paste(where_predicates, collapse = " AND ")

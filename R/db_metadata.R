@@ -47,21 +47,24 @@ write_varcodes <- function(varcodes, db_conn = NULL) {
   # Fetch the variable codes already in the database (just the codes, not the IDs)
   old_varcodes <- fetch_varcodes(db_conn)$VARCODE
   new_varcodes <- varcodes %>% subset(. %not_in% old_varcodes)
-
+  num_newvars <- length(new_varcodes)
+  
   # `ID` values are automatically assigned by the database engine to variable
   # codes, so here we assign `NA` values to them before sending the table to
   # the database for writing.
-  if (length(new_varcodes) == 0) return()
-  rlog::log_info(glue::glue(
-    "Assigning database IDs to {length(new_varcodes)} new variable codes"
-  ))
+  if (num_newvars == 0) {
+    return(0)
+  }
+  
   DBI::dbWriteTable(
     db_conn, "VARCODES",
     tibble::tibble(
-      ID = rep(NA, length(new_varcodes)),
+      ID = rep(NA, num_newvars),
       VARCODE = new_varcodes
     ),
-    append = TRUE)
+    append = TRUE
+  )
+  return(num_newvars)
 }
 
 #' Retrieve variable names from an index table
@@ -91,23 +94,23 @@ write_varcodes <- function(varcodes, db_conn = NULL) {
 #' @export
 fetch_varcodes <- function(db_conn = NULL) {
   was.null <- FALSE
-  
+
   if (is.null(db_conn)) {
-    was.null = TRUE
+    was.null <- TRUE
     db_connector <- db_connector_sqlite()
     db_conn <- db_connector()
   }
-  
+
   if (!DBI::dbExistsTable(db_conn, "VARCODES")) {
     return(as.character(NULL))
   }
-  
-  df_varcodes <- 
-    DBI::dbReadTable(db_conn, "VARCODES") %>% 
+
+  df_varcodes <-
+    DBI::dbReadTable(db_conn, "VARCODES") %>%
     dplyr::collect()
-  
+
   if (was.null) DBI::dbDisconnect(db_conn)
-  
+
   return(df_varcodes)
 }
 
@@ -133,14 +136,14 @@ fetch_varcodes <- function(db_conn = NULL) {
 #' drives.
 #'
 #' The extraction functions found in this library use this function's inverse,
-#' `date_str_to_qtr_id()`, to convert the quarter-end reporting dates found in
+#' `ymd_chr_to_qtr_id()`, to convert the quarter-end reporting dates found in
 #' the source data into integer-valued quarter IDs.
 #'
 #' @param qtr_int An `integer` representing the index of a quarter since the
 #' beginning of year 1976
 #' @return The `Date` of the last day of the requested quarter.
 #' @export
-qtr_id_to_date_str <- function(qtr_int) {
+qtr_id_to_ymd_chr <- function(qtr_int) {
   yyyy <- 1976 + (qtr_int %/% 4)
   qq <- ifelse(qtr_int %% 4 == 0, 4, qtr_int %% 4)
   next_qtr_start <-
@@ -173,14 +176,14 @@ qtr_id_to_date_str <- function(qtr_int) {
 #' drives.
 #'
 #' Query functions found in this library use this function's inverse,
-#' `qtr_id_to_date_str()`, which converts quarter IDs back into readable dates
+#' `qtr_id_to_ymd_chr()`, which converts quarter IDs back into readable dates
 #' for output to the end user.
 #'
 #' @param date_str A `Date` or character value in ISO `YYYY-MM-DD` format
 #' @return The index of the quarter since the beginning of the year 1976, the
 #' initial year of data available from the Chicago Federal Reserve.
 #' @export
-date_str_to_qtr_id <- function(date_str) {
+ymd_chr_to_qtr_id <- function(date_str) {
   yyyy <- lubridate::year(lubridate::ymd(date_str))
   qq <- lubridate::quarter(lubridate::ymd(date_str))
   return(4 * (yyyy - 1976) + qq)

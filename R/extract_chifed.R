@@ -17,16 +17,9 @@ extract_chifed_zips <-
     db_connector <- db_connector_sqlite(get_sqlite_file())
     closeAllConnections()
     codebook_path <- glue::glue("{chifed_zip_path}/MDRM.zip")
-    capture.output(
-      {
-        extract_chifed_mdrm(codebook_path)
-        purrr::walk(
-          list_chifed_zips(chifed_zip_path), 
-          ~ extract_chifed_zip(.)
-        )
-      },
-      file = generate_log_name("extraction_chifed"),
-      split = TRUE
+    purrr::walk(
+      list_chifed_zips(chifed_zip_path),
+      ~ extract_chifed_zip(.)
     )
   }
 
@@ -51,24 +44,28 @@ extract_chifed_zip <- function(zip_file = NULL) {
   yy <- stringr::str_match(zip_file, "([[:digit:]]{2})[[:digit:]]{2}")[1, 2]
   yyyy <- ifelse(yy == "00", "2000", paste0("19", yy))
   mm <- stringr::str_match(zip_file, "[[:digit:]]{2}([[:digit:]]{2})")[1, 2]
-  dt_str <- glue::glue("{yyyy}-{mm}-01")
+  ymd_chr <- as.character(qtr_end(glue::glue("{yyyy}-{mm}-01")))
 
   xpt_file <-
     unzip(zip_file, list = TRUE)[["Name"]] %>%
     subset(stringr::str_detect(., "\\.(XPT|xpt)"))
 
   zip_base <- basename(zip_file)
-  rlog::log_info(glue::glue("Reading records from {zip_base} > {xpt_file}"))
+  db_log.chifed_ext(
+    ymd_chr,
+    glue::glue("Reading records from {zip_base} > {xpt_file}")
+  )
   df_wide <- unz(zip_file, xpt_file) %>% haven::read_xpt()
-  rlog::log_info(glue::glue(
-    "Extracted {nrow(df_wide)} rows ",
-    "with {ncol(df_wide)} columns from {xpt_file}"
+  db_log.chifed_ext(ymd_chr, paste(
+    "Extracted", nrow(df_wide),
+    "rows with", ncol(df_wide),
+    "columns from", xpt_file
   ))
-
+  
   df_wide %<>%
     dplyr::mutate(
       IDRSSD = as.character(RSSD9001),
-      QUARTER_ID = date_str_to_qtr_id(dt_str)
+      QUARTER_ID = ymd_chr_to_qtr_id(ymd_chr)
     ) %>%
     dplyr::select(
       IDRSSD, QUARTER_ID,
@@ -79,9 +76,7 @@ extract_chifed_zip <- function(zip_file = NULL) {
   new_varcodes <- xpt_varcodes %>% subset(. %not_in% c("IDRSSD", "QUARTER_ID"))
   write_varcodes(new_varcodes)
 
-  rlog::log_info(glue::glue(
-    "Pivoting to long form for `CHIFED.OBS_ALL` table..."
-  ))
+  db_log.chifed_ext(ymd_chr, "Pivoting to long form...")
   if ("CALL8787" %not_in% new_varcodes) {
     df_wide %<>% dplyr::mutate(CALL8787 = NA)
   }
@@ -101,17 +96,19 @@ extract_chifed_zip <- function(zip_file = NULL) {
 
   num_vars <- ncol(df_wide) - 2 # Don't count `IDRSSD` or `QUARTER_ID`
   num_obs <- nrow(df_long)
-  rlog::log_info(glue::glue(
-    "Writing {num_obs} non-NA observations",
-    " of {num_vars} variables to database..."
+  db_log.chifed_ext(ymd_chr, paste(
+    "Writing", num_obs, "non-NA observations of",
+    num_vars, "variables to \"FFIEC.OBS_ALL\"..."
   ))
-  tryCatch(write_chifed_observations(df_long),
+  tryCatch(
+    write_chifed_observations(df_long),
     warning = stop,
     error   = stop
   )
-  rlog::log_info(glue::glue(
+  db_log.chifed_ext(ymd_chr, glue::glue(
     "Successfully extracted {zip_base} > {xpt_file} to the database!"
   ))
+  cat(paste(rep('-', 80), collapse = ''))
   cat("\n")
 }
 
@@ -119,10 +116,8 @@ extract_chifed_zip <- function(zip_file = NULL) {
 #'
 #' `extract_chifed_mdrm()` extracts the Chicago Fed's call report data
 #' dictionary provided at (their website)[https://www.federalreserve.gov/apps/mdrm/download_mdrm.htm]
-#' to a database specified in the given database connector function.
+#' to the SQLite file specified in `set_sqlite_file()`.
 #'
-#' @param db_connector A `function` created by one of the `db_connector_*()`
-#' functions found in this package. It should be passed without the `()`
 #' @param codebook_zip An existing copy of `MDRM.zip`
 #' page accompanying the main data.
 #' @return NULL

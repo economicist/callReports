@@ -9,14 +9,11 @@ extract_chifed_mdrm(codebook_zip)
 \arguments{
 \item{codebook_zip}{An existing copy of \code{MDRM.zip}
 page accompanying the main data.}
-
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
 }
 \description{
 \code{extract_chifed_mdrm()} extracts the Chicago Fed's call report data
 dictionary provided at (their website)\link{https://www.federalreserve.gov/apps/mdrm/download_mdrm.htm}
-to a database specified in the given database connector function.
+to the SQLite file specified in \code{set_sqlite_file()}.
 }
 \examples{
 extract_chifed_mdrm("./MDRM.zip")

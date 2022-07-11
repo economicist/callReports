@@ -10,9 +10,6 @@ extract_ffiec_tsv(zf, sch)
 \item{zf}{A ZIP file containing schedule files}
 
 \item{sch}{A valid FFIEC schedule data file inside the ZIP file \code{zf}}
-
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
 }
 \description{
 \code{extract_ffiec_tsv()} accepts a ZIP file, extracts one of its enclosed
@@ -24,9 +21,7 @@ ZIP files containing the bulk data 2001-present offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
 extract_ffiec_tsv(
-  ffiec_db,
   "./zips-ffiec/FFIEC FFIEC CDR Call Bulk All Schedules 03312018.zip",
   "FFIEC CDR Call Schedule RCCII 06302002.txt"
 )

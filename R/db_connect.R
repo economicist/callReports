@@ -45,7 +45,10 @@ create_new_sqlite_db <-
            confirm = TRUE) {
     # If file exists, ask for permission to overwrite. Exit if permission denied.
     journal_path <- glue::glue("{sqlite_path}-journal")
-    if (file.exists(journal_path)) confirm_and_delete(journal_path)
+    if (file.exists(journal_path)) {
+      cat(glue::glue("Database lock file {journal_path} detected"))
+      confirm_and_delete(journal_path)
+    }
     if (overwrite & file.exists(sqlite_path)) {
       if (confirm) {
         confirm_and_delete(sqlite_path)
