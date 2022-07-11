@@ -2,33 +2,25 @@
 % Please edit documentation in R/extract_ffiec.R
 \name{parse_ffiec_tsv}
 \alias{parse_ffiec_tsv}
-\title{Extract the observations for a given FFIEC schedule file to a database}
+\title{Parse an FFIEC TSV file into codebook, observation, and problem data frames.}
 \usage{
-parse_ffiec_tsv(sch_unzipped)
+parse_ffiec_tsv(tsv)
 }
 \arguments{
-\item{sch_unzipped}{A valid FFIEC schedule data file extracted to disk#'}
+\item{tsv}{The path to an unzipped FFIEC TSV schedule file}
+}
+\value{
+A named \code{list} with three \code{tibble} elements: \code{codebook}, \code{observations},
+and \code{problems}
 }
 \description{
 \code{parse_ffiec_tsv()} accepts a text file containing tab-separated-value
 bulk data provided by the FFIEC, and writes it to a given database.
 }
 \details{
-If any warnings are triggered about parsing issues, they are absorbed by the
-function and an attempt is made to repair the schedule file. A second attempt
-is then made, and a visible warning issued it was not resolved. Any data
-extracted will still be written to the database, but you may wish to
-investigate their integrity. Tests existing data sets as of 2022 June 17
-have been working without warnings.
-
-Most applications will not use this function as it is called by
-\code{extract_ffiec_tsv()} as part of extracting the codebook and observations
-simultaneously.
-
 ZIP files containing valid schedule files for 2001-present are offered at the
 \href{https://cdr.ffiec.gov/public/PWS/DownloadBulkData.aspx}{FFIEC Bulk Data Download Service}
 }
 \examples{
-ffiec_db <- db_connector_sqlite("./db/ffiec.sqlite")
-parse_ffiec_tsv(ffiec_db, "FFIEC CDR Call Schedule RCCII 06302002.txt")
+parse_ffiec_tsv("FFIEC CDR Call Schedule RCCII 06302002.txt")
 }

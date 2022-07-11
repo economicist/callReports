@@ -4,13 +4,13 @@
 \alias{write_chifed_observations}
 \title{Write a dataframe of Chicago Fed observations to the database}
 \usage{
-write_chifed_observations(db_connector, df_long)
+write_chifed_observations(df_long)
 }
 \arguments{
+\item{df_long}{A dataframe of observations in long form}
+
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
 functions found in this package. It should be passed without the \verb{()}}
-
-\item{df_long}{A dataframe of observations in long form}
 }
 \description{
 Write a dataframe of Chicago Fed observations to the database

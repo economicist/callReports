@@ -2,24 +2,28 @@ rm(list = ls(all.names = TRUE))
 # library(callReports)
 devtools::document()
 
-# Latest feature: Persistent configuration with interactive selections
-#
-# Not necessary to run the following `setter` functions the first time you use
-# this library, as the `getter` functions will automatically call them when they
-# need values to get.
-#
-# Do, however, uncomment and run the appropriate line below if you ever need to
-# change the location or name of the database file, or either of the folders
-# where the ZIP files are stored:
-
+##
+## These are all called automatically the first time you use their corresponding
+## `get_*()` functions (or, more likely, a behind-the-scenes function that calls
+## one), so you can leave them commented out until you need one:
+##
 # set_sqlite_filename()
 # set_chifed_zip_dir()
 # set_ffiec_zip_dir()
+# set_logging_dir()
 
+##
+## You can nuke all settings associated with this package with one command, and
+## you'll be asked to respecify all settings when necessary:
+##
+# reset_user_cfg()
 
-# The `get_*()` functions used as arguments below can all be used on their own
-# if you ever want to know the current database and ZIP folder configuration.
-
-create_new_sqlite_db(get_sqlite_filename(), overwrite = TRUE, confirm = FALSE)
-# extract_chifed_zips(db_connector_sqlite(), get_chifed_zip_dir())
-extract_ffiec_zips(db_connector_sqlite(), get_ffiec_zip_dir())
+##
+## Below is all you need to run to get *ALL* of the Chicago Federal Reserve
+## and FFIEC data sets extracted into a single database. The SQLite file is
+## approximately 35 GB.
+##
+options(warn = 1)
+create_new_sqlite_db(overwrite = TRUE, confirm = FALSE)
+# extract_chifed_zips()
+extract_ffiec_zips()

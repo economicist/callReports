@@ -4,25 +4,21 @@
 \alias{fetch_ffiec_observations}
 \title{Query the FFIEC database for variables in a given database table}
 \usage{
-fetch_ffiec_observations(db_connector, tbl_name, ...)
+fetch_ffiec_observations(tbl_name, ...)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
+\item{tbl_name}{A valid table name containing FFIEC observations.}
 
 \item{...}{Quoted variable names, separated by commas}
-
-\item{sch_code}{A valid alphabetical schedule code}
 }
 \value{
-A \code{tibble} containing bank ID, report date, and the values of the
-requested variables.
+A \code{tibble} containing bank IDRSSD, report date, and the values of the
+requested variables in wide format.
 }
 \description{
 \code{query_ffiec_db()} connects to a given database and searches the given
 schedule table for the requested variables.
 }
 \examples{
-ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
-query_ffiec_db(ffiec_db, "RCON2170", "RCON2948", "RCON3210")
+fetch_ffiec_observations("FFIEC.OBS_RC", "RCON2170", "RCON2948", "RCON3210")
 }

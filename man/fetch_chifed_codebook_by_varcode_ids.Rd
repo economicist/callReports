@@ -11,7 +11,7 @@ fetch_chifed_codebook_by_varcode_ids(db_connector, varcode_ids)
 functions found in this package. It should be passed without the \verb{()}}
 
 \item{varcode_ids}{A vector of integer-valued variable code IDs that can
-be found in the \code{VAR_CODES} database table.}
+be found in the \code{VARCODES} database table.}
 }
 \description{
 Fetch the Chicago Fed codebook data for a set of database variable ID codes.

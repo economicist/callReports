@@ -4,14 +4,14 @@
 \alias{extract_chifed_mdrm}
 \title{Extract the Chicago Fed's codebook data to a database}
 \usage{
-extract_chifed_mdrm(db_connector, codebook_zip)
+extract_chifed_mdrm(codebook_zip)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
 \item{codebook_zip}{An existing copy of \code{MDRM.zip}
 page accompanying the main data.}
+
+\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
+functions found in this package. It should be passed without the \verb{()}}
 }
 \description{
 \code{extract_chifed_mdrm()} extracts the Chicago Fed's call report data
@@ -19,6 +19,5 @@ dictionary provided at (their website)\link{https://www.federalreserve.gov/apps/
 to a database specified in the given database connector function.
 }
 \examples{
-chifed_db <- sqlite_connector("./db/chifed.sqlite")
-extract_chifed_mdrm(chifed_db, "./MDRM.zip")
+extract_chifed_mdrm("./MDRM.zip")
 }

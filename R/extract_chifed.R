@@ -13,14 +13,17 @@
 #' @examples
 #' extract_chifed_zips("./zips-chifed")
 extract_chifed_zips <-
-  function(db_connector, chifed_zip_path = get_chifed_zip_dir()) {
+  function(chifed_zip_path = get_chifed_zip_dir()) {
+    db_connector <- db_connector_sqlite(get_sqlite_file())
     closeAllConnections()
     codebook_path <- glue::glue("{chifed_zip_path}/MDRM.zip")
     capture.output(
       {
-        extract_chifed_mdrm(db_connector, codebook_path)
-        list_chifed_zips(chifed_zip_path) %>%
-          purrr::walk(~ extract_chifed_zip(db_connector, .))
+        extract_chifed_mdrm(codebook_path)
+        purrr::walk(
+          list_chifed_zips(chifed_zip_path), 
+          ~ extract_chifed_zip(.)
+        )
       },
       file = generate_log_name("extraction_chifed"),
       split = TRUE
@@ -41,7 +44,7 @@ extract_chifed_zips <-
 #' @examples
 #' chifed_db <- sqlite_connector("./db/chifed.sqlite")
 #' extract_chifed_zip(chifed_db, "./zips-chifed/call0003-zip.zip")
-extract_chifed_zip <- function(db_connector, zip_file = NULL) {
+extract_chifed_zip <- function(zip_file = NULL) {
   if (is.null(zip_file)) {
     zip_file <- rstudioapi::selectFile(path = get_chifed_zip_dir())
   }
@@ -74,7 +77,7 @@ extract_chifed_zip <- function(db_connector, zip_file = NULL) {
 
   xpt_varcodes <- names(df_wide)
   new_varcodes <- xpt_varcodes %>% subset(. %not_in% c("IDRSSD", "QUARTER_ID"))
-  write_varcodes(db_connector, new_varcodes)
+  write_varcodes(new_varcodes)
 
   rlog::log_info(glue::glue(
     "Pivoting to long form for `CHIFED.OBS_ALL` table..."
@@ -87,14 +90,14 @@ extract_chifed_zip <- function(db_connector, zip_file = NULL) {
     df_wide %>%
     tidyr::pivot_longer(
       cols = !any_of(c("IDRSSD", "QUARTER_ID", "CALL8786", "CALL8787")),
-      names_to = "VAR_CODE",
+      names_to = "VARCODE",
       values_to = "VALUE",
       values_transform = as.character,
       values_drop_na = TRUE
     ) %>%
-    dplyr::inner_join(fetch_varcodes(db_connector), by = "VAR_CODE") %>%
-    dplyr::rename(VAR_CODE_ID = ID) %>%
-    dplyr::select(IDRSSD, QUARTER_ID, CALL8786, CALL8787, VAR_CODE_ID, VALUE)
+    dplyr::inner_join(fetch_varcodes(), by = "VARCODE") %>%
+    dplyr::rename(VARCODE_ID = ID) %>%
+    dplyr::select(IDRSSD, QUARTER_ID, CALL8786, CALL8787, VARCODE_ID, VALUE)
 
   num_vars <- ncol(df_wide) - 2 # Don't count `IDRSSD` or `QUARTER_ID`
   num_obs <- nrow(df_long)
@@ -102,7 +105,7 @@ extract_chifed_zip <- function(db_connector, zip_file = NULL) {
     "Writing {num_obs} non-NA observations",
     " of {num_vars} variables to database..."
   ))
-  tryCatch(write_chifed_observations(db_connector, df_long),
+  tryCatch(write_chifed_observations(df_long),
     warning = stop,
     error   = stop
   )
@@ -125,9 +128,8 @@ extract_chifed_zip <- function(db_connector, zip_file = NULL) {
 #' @return NULL
 #' @export
 #' @examples
-#' chifed_db <- sqlite_connector("./db/chifed.sqlite")
-#' extract_chifed_mdrm(chifed_db, "./MDRM.zip")
-extract_chifed_mdrm <- function(db_connector, codebook_zip) {
+#' extract_chifed_mdrm("./MDRM.zip")
+extract_chifed_mdrm <- function(codebook_zip) {
   mdrm <-
     unz(codebook_zip, "MDRM_CSV.csv") %>%
     readr::read_csv(
@@ -137,8 +139,9 @@ extract_chifed_mdrm <- function(db_connector, codebook_zip) {
       progress = FALSE
     ) %>%
     dplyr::select(-SERIESGLOSSARY, -UNNAMED_11) %>%
-    dplyr::mutate(VAR_CODE = paste0(MNEMONIC, ITEM_CODE)) %>%
-    dplyr::select(VAR_CODE, everything())
+    dplyr::mutate(VARCODE = paste0(MNEMONIC, ITEM_CODE)) %>%
+    dplyr::select(VARCODE, everything())
+  db_connector <- db_connector_sqlite()
   db_conn <- db_connector()
   try(DBI::dbWriteTable(db_conn, "CHIFED.CODEBOOK", mdrm, overwrite = TRUE))
   DBI::dbDisconnect(db_conn)

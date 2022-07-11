@@ -13,7 +13,7 @@ functions found in this package. It should be passed without the \verb{()}}
 }
 \value{
 A \code{tibble} in the form of the codebook, but with an additional
-column pairing a \code{VAR_CODE_ID} to each \code{VAR_CODE} found in the observations
+column pairing a \code{VARCODE_ID} to each \code{VARCODE} found in the observations
 table
 }
 \description{
@@ -21,6 +21,6 @@ table
 in the database table \code{CHIFED.CODEBOOK} containing records only for those
 variables currently available in \code{CHIFED.OBS_ALL} (as determined by a query
 at the time of this function being called), as well as an additional column
-indicating which value of \code{VAR_CODE_ID} in \code{CHIFED.OBS_ALL} is associated
-with which \code{VAR_CODE} and description.
+indicating which value of \code{VARCODE_ID} in \code{CHIFED.OBS_ALL} is associated
+with which \code{VARCODE} and description.
 }

@@ -4,14 +4,13 @@
 \alias{write_varcodes}
 \title{Add variable names to an index table}
 \usage{
-write_varcodes(db_connector, var_codes)
+write_varcodes(varcodes, db_conn = NULL)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
-\item{var_codes}{A character vector of variable codes to put into the
+\item{varcodes}{A character vector of variable codes to put into the
 database. Variable codes already assigned a database ID will be skipped.}
+
+\item{db_conn}{An active database connection created by \verb{db_connector_*()}}
 }
 \description{
 \code{write_varcodes()} takes a list of variable codes and adds each of them

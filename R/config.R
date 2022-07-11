@@ -28,7 +28,7 @@ get_cfg_filename <-
 #' given by `yaml_name`
 #' @param yaml_name (default `callReports.yml`) A name for the configuration file
 #' @export
-reset_user_cfg <- 
+reset_user_cfg <-
   function(subdir_name = "economicist", yaml_name = "callReports.yml") {
     unlink(get_cfg_filename()$user)
     create_user_cfg_if_not_exists(subdir_name, yaml_name)
@@ -60,11 +60,6 @@ create_user_cfg_if_not_exists <-
     }
   }
 
-get_user_cfg <- 
-  function(subdir_name = "economicist", yaml_name = "callReports.yml") {
-    cfg_list <- yaml::read_yaml(get_user_cfg)
-  }
-
 #' Get the directory where the Chicago Fed ZIP files are stored
 #'
 #' @return A directory character value
@@ -85,7 +80,9 @@ get_ffiec_zip_dir <- function() {
   create_user_cfg_if_not_exists()
   cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
   cfg_val <- cfg_list$zips_ffiec
-  if (is.null(cfg_val)) return(set_ffiec_zip_dir())
+  if (is.null(cfg_val)) {
+    return(set_ffiec_zip_dir())
+  }
   return(cfg_val)
 }
 
@@ -97,7 +94,9 @@ get_logging_dir <- function() {
   create_user_cfg_if_not_exists()
   cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
   cfg_val <- cfg_list$logging_dir
-  if (is.null(cfg_val)) return(set_logging_dir())
+  if (is.null(cfg_val)) {
+    return(set_logging_dir())
+  }
   return(cfg_val)
 }
 
@@ -109,7 +108,9 @@ get_sqlite_filename <- function() {
   create_user_cfg_if_not_exists()
   cfg_list <- yaml::read_yaml(get_cfg_filename()$user)
   cfg_val <- cfg_list$sqlite_file
-  if (is.null(cfg_val)) return(set_sqlite_filename())
+  if (is.null(cfg_val)) {
+    return(set_sqlite_filename())
+  }
   return(cfg_val)
 }
 

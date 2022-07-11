@@ -4,7 +4,7 @@
 \alias{detect_ffiec_cross_references}
 \title{Detect variables in the FFIEC database that exist in multiple tables}
 \usage{
-detect_ffiec_cross_references(db_connector)
+detect_ffiec_cross_references()
 }
 \arguments{
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}

@@ -22,38 +22,46 @@
 #' an integer ID value so that the storage requirements are significantly
 #' smaller.
 #'
-#' @param db_connector A `function` created by one of the `db_connector_*()`
-#' functions found in this package. It should be passed without the `()`
-#' @param var_codes A character vector of variable codes to put into the
+#' @param varcodes A character vector of variable codes to put into the
 #' database. Variable codes already assigned a database ID will be skipped.
+#' @param db_conn An active database connection created by `db_connector_*()`
 #' @export
-write_varcodes <- function(db_connector, var_codes) {
-  db_conn <- db_connector()
+write_varcodes <- function(varcodes, db_conn = NULL) {
+  if (is.null(db_conn)) {
+    db_connector <- db_connector_sqlite()
+    db_conn <- db_connector()
+  }
 
-  # If the `VAR_CODES` table does not yet exist, create it with an ID column
+  # If the `VARCODES` table does not yet exist, create it with an ID column
   # that automatically increments with each new addition to the table, thus
   # automatically assigning each variable code an integer ID. Additionally,
   # prevent duplicate variable code entries by adding a `UNIQUE` constraint
   # to its relevant table column.
-  if (!DBI::dbExistsTable(db_conn, "VAR_CODES")) {
+  if (!DBI::dbExistsTable(db_conn, "VARCODES")) {
     tbl_gen_query <-
-      "CREATE TABLE VAR_CODES" %>%
-      paste("(ID INTEGER PRIMARY KEY AUTOINCREMENT, VAR_CODE TEXT UNIQUE)")
+      "CREATE TABLE VARCODES" %>%
+      paste("(ID INTEGER PRIMARY KEY AUTOINCREMENT, VARCODE TEXT UNIQUE)")
     DBI::dbExecute(db_conn, tbl_gen_query)
   }
 
   # Fetch the variable codes already in the database (just the codes, not the IDs)
-  varcodes <- fetch_varcodes(db_connector) %>% getElement("VAR_CODE")
+  old_varcodes <- fetch_varcodes(db_conn)$VARCODE
+  new_varcodes <- varcodes %>% subset(. %not_in% old_varcodes)
 
   # `ID` values are automatically assigned by the database engine to variable
   # codes, so here we assign `NA` values to them before sending the table to
   # the database for writing.
-  new_varcodes <-
-    tibble::tibble(ID = rep(NA, length(var_codes)), VAR_CODE = var_codes) %>%
-    dplyr::filter(VAR_CODE %not_in% varcodes)
-
-  DBI::dbWriteTable(db_conn, "VAR_CODES", new_varcodes, append = TRUE)
-  DBI::dbDisconnect(db_conn)
+  if (length(new_varcodes) == 0) return()
+  rlog::log_info(glue::glue(
+    "Assigning database IDs to {length(new_varcodes)} new variable codes"
+  ))
+  DBI::dbWriteTable(
+    db_conn, "VARCODES",
+    tibble::tibble(
+      ID = rep(NA, length(new_varcodes)),
+      VARCODE = new_varcodes
+    ),
+    append = TRUE)
 }
 
 #' Retrieve variable names from an index table
@@ -77,20 +85,30 @@ write_varcodes <- function(db_connector, var_codes) {
 #' each variable code an integer ID value so that the storage requirements are
 #' significantly smaller.
 #'
-#' @param db_connector A `function` created by one of the `db_connector_*()`
-#' functions found in this package. It should be passed without the `()`
+#' @param db_conn An active database connection created by `db_connector_*()`.
+#' If `NULL`, the default database connection will be activated.
 #' @return A character vector of variable codes
 #' @export
-fetch_varcodes <- function(db_connector) {
-  db_conn <- db_connector()
-  if (!DBI::dbExistsTable(db_conn, "VAR_CODES")) {
+fetch_varcodes <- function(db_conn = NULL) {
+  was.null <- FALSE
+  
+  if (is.null(db_conn)) {
+    was.null = TRUE
+    db_connector <- db_connector_sqlite()
+    db_conn <- db_connector()
+  }
+  
+  if (!DBI::dbExistsTable(db_conn, "VARCODES")) {
     return(as.character(NULL))
   }
-  var_codes <-
-    DBI::dbReadTable(db_conn, "VAR_CODES") %>%
+  
+  df_varcodes <- 
+    DBI::dbReadTable(db_conn, "VARCODES") %>% 
     dplyr::collect()
-  DBI::dbDisconnect(db_conn)
-  return(var_codes)
+  
+  if (was.null) DBI::dbDisconnect(db_conn)
+  
+  return(df_varcodes)
 }
 
 #' Convert a quarter ID back into a date

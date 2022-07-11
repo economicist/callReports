@@ -29,15 +29,15 @@
 #' repair_ffiec_schedule("FFIEC CDR Call Schedule RIE 06302004.txt")
 repair_ffiec_schedule <- function(sch_unzipped) {
   rlog::log_info(glue::glue("Checking integrity of {sch_unzipped}..."))
-  var_codes <- read_ffiec_varcodes(sch_unzipped)
+  varcodes <- read_ffiec_varcodes(sch_unzipped)
   var_descs <- read_ffiec_vardescs(sch_unzipped)
 
-  if (length(var_codes) != length(var_descs)) {
+  if (length(varcodes) != length(var_descs)) {
     rlog::log_info("Unequal number of values in name and description rows.")
     stop(glue::glue("{sch_unzipped} not a valid schedule file and cannot be repaired."))
   }
 
-  num_vars <- length(var_codes)
+  num_vars <- length(varcodes)
   exp_n_tabs <- num_vars - 1
   obs_lines <-
     readr::read_lines(sch_unzipped,

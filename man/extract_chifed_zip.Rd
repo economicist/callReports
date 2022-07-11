@@ -4,13 +4,13 @@
 \alias{extract_chifed_zip}
 \title{Extract the Chicago Fed's data observations to a database}
 \usage{
-extract_chifed_zip(db_connector, zip_file = NULL)
+extract_chifed_zip(zip_file = NULL)
 }
 \arguments{
+\item{zip_file}{An existing ZIP file containing a valid XPT data file}
+
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
 functions found in this package. It should be passed without the \verb{()}}
-
-\item{zip_file}{An existing ZIP file containing a valid XPT data file}
 }
 \description{
 \code{extract_chifed_observations()} reads a ZIP file containing a valid XPT file.

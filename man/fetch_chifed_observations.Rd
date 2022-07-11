@@ -4,19 +4,13 @@
 \alias{fetch_chifed_observations}
 \title{Retreive Chicago Fed observations from a database}
 \usage{
-fetch_chifed_observations(
-  db_connector,
-  tbl_name,
-  ...,
-  min_date = NULL,
-  max_date = NULL
-)
+fetch_chifed_observations(tbl_name, ..., min_date = NULL, max_date = NULL)
 }
 \arguments{
+\item{...}{Quoted variable names, separated by commas.}
+
 \item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
 functions found in this package. It should be passed without the \verb{()}}
-
-\item{...}{Quoted variable names, separated by commas.}
 }
 \value{
 A \code{tibble()} containing bank ID, report date, and values for the

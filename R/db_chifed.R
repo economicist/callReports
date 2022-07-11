@@ -4,7 +4,8 @@
 #' functions found in this package. It should be passed without the `()`
 #' @param df_long A dataframe of observations in long form
 #' @export
-write_chifed_observations <- function(db_connector, df_long) {
+write_chifed_observations <- function(df_long) {
+  db_connector <- db_connector_sqlite()
   db_conn <- db_connector()
   tryCatch(
     {
@@ -16,7 +17,7 @@ write_chifed_observations <- function(db_connector, df_long) {
             QUARTER_ID = "INTEGER",
             CALL8786 = "INTEGER",
             CALL8787 = "INTEGER",
-            VAR_CODE_ID = "INTEGER",
+            VARCODE_ID = "INTEGER",
             VALUE = "TEXT"
           )
         )
@@ -42,16 +43,16 @@ write_chifed_observations <- function(db_connector, df_long) {
 #' chifed_db <- sqlite_connector("./db/chifed.sqlite")
 #' query_chifed_db("RCON2170", "RCON2950", "RCON3210")
 fetch_chifed_observations <-
-  function(db_connector, tbl_name, ...,
-           min_date = NULL, max_date = NULL) {
+  function(tbl_name, ..., min_date = NULL, max_date = NULL) {
+    db_connector <- db_connector_sqlite()
     db_conn <- db_connector()
     df_varcodes <-
-      DBI::dbReadTable(db_conn, "VAR_CODES") %>%
-      dplyr::filter(VAR_CODE %in% c(...)) %>%
+      DBI::dbReadTable(db_conn, "VARCODES") %>%
+      dplyr::filter(VARCODE %in% c(...)) %>%
       dplyr::collect() %>%
       tibble::as_tibble()
     varcode_ids_csv <- paste(df_varcodes$ID, collapse = ", ")
-    where_clause <- glue::glue('WHERE "VAR_CODE_ID" IN ({varcode_ids_csv})')
+    where_clause <- glue::glue('WHERE "VARCODE_ID" IN ({varcode_ids_csv})')
     if (!is.null(min_date)) {
       min_qtr_id <- date_str_to_qtr_id(min_date)
       where_clause <- glue::glue("{where_clause} AND QUARTER_ID >= {min_qtr_id}")
@@ -68,8 +69,8 @@ fetch_chifed_observations <-
       DBI::dbFetch(db_res) %>%
       tibble::as_tibble() %>%
       dplyr::mutate(REPORT_DATE = qtr_id_to_date_str(QUARTER_ID)) %>%
-      dplyr::inner_join(df_varcodes, by = c("VAR_CODE_ID" = "ID")) %>%
-      dplyr::select(IDRSSD, REPORT_DATE, CALL8786, CALL8787, VAR_CODE, VALUE)
+      dplyr::inner_join(df_varcodes, by = c("VARCODE_ID" = "ID")) %>%
+      dplyr::select(IDRSSD, REPORT_DATE, CALL8786, CALL8787, VARCODE, VALUE)
     DBI::dbClearResult(db_res)
     DBI::dbDisconnect(db_conn)
 
@@ -80,7 +81,7 @@ fetch_chifed_observations <-
     df_out %<>%
       tidyr::pivot_wider(
         id_cols = c(IDRSSD, REPORT_DATE, CALL8786, CALL8787),
-        names_from = VAR_CODE,
+        names_from = VARCODE,
         values_from = VALUE
       )
 
@@ -93,16 +94,16 @@ fetch_chifed_observations <-
 #' @param db_connector A `function` created by one of the `db_connector_*()`
 #' functions found in this package. It should be passed without the `()`
 #' @param varcode_ids A vector of integer-valued variable code IDs that can
-#' be found in the `VAR_CODES` database table.
+#' be found in the `VARCODES` database table.
 #' @export
 fetch_chifed_codebook_by_varcode_ids <- function(db_connector, varcode_ids) {
   db_conn <- db_connector()
   db_res <-
     paste(varcode_ids, collapse = ", ") %>%
     paste(
-      'SELECT A."ID" AS "VAR_CODE_ID", B.* FROM "VAR_CODES" A',
+      'SELECT A."ID" AS "VARCODE_ID", B.* FROM "VARCODES" A',
       'INNER JOIN "CHIFED.CODEBOOK" B',
-      'ON A."VAR_CODE" = B."VAR_CODE"',
+      'ON A."VARCODE" = B."VARCODE"',
       'WHERE A."ID" IN (', ., ")"
     ) %>%
     DBI::dbSendQuery(db_conn, .)
@@ -148,18 +149,18 @@ available_chifed_dates <- function(db_connector) {
 #' in the database table `CHIFED.CODEBOOK` containing records only for those
 #' variables currently available in `CHIFED.OBS_ALL` (as determined by a query
 #' at the time of this function being called), as well as an additional column
-#' indicating which value of `VAR_CODE_ID` in `CHIFED.OBS_ALL` is associated
-#' with which `VAR_CODE` and description.
+#' indicating which value of `VARCODE_ID` in `CHIFED.OBS_ALL` is associated
+#' with which `VARCODE` and description.
 #'
 #' @param db_connector A `function` created by one of the `db_connector_*()`
 #' functions found in this package. It should be passed without the `()`
 #' @return A `tibble` in the form of the codebook, but with an additional
-#' column pairing a `VAR_CODE_ID` to each `VAR_CODE` found in the observations
+#' column pairing a `VARCODE_ID` to each `VARCODE` found in the observations
 #' table
 #' @export
 available_chifed_varcodes <-
   function(db_connector, min_date = NULL, max_date = NULL) {
-    db_query <- 'SELECT DISTINCT "VAR_CODE_ID" FROM "CHIFED.OBS_ALL"'
+    db_query <- 'SELECT DISTINCT "VARCODE_ID" FROM "CHIFED.OBS_ALL"'
 
     where_predicates <- c()
     if (!is.null(min_date)) {
@@ -184,7 +185,7 @@ available_chifed_varcodes <-
     DBI::dbClearResult(db_results)
 
     df_varcode_ids_all <-
-      DBI::dbReadTable(db_conn, "VAR_CODES") %>%
+      DBI::dbReadTable(db_conn, "VARCODES") %>%
       collect() %>%
       as_tibble()
 
@@ -195,10 +196,10 @@ available_chifed_varcodes <-
 
     df_details <-
       df_return %>%
-      inner_join(df_varcode_ids_all, by = c("VAR_CODE_ID" = "ID")) %>%
+      inner_join(df_varcode_ids_all, by = c("VARCODE_ID" = "ID")) %>%
       mutate(
-        MNEMONIC = substr(VAR_CODE, 1, 4),
-        ITEM_CODE = substr(VAR_CODE, 5, 8)
+        MNEMONIC = substr(VARCODE, 1, 4),
+        ITEM_CODE = substr(VARCODE, 5, 8)
       ) %>%
       inner_join(df_codebook, by = c("MNEMONIC", "ITEM_CODE")) %>%
       mutate(across(START_DATE:END_DATE, ~ as.Date(lubridate::mdy_hms(.)))) %>%
@@ -213,13 +214,13 @@ available_chifed_varcodes <-
 
     df_details %<>%
       select(
-        VAR_CODE_ID, VAR_CODE, REPORTING_FORM,
+        VARCODE_ID, VARCODE, REPORTING_FORM,
         !any_of(c(
           "MNEMONIC", "ITEM_CODE",
           "CONFIDENTIALITY", "SERIESGLOSSARY"
         ))
       ) %>%
-      arrange(VAR_CODE, REPORTING_FORM) %>%
+      arrange(VARCODE, REPORTING_FORM) %>%
       as_tibble()
 
     DBI::dbDisconnect(db_conn)

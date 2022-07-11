@@ -4,16 +4,16 @@
 \alias{search_ffiec_codebook}
 \title{Search the FFIEC data codebook in the database, by varible name or description}
 \usage{
-search_ffiec_codebook(db_connector, var_name = NULL, var_desc = NULL)
+search_ffiec_codebook(var_name = NULL, var_desc = NULL)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
 \item{var_name}{A valid full 8-character variable name}
 
 \item{var_desc}{Any substring (case-insensitive) you hope to find in a
 variable description}
+
+\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
+functions found in this package. It should be passed without the \verb{()}}
 }
 \value{
 A \code{tibble} containing matching results in the codebook
@@ -22,7 +22,6 @@ A \code{tibble} containing matching results in the codebook
 Either a \code{var_name} or \code{var_desc} must be provided.
 }
 \examples{
-ffiec_db <- sqlite_connector("./db/ffiec.sqlite")
 search_ffiec_codebook(ffiec_db, var_name = "RCON2950")
 search_ffiec_codebook(ffiec_db, var_desc = "TOTAL LIABILITIES")
 }

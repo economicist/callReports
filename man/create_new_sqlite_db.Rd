@@ -4,7 +4,11 @@
 \alias{create_new_sqlite_db}
 \title{Create a new SQLite database to extract data into}
 \usage{
-create_new_sqlite_db(sqlite_path, overwrite = FALSE, confirm = TRUE)
+create_new_sqlite_db(
+  sqlite_path = get_sqlite_filename(),
+  overwrite = FALSE,
+  confirm = TRUE
+)
 }
 \arguments{
 \item{sqlite_path}{A path containing at least a valid SQLite filename. It

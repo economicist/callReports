@@ -4,15 +4,15 @@
 \alias{extract_ffiec_tsv}
 \title{Extract the FFIEC codebook and all observations for a single schedule}
 \usage{
-extract_ffiec_tsv(db_connector, zf, sch)
+extract_ffiec_tsv(zf, sch)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
 \item{zf}{A ZIP file containing schedule files}
 
 \item{sch}{A valid FFIEC schedule data file inside the ZIP file \code{zf}}
+
+\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
+functions found in this package. It should be passed without the \verb{()}}
 }
 \description{
 \code{extract_ffiec_tsv()} accepts a ZIP file, extracts one of its enclosed

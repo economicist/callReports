@@ -4,11 +4,11 @@
 \alias{fetch_varcodes}
 \title{Retrieve variable names from an index table}
 \usage{
-fetch_varcodes(db_connector)
+fetch_varcodes(db_conn = NULL)
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
+\item{db_conn}{An active database connection created by \verb{db_connector_*()}.
+If \code{NULL}, the default database connection will be activated.}
 }
 \value{
 A character vector of variable codes

@@ -4,23 +4,15 @@
 \alias{extract_ffiec_zips}
 \title{Extract an entire directory of FFIEC ZIP files to a database}
 \usage{
-extract_ffiec_zips(db_connector, ffiec_zip_path = get_ffiec_zip_dir())
+extract_ffiec_zips(ffiec_zip_path = get_ffiec_zip_dir())
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
-\item{ffiec_zip_path}{A single character value containing an existing folder
-containing the ZIP files}
+\item{ffiec_zip_path}{(default \code{get_ffiec_zip_dir()}) A single character
+value containing an existing folder containing the ZIP files}
 }
 \description{
-\code{extract_ffiec_zips_to_db()} examines all ZIP files in \code{ffiec_zip_path}
-and attempts to extract each enclosed schedule file to the database whose
-connector function is given by \code{db_connector}. The underlying extraction
-function skips schedule files that have already been successfully extracted
-to the database.
-}
-\examples{
-db_connector <- db_connector_sqlite("./db/ffiec.sqlite")
-extract_ffiec_zips_to_db(db_connector, "./zips-ffiec")
+\code{extract_ffiec_zips()} examines all ZIP files in \code{ffiec_zip_path} and
+attempts to extract each enclosed schedule file to the database set by the
+user. The underlying extraction function skips schedule files that have
+already been successfully extracted to the database.
 }

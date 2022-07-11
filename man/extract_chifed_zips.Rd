@@ -4,15 +4,15 @@
 \alias{extract_chifed_zips}
 \title{List ZIP files containing Call Report data from the Chicago Fed}
 \usage{
-extract_chifed_zips(db_connector, chifed_zip_path = get_chifed_zip_dir())
+extract_chifed_zips(chifed_zip_path = get_chifed_zip_dir())
 }
 \arguments{
-\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
-functions found in this package. It should be passed without the \verb{()}}
-
 \item{chifed_zip_path}{A single character value containing an existing folder
 containing the ZIP files
 SQLite DB? This is meaningful only for SQLite databases.}
+
+\item{db_connector}{A \code{function} created by one of the \verb{db_connector_*()}
+functions found in this package. It should be passed without the \verb{()}}
 }
 \value{
 A character vector containing the full paths of valid ZIP files

@@ -15,8 +15,7 @@ repair_colnames(nms, prefix = "UNNAMED")
 A valid and unique variable name
 }
 \description{
-The \verb{readr::read_*()} functions display a message about renaming variables
-with invalid names if no rule is provided for repairing them. This function
-provides such a rule, and can be used as the \code{name_repair} parameter of those
-functions.
+\code{vroom::vroom()} display a message about renaming variables with invalid
+names if no rule is provided for repairing them. This function provides such
+a rule, and can be used as the \code{name_repair} parameter of those functions.
 }

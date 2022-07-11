@@ -99,26 +99,24 @@ parse_tsv_line <- function(tsv_line) {
 
 #' Repair any invalid column names
 #'
-#' The `readr::read_*()` functions display a message about renaming variables
-#' with invalid names if no rule is provided for repairing them. This function
-#' provides such a rule, and can be used as the `name_repair` parameter of those
-#' functions.
+#' `vroom::vroom()` display a message about renaming variables with invalid
+#' names if no rule is provided for repairing them. This function provides such
+#' a rule, and can be used as the `name_repair` parameter of those functions.
 #'
 #' @param nm A character-valued variable name
 #' @param idx The index of that variable in the data set
 #' @return A valid and unique variable name
 #' @export
 repair_colnames <- function(nms, prefix = "UNNAMED") {
-  repair_colname <- function(nm, idx) {
-    ifelse(is.null(nm) | stringr::str_length(stringr::str_trim(nm)) == 0,
+  purrr::map2_chr(nms, 1:length(nms), function(nm, idx) {
+    ifelse(
+      is.null(nm) | stringr::str_length(stringr::str_trim(nm)) == 0,
       glue::glue("{prefix}_{idx}"),
       stringr::str_trim(nm) %>%
         stringr::str_to_upper() %>%
         stringr::str_replace_all("[\\.[:space:]]+", "_")
     )
-  }
-  new_names <- purrr::map2_chr(nms, 1:length(nms), ~ repair_colname(.x, .y))
-  return(new_names)
+  })
 }
 
 #' Is a character value `NULL`, of length zero, or just whitespace?
