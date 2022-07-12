@@ -16,7 +16,7 @@ extract_chifed_zips <-
   function(chifed_zip_path = get_chifed_zip_dir()) {
     db_connector <- db_connector_sqlite(get_sqlite_file())
     closeAllConnections()
-    codebook_path <- glue::glue("{chifed_zip_path}/MDRM.zip")
+    extract_chifed_mdrm(glue::glue("{chifed_zip_path}/MDRM.zip"))
     purrr::walk(
       list_chifed_zips(chifed_zip_path),
       ~ extract_chifed_zip(.)
@@ -73,18 +73,139 @@ extract_chifed_zip <- function(zip_file = NULL) {
     )
 
   xpt_varcodes <- names(df_wide)
-  new_varcodes <- xpt_varcodes %>% subset(. %not_in% c("IDRSSD", "QUARTER_ID"))
+  new_varcodes <- xpt_varcodes %>% subset(. %not_in% c("IDRSSD", "RSSD9999"))
   write_varcodes(new_varcodes)
+  
+  db_log.chifed_ext(ymd_chr, "Eliminating variables with no observations...")
+  df_wide %<>% dplyr::select_if(~ !all(is.na(.)))
+  db_log.chifed_ext(ymd_chr, glue::glue(
+    '{ncol(df_wide)} columns with valid observations remain in the dataset'
+  ))
+  
+  subset_chifed_vars(df_wide, '^TE') %>%
+    write_chifed_observations(ymd_chr, 'TEXT')
+  df_wide %<>% subset_chifed_vars('^TE', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RSSD') %>%
+    write_chifed_observations(ymd_chr, 'RSSD')
+  df_wide %<>% subset_chifed_vars('^RSSD', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RCF[DFW]') %>%
+    write_chifed_observations(ymd_chr, 'RCFD')
+  df_wide %<>% subset_chifed_vars('^RCF[DFW]', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RCFN') %>%
+    write_chifed_observations(ymd_chr, 'RCFN')
+  df_wide %<>% subset_chifed_vars('^RCFN', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RC(O[NFW]|F[[:digit:]])') %>%
+    write_chifed_observations(ymd_chr, 'RCON')
+  df_wide %<>% subset_chifed_vars('^RC(O[NFW]|F[[:digit:]])', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RCOS') %>%
+    write_chifed_observations(ymd_chr, 'RCOS')
+  df_wide %<>% subset_chifed_vars('^RCOS', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RIAD') %>%
+    write_chifed_observations(ymd_chr, 'RIAD')
+  df_wide %<>% subset_chifed_vars('^RIAD', negate = TRUE)
+  
+  subset_chifed_vars(df_wide, '^RIAS') %>%
+    write_chifed_observations(ymd_chr, 'RIAS')
+  df_wide %<>% subset_chifed_vars('^RIAS', negate = TRUE)
+  
+  df_wide %>% write_chifed_observations(ymd_chr, 'OTHER')
+  
+  db_log.chifed_ext(ymd_chr, glue::glue(
+    "Successfully extracted {zip_base} > {xpt_file} to the database!"
+  ))
+  cat(paste(rep('-', 80), collapse = ''))
+  cat("\n")
+}
 
-  db_log.chifed_ext(ymd_chr, "Pivoting to long form...")
-  if ("CALL8787" %not_in% new_varcodes) {
+#' Subset a wide-format Chicago Fed data extract by variable name pattern
+#' 
+#' Because there are so many variables in the Chicago Fed data set, there are
+#' millions of rows in the resulting data set after pivoting into long form.
+#' Splitting the data up by a variable name pattern allows us to store variables
+#' with similar names in their own table, reducing the length of table scans
+#' during queries and speeding up return of results.
+#'
+#' For matching *ALL* members of a variable group like "RSSD", "RCON", "RCFD", 
+#' etc., it is best to match on the first two letters because of how the data
+#' is disaggregated, with each layer of reporting being given a separate 6-digit
+#' suffix on a  two-letter prefix instead of the standard 4-letter, 4-digit
+#' variable code.
+#'
+#' @param df_wide A data frame extracted from a Chicago Fed data set
+#' @param pattern A pattern to match variable names on
+#' @param negate (default `FALSE`) Negate the match given by `pattern`?
+#' @return A `tibble` with the requested variables along with the necessary
+#' identifying columns
+#' @export
+#'
+#' @examples
+#' df_rcon <- subset_chifed_vars(df_wide, '^RC.{6}') ## Subset to RCON variables
+#' df_text <- subset_chifed_vars(df_wide, '^TE.{6}') ## Subset to TEXT variables
+subset_chifed_vars <- function(df_wide, pattern, negate = FALSE) {
+  varcodes <- 
+    names(df_wide) %>%
+    subset(. %not_in% c('IDRSSD', 'QUARTER_ID', 'CALL8786', 'CALL8787'))
+  if (length(varcodes) == 0) return(NULL)
+  
+  vars_matched <- ifelse(
+    negate,
+    subset(varcodes, !grepl(pattern, varcodes)),
+    subset(varcodes,  grepl(pattern, varcodes))
+  )
+  if (length(vars_matched) == 0 | is.na(vars_matched)) return(NULL)
+  
+  if (negate) {
+    return(
+      dplyr::select(
+        df_wide,
+        all_of(c('IDRSSD', 'QUARTER_ID')),
+        any_of(c('CALL8786', 'CALL8787')),      
+        !tidyselect::matches(pattern)
+      )
+    )
+  }
+  
+  dplyr::select(
+    df_wide,
+    all_of(c('IDRSSD', 'QUARTER_ID')),
+    any_of(c('CALL8786', 'CALL8787')),      
+    tidyselect::matches(pattern)
+  )
+}
+
+#' Write a dataframe of Chicago Fed observations to the database
+#'
+#' @param db_connector A `function` created by one of the `db_connector_*()`
+#' functions found in this package. It should be passed without the `()`
+#' @param df_long A dataframe of observations in long form
+#' @export
+write_chifed_observations <- function(df_wide, ymd_chr, suffix) {
+  if (is.null(df_wide)) return()
+  tbl_name <- glue::glue("CHIFED.OBS_{suffix}")
+  df_wide %<>% dplyr::select(!tidyselect::any_of(c('RSSD9999', 'DATE_SAS')))
+  if ("CALL8787" %not_in% names(df_wide)) {
     df_wide %<>% dplyr::mutate(CALL8787 = NA)
   }
-
-  df_long <-
-    df_wide %>%
+  
+  db_log.chifed_ext(
+    ymd_chr, 
+    paste(
+      "Pivoting", nrow(df_wide), "observations of", 
+      ncol(df_wide) - 4, "variables into long form..."
+    )
+  )
+  
+  df_long <- 
     tidyr::pivot_longer(
-      cols = !any_of(c("IDRSSD", "QUARTER_ID", "CALL8786", "CALL8787")),
+      df_wide,
+      cols = 
+        !tidyselect::any_of(c("IDRSSD", "QUARTER_ID", "CALL8786", "CALL8787")),
       names_to = "VARCODE",
       values_to = "VALUE",
       values_transform = as.character,
@@ -93,23 +214,38 @@ extract_chifed_zip <- function(zip_file = NULL) {
     dplyr::inner_join(fetch_varcodes(), by = "VARCODE") %>%
     dplyr::rename(VARCODE_ID = ID) %>%
     dplyr::select(IDRSSD, QUARTER_ID, CALL8786, CALL8787, VARCODE_ID, VALUE)
-
-  num_vars <- ncol(df_wide) - 2 # Don't count `IDRSSD` or `QUARTER_ID`
-  num_obs <- nrow(df_long)
-  db_log.chifed_ext(ymd_chr, paste(
-    "Writing", num_obs, "non-NA observations of",
-    num_vars, "variables to \"FFIEC.OBS_ALL\"..."
+  
+  db_log.chifed_ext(ymd_chr, paste0(
+    "Writing ", nrow(df_long), " non-NA observations of ",
+    length(unique(df_long$VARCODE_ID)), " variables to \"", tbl_name, "\"..."
   ))
+  
+  db_connector <- db_connector_sqlite()
+  db_conn <- db_connector()
+  
   tryCatch(
-    write_chifed_observations(df_long),
+    {
+      DBI::dbBegin(db_conn)
+      if (!DBI::dbExistsTable(db_conn, tbl_name)) {
+        DBI::dbCreateTable(db_conn, tbl_name,
+                           fields = c(
+                             IDRSSD = "INTEGER",
+                             QUARTER_ID = "INTEGER",
+                             CALL8786 = "INTEGER",
+                             CALL8787 = "INTEGER",
+                             VARCODE_ID = "INTEGER",
+                             VALUE = "TEXT"
+                           )
+        )
+      }
+      DBI::dbWriteTable(db_conn, tbl_name, df_long, append = TRUE)
+      DBI::dbCommit(db_conn)
+    },
     warning = stop,
-    error   = stop
+    error = stop
   )
-  db_log.chifed_ext(ymd_chr, glue::glue(
-    "Successfully extracted {zip_base} > {xpt_file} to the database!"
-  ))
-  cat(paste(rep('-', 80), collapse = ''))
-  cat("\n")
+  
+  DBI::dbDisconnect(db_conn)
 }
 
 #' Extract the Chicago Fed's codebook data to a database

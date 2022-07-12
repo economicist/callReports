@@ -17,7 +17,7 @@ get_cfg_filename <-
   function(subdir_name = "economicist", yaml_name = "callReports.yml") {
     list(
       user = file.path(rappdirs::user_config_dir(subdir_name), yaml_name),
-      template = file.path(system.file(package = "callReports"), yaml_name)
+      template = file.path(system.file('cfg/', package = "callReports"), yaml_name)
     )
   }
 

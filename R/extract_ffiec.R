@@ -52,7 +52,7 @@ extract_ffiec_tsv <-
     part_str <- glue::glue("({fname_parts$part_num} of {fname_parts$part_of})")
     part_str <- ifelse(part_str == "(1 of 1)", "", part_str)
 
-    db_log.ffiec_ext(fname_parts, glue::glue("{date_sch} {part_str}"))
+    db_log.ffiec_ext(fname_parts, as.character(glue::glue("{date_sch} {part_str}")))
     unzip(zf, sch, exdir = tempdir(), unzip = getOption("unzip"))
     tsv_tmp <- file.path(tempdir(), sch)
 
@@ -60,9 +60,9 @@ extract_ffiec_tsv <-
     df_codebook <- parsed_data$codebook
     df_wide <- parsed_data$observations
     df_problems <- parsed_data$problems
-    db_log.ffiec_ext(fname_parts, glue::glue(
+    db_log.ffiec_ext(fname_parts, as.character(glue::glue(
       "Read {nrow(df_wide)} rows containing {ncol(df_wide)} columns"
-    ))
+    )))
 
     db_connector <- db_connector_sqlite()
     db_conn <- db_connector()
@@ -78,9 +78,9 @@ extract_ffiec_tsv <-
           if (num_newvars > 0) {
             db_log.ffiec_ext(
               fname_parts,
-              glue::glue(
+              as.character(glue::glue(
                 'Assigned database IDs to {num_newvars} new variable codes.'
-              ),
+              )),
               db_conn
             )
           }
@@ -138,7 +138,8 @@ extract_ffiec_tsv <-
             append = TRUE
           )
 
-          tbl_name <- glue::glue("FFIEC.OBS_{fname_parts$sch_code}")
+          tbl_name <- 
+            as.character(glue::glue("FFIEC.OBS_{fname_parts$sch_code}"))
           db_log.ffiec_ext(
             fname_parts, 
             glue::glue(
@@ -209,8 +210,12 @@ parse_ffiec_tsv <- function(tsv) {
   # the `problems` attribute attached to the resulting `tibble`. Instead, here
   # we read the data using only the `NA` detection, then extract the problems,
   # and only then do we repair the column names.
-  db_log.ffiec_ext(db_conn, fname_parts, glue::glue(
-    "Reading observations from schedule...")
+  db_log.ffiec_ext(
+    fname_parts, 
+    as.character(glue::glue(
+      "Reading observations from schedule...")
+    ),
+    db_conn
   )
   df_wide <- tryCatch(
     {
@@ -224,7 +229,7 @@ parse_ffiec_tsv <- function(tsv) {
       )
     },
     warning = function(w) {
-      db_log.ffiec_ext(db_conn, fname_parts, "Warning issued while parsing")
+      db_log.ffiec_ext(fname_parts, "Warning issued while parsing", db_conn)
     }
   )
 

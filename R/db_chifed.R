@@ -1,36 +1,3 @@
-#' Write a dataframe of Chicago Fed observations to the database
-#'
-#' @param db_connector A `function` created by one of the `db_connector_*()`
-#' functions found in this package. It should be passed without the `()`
-#' @param df_long A dataframe of observations in long form
-#' @export
-write_chifed_observations <- function(df_long) {
-  db_connector <- db_connector_sqlite()
-  db_conn <- db_connector()
-  tryCatch(
-    {
-      DBI::dbBegin(db_conn)
-      if (!DBI::dbExistsTable(db_conn, "CHIFED.OBS_ALL")) {
-        DBI::dbCreateTable(db_conn, "CHIFED.OBS_ALL",
-          fields = c(
-            IDRSSD = "INTEGER",
-            QUARTER_ID = "INTEGER",
-            CALL8786 = "INTEGER",
-            CALL8787 = "INTEGER",
-            VARCODE_ID = "INTEGER",
-            VALUE = "TEXT"
-          )
-        )
-      }
-      DBI::dbWriteTable(db_conn, "CHIFED.OBS_ALL", df_long, append = TRUE)
-      DBI::dbCommit(db_conn)
-    },
-    warning = stop,
-    error = stop
-  )
-  DBI::dbDisconnect(db_conn)
-}
-
 #' Retreive Chicago Fed observations from a database
 #'
 #' @param db_connector A `function` created by one of the `db_connector_*()`
@@ -61,7 +28,7 @@ fetch_chifed_observations <-
       max_qtr_id <- ymd_chr_to_qtr_id(max_date)
       where_clause <- glue::glue("{where_clause} AND QUARTER_ID <= {max_qtr_id}")
     }
-    db_query <- glue::glue('SELECT * FROM "CHIFED.OBS_ALL" {where_clause}')
+    db_query <- glue::glue('SELECT * FROM "{tbl_name}" {where_clause}')
 
     rlog::log_info("Requesting variables from database...")
     db_res <- DBI::dbSendQuery(db_conn, db_query)

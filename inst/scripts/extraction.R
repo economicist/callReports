@@ -10,4 +10,4 @@ devtools::document()
 
 create_new_sqlite_db(overwrite = TRUE, confirm = FALSE)
 extract_chifed_zips()
-extract_ffiec_zips()
+# extract_ffiec_zips()

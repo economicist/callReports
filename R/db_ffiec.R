@@ -13,6 +13,7 @@
 fetch_ffiec_observations <- function(tbl_name, ...) {
   db_connector <- db_connector_sqlite()
   db_conn <- db_connector()
+  
   df_varcodes <-
     DBI::dbReadTable(db_conn, "VARCODES") %>%
     dplyr::filter(VARCODE %in% c(...)) %>%
