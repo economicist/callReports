@@ -1,6 +1,6 @@
 Package: callReports
 Title: Extract and query call report data from the FFIEC and Chicago Fed
-Version: 0.0.0.9300
+Version: 0.0.0.9301
 Authors@R: 
     person("Robert", "Roper", , "rob@rcroper.com", role = c("aut", "cre"))
 Description: >
