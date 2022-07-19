@@ -30,7 +30,7 @@ get_cfg_filename <-
 #' @export
 reset_user_cfg <-
   function(subdir_name = "economicist", yaml_name = "callReports.yml") {
-    unlink(get_cfg_filename()$user)
+    if (file.exists(get_cfg_filename()$user)) unlink(get_cfg_filename()$user)
     create_user_cfg_if_not_exists(subdir_name, yaml_name)
     return(invisible())
   }
@@ -52,7 +52,7 @@ reset_user_cfg <-
 create_user_cfg_if_not_exists <-
   function(subdir_name = "economicist", yaml_name = "callReports.yml") {
     if (!file.exists(get_cfg_filename()$user)) {
-      cfg_subdir <- rappdirs::user_config_dir(subdir_name)
+      cfg_subdir <- file.path(rappdirs::user_config_dir(), subdir_name)
       if (!dir.exists(cfg_subdir)) dir.create(cfg_subdir)
       tryCatch(file.copy(get_cfg_filename()$template, get_cfg_filename()$user),
         warning = warning, error = stop
